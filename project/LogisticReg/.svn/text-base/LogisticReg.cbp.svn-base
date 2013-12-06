@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="LogisticReg" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="../../bin/Debug/LogisticReg" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../lib/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="../../bin/Release/LogisticReg" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../lib/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="../../examples/LogisticReg_main.cpp" />
+		<Unit filename="../../include/strategy_core/common/common.h" />
+		<Unit filename="../../include/strategy_core/common/log4c.h" />
+		<Unit filename="../../include/strategy_core/gradient_descent/BFGS.h" />
+		<Unit filename="../../include/strategy_core/gradient_descent/GradientDescent.h" />
+		<Unit filename="../../include/strategy_core/gradient_descent/LineSearch.h" />
+		<Unit filename="../../include/strategy_core/lin_alg/base.h" />
+		<Unit filename="../../include/strategy_core/lin_alg/dense.h" />
+		<Unit filename="../../include/strategy_core/lin_alg/sparse.h" />
+		<Unit filename="../../include/strategy_core/supervised/LogisticReg.h" />
+		<Unit filename="../../src/common/log4c.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/gradient_descent/BFGS.cpp" />
+		<Unit filename="../../src/gradient_descent/GradientDescent.cpp" />
+		<Unit filename="../../src/lin_alg/sparse.cpp" />
+		<Unit filename="../../src/supervised/LogisticReg.cpp" />
+		<Unit filename="../../src/supervised/MaxEntropy.cpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

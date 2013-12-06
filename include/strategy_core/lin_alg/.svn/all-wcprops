@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/Code/!svn/ver/5916/DataPlatform/strategy_core/Trunk/include/strategy_core/lin_alg
+END
+base.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/Code/!svn/ver/5916/DataPlatform/strategy_core/Trunk/include/strategy_core/lin_alg/base.h
+END
+sparse.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/Code/!svn/ver/5916/DataPlatform/strategy_core/Trunk/include/strategy_core/lin_alg/sparse.h
+END
+dense.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/Code/!svn/ver/5916/DataPlatform/strategy_core/Trunk/include/strategy_core/lin_alg/dense.h
+END
