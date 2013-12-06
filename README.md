@@ -1,4 +1,4 @@
 strategy_core
 =============
 
-Implementations of machine learning and data mining algorithms
+An open source algorithm package for machine learning, data mining and optimization.
