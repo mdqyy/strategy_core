@@ -3,15 +3,15 @@ svn:wc:ra_dav:version-url
 V 71
 /svn/Code/!svn/ver/5916/DataPlatform/strategy_core/Trunk/src/supervised
 END
+LogisticReg.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/Code/!svn/ver/26458/DataPlatform/strategy_core/Trunk/src/supervised/LogisticReg.cpp
+END
 MaxEntropy.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 86
 /svn/Code/!svn/ver/5916/DataPlatform/strategy_core/Trunk/src/supervised/MaxEntropy.cpp
-END
-LogisticReg.cpp
-K 25
-svn:wc:ra_dav:version-url
-V 88
-/svn/Code/!svn/ver/15230/DataPlatform/strategy_core/Trunk/src/supervised/LogisticReg.cpp
 END

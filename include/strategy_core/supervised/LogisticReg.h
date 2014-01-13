@@ -17,9 +17,9 @@
 #ifndef STRATEGY_CORE_SUPERVISED_LOGISTICREG_H_
 #define STRATEGY_CORE_SUPERVISED_LOGISTICREG_H_
 
+#include <strategy_core/lin_alg/dense.h>
 #include <strategy_core/lin_alg/sparse.h>
-#include <strategy_core/common/common.h>
-#include <strategy_core/lin_alg/base.h>
+#include <strategy_core/common/algorithm.h>
 #include <string>
 
 using namespace std;
@@ -57,44 +57,45 @@ class TrainingSet {
   bool load_sample(void);
 };
 
-class LrPara {
+class LrModel:algorithm::Model {
  public:
-  REAL step_len;
-  REAL stop_cond;
-  LrPara();
-  ~LrPara();
+  REAL target;  /// Value of target function.
+  DenseRealVector *weight_vector;
+  SampleSet *ss;
+  DenseRealVector *gradient_vector;
+  REAL *sum_xcol; /// intermediate result: sum(x_ij, i, 1, sample_num)
+                  /// init when loading whole data set.
+  REAL *sum_nz_xcol; /// intermediate result: sum(x_ij, i, 1, sample_num) | yi != 0
+                  /// init when loading whole data set.
+  REAL *ewx;      /// intermediate result: exp(inner(W, Xi))
+                  /// init when doing every step.
+  REAL logit;     /// logit = ewx/(1 + ewx)
+  LrModel(const SampleSet *ss);
+  ~LrModel();
+  void cal_target();/// The target funtion is the likelihood function of
+                    /// logisitic regression.
+  void cal_gradient();
+  void cal_logit();
+  REAL get_ewx(const INT row); /// row: [0, sample_num - 1]
+  REAL get_sum_xcol(const INT col); /// col: [0, feature_num - 1]
+  REAL get_sum_nz_xcol(const INT col); /// col: [0, feature_num - 1]
 
- protected:
-  ;
- private:
-  ;
+  bool preprocess(const TrainingSet *ts);
 };
 
-class LrModel {
+class LrPara:algorithm::Para {
  public:
-  REAL *tmp_xcol; /// intermediate result: sum(x_ij, i, 1, sample_num)
-                  /// init when loading whole data set.
-  REAL *tmp_ewx;  /// intermediate result: exp(inner(W, Xi))
-                  /// init when doing every step.
-  REAL get_target(TrainingSet *ts, VectorType *weight);
-  VectorType *get_gradient();
-  LrModel();
-  ~LrModel();
+  REAL step_len;
+  REAL epsilon;
+  INT max_iter_num;
 
-  REAL get_tmp_ewx(const INT row) { /// row: [0, sample_num - 1]
-    return tmp_ewx[row];
-  };
-
-  REAL get_tmp_xcol(const INT col) { /// col: [0, feature_num - 1]
-    return tmp_xcol[col];
-  };
-
+  LrPara(const char *conf_file_path, const chat *encoding);
+  ~LrPara();
 };
 
 void init(const char *logfile_path);
-bool train(const TrainingSet *ts, LrPara *lrPara);
-Ytype_p predict(Model *model, VectorType *features);
-
+bool train(const TrainingSet *ts, const LrPara *lrpara);
+Ytype_p predict(const DenseREALVector *weight, const SparseVector *feature);
 }
 
 #endif //STRATEGY_CORE_SUPERVISED_LOGISTICREG_H_

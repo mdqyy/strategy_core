@@ -1,6 +1,6 @@
 //==============================================================================
 /*!
- *  \file common.cpp
+ *  \file common.h
  *
  *  \brief common file
  *
@@ -18,12 +18,6 @@
 
 #include "log4c.h"
 
-class Model {
- public:
-  Model();
-  ~Model();
-  virtual bool write() = 0;
-  virtual bool read() = 0;
-};
-
+namespace memory {
+}
 #endif //STRATEGY_CORE_COMMON_COMMON_H_

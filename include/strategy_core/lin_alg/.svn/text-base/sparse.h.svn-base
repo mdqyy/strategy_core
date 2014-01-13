@@ -20,30 +20,25 @@
 #include <strategy_core/lin_alg/base.h>
 
 namespace sparse {
-/*! Sparse vector */
+#ifndef ElemType
+#define ElemType REAL
+
+/*! Sparse Vector implementation using Linked List */
 class SparseVectorPoint {
  public:
-  std::size_t index;
-  double value;
+  INT index;
+  REAL value;
 };
 
 class SparseVector {
-
 };
 
-/*! Sparse Matrix implementation using Cross List */
-#ifndef ElemType
-#define ElemType REAL
 class CrossListNode {
  public:
   INT i, j; /// position of a non-zero element, a[i,j]
   ElemType e;
   CrossListNode *right, *down;
-  CrossListNode () {
-    right = NULL;
-    down = NULL;
-    e = 0.0;
-  }
+  CrossListNode ();
 };
 
 class SingleList {
@@ -72,11 +67,24 @@ class CrossList {
   bool output_row(const INT row_no);
   bool output_col(const INT col_no);
   void output_all(void);
-
- protected:
-
- private:
 };
+
+/*! Sparse Matrix implementation using Cross List */
+class SparseMatrix {
+ public:
+  INT row;
+  INT col;
+  CrossList *cl;
+
+  SparseMatrix(const INT row, const INT col);
+  ~SparseMatrix();
+}
+
+class Diag:SparseMatrix {
+ public:
+  Diag(const INT n);
+  ~Diag();
+}
 #endif
 }
-#endif //STRATEGY_CORE_LIN_ALG_DENSE_H_
+#endif //STRATEGY_CORE_LIN_ALG_SPARSE_H_

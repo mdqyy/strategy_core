@@ -1,8 +1,8 @@
 //==============================================================================
 /*!
-*  \file BFGS_main.cpp
+*  \file LogisticReg_main.cpp
 *
-*  \brief main program of BFGS
+*  \brief A running case of Logistic Regression.
 *
 *  \author chenqinyu
 *          contact:
@@ -24,40 +24,30 @@ int main (int argc, char **argv) {
   int flag = 0;
 ///for (INT i = 0; i < 1; i++) { /// test memory leak
   const char *log_conf_path = "/home/cqy/work/strategy_core/etc/LogisticReg/l4c.cfg";
+  const char *conf_file_path = "";
   const char *trainingset_path = "/home/cqy/work/strategy_core/data/logistic.sample";
+
   LogisticReg::init(log_conf_path);
-  //LogisticReg::LrPara *lrpara = new LogisticReg::LrPara();
   L4C_INFO("Logistic regression training starts!");
 
+  LogisticReg::LrPara *lrpara = new LogisticReg::LrPara(conf_file_path, "utf-8");
+  Conf conf = Conf(conf_file_path, encoding_type);
+  conf.parse(lrpara);
   LogisticReg::TrainingSet *ts = new LogisticReg::TrainingSet(trainingset_path);
-  if (!ts->load_header()) {
-    L4C_FATAL("Loading header failed!");
-    flag = -1;
-    goto end;
-  }
-  //cout<<ts->sample_num<<' '<<ts->feature_num<<endl;
 
-  if (!ts->load_sample()) {
-    L4C_FATAL("Loading sample failed!");
-    flag = -1;
-    goto end;
-  }
-  /*
   if (!ts->train(ts, lrpara)) {
-    L4C_FATAL("Training failed!");
+    L4C_FATAL("Logistic regression training failed!");
     flag = -1;
     goto end;
   }
-  */
+
+  L4C_INFO("Logistic regression training finished!");
+
 end:
-  delete ts; ts = NULL;
-  //delete lrpara; lrpara = NULL;
-  if (flag < 0) {
-    L4C_INFO("Logistic regression training failed!");
-  }
-  else {
-    L4C_INFO("Logistic regression training ends successfully!");
-  }
+  delete ts;
+  ts = NULL;
+  delete lrpara;
+  lrpara = NULL;
 ///}
   return flag;
 }

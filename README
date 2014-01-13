@@ -1,0 +1,19 @@
+Guideline for Installation
+-------------------------------------------------------------------------------
+
+A. Installation with code::blocks cbp file:
+	A1. Make sure you have installed cbp2make first.
+
+	A2. Generate Makefile for code::blocks project using cbp2make
+
+		cd ./project
+		cbp2make -in ${PROJECT_NAME}.cbp -out Makefile
+
+	A3. Then modify the Makefile, append the include path for ${INC}, library 
+	    for ${LIB}
+		
+		INC = -I ../include
+		LIB = -l${YOUR_LIB}
+
+B. Installtion with CMake:
+

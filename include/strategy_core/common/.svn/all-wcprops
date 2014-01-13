@@ -3,11 +3,17 @@ svn:wc:ra_dav:version-url
 V 85
 /svn/Code/!svn/ver/5916/DataPlatform/strategy_core/Trunk/include/strategy_core/common
 END
+algorithm.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/Code/!svn/ver/26383/DataPlatform/strategy_core/Trunk/include/strategy_core/common/algorithm.h
+END
 common.h
 K 25
 svn:wc:ra_dav:version-url
-V 94
-/svn/Code/!svn/ver/5916/DataPlatform/strategy_core/Trunk/include/strategy_core/common/common.h
+V 95
+/svn/Code/!svn/ver/26383/DataPlatform/strategy_core/Trunk/include/strategy_core/common/common.h
 END
 log4c.h
 K 25

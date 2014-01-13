@@ -20,10 +20,16 @@
 #include <strategy_core/common/common.h>
 
 class LineSearch {
+  ///TODO:
  public:
+  DenseRealVector *step_vector;
+  LineSearch();
+  ~LineSearch();
 
- protected:
+  bool step(REAL &lambda, REAL step_len);
 
+ private:
+  void *target_fun();
 };
 
 #endif //STRATEGY_CORE_GRADIENT_DESCENT_LINESEARCH_H_

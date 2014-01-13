@@ -20,24 +20,20 @@
 
 #define REAL double
 #define INT size_t
+#defin UINT unsigned int
 
 class Complex {
-  public:
-    double re;
-    double in;
-
+ public:
+  double re;
+  double in;
 };
 
 class Vector {
-
+  virtual bool set(INT pos, REAL value) = 0;
+  virtual REAL get(INT pos) = 0;
 };
 
 class Matrix {
-  public:
-
-  protected:
-
-  private:
 
 };
-#endif //STRATEGY_CORE_LIN_ALG_H_
+#endif //STRATEGY_CORE_LIN_ALG_BASE_H_

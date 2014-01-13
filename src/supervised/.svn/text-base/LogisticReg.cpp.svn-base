@@ -48,7 +48,7 @@ SampleSet::~SampleSet () {
 }
 
 /*! TrainingSet */
-TrainingSet::TrainingSet (const char *training_set_path) {
+TrainingSet::TrainingSet(const char *training_set_path) {
   this->training_set_path = training_set_path;
   this->line = NULL;
   this->size = 0;
@@ -56,7 +56,7 @@ TrainingSet::TrainingSet (const char *training_set_path) {
   this->opf = NULL;
 }
 
-TrainingSet::~TrainingSet () {
+TrainingSet::~TrainingSet() {
   if (NULL != this->opf)
     fclose(this->opf);
   delete this->line;
@@ -65,12 +65,12 @@ TrainingSet::~TrainingSet () {
   this->sample_set = NULL;
 }
 
-void init (const char *log_conf_path) {
+void init(const char *log_conf_path) {
   set_cfg_path(log_conf_path);
   /// TODO:
 }
 
-bool TrainingSet::load_header () {
+bool TrainingSet::load_header() {
   bool flag = true;
   map<string, string> kv;
 
@@ -109,10 +109,11 @@ end:
   return flag;
 }
 
-bool TrainingSet::load_sample () {
+bool TrainingSet::load_sample() {
   bool flag = true;
   INT row_id = 0;
   this->sample_set = new SampleSet(this->sample_num, this->feature_num);
+
   do {
     this->sample_set->y[row_id] = atoi(&(this->line[0]));
     INT curr_pos = 2, last_pos = curr_pos;
@@ -131,10 +132,7 @@ bool TrainingSet::load_sample () {
       if (TOKENIZER == line[curr_pos] or END_OF_LINE == line[curr_pos]) {
         strncpy(feature_value, this->line + last_pos, curr_pos - last_pos);
         fvalue = atof(feature_value);
-        sparse::CrossListNode *clnode = new sparse::CrossListNode();
-        clnode->i = row_id;
-        clnode->j = fid;
-        clnode->e = fvalue;
+        sparse::CrossListNode *clnode = new sparse::CrossListNode(row_id, fid, fvalue);
         last_pos = curr_pos + 1;
         if (!sample_set->features->append(clnode)) {
           L4C_FATAL("Insert element error at (%d, %d, %f)!",
@@ -156,63 +154,82 @@ end:
 }
 
 /*! LrModel */
-REAL LrModel::get_target (TrainingSet *ts, VectorType *weight) {
-  /*!
-    The likelihood function of logisitic regression.
-  */
-  REAL target;
-  for (INT i = 0; i < ts->feature_num; i++) {
-    REAL inner, part;
-    for (INT j = 0; j < ts->feature_num; j++) {
-      ///TODO:
-      ///inner = inner_product(ts->features, weight);
-    }
-    target -= std::log(1 + exp(inner));
-    /*
-    if (1 == ts->sample_set->)
-      target += inner;
-    */
-  }
-  return target;
+LrModel::LrModel(const SampleSet *ss) {
+  this->SampleSet = ss;
 }
 
-VectorType *LrModel::get_gradient () {
-  VectorType *gradient;
-  ///TODO:
-  return gradient;
+LrModel::~LrModel() {
+  delete this->weight_vector;
+  this->weight_vector = NULL;
+  delete this->ss;
+  this->ss = NULL;
+  delete this->gradient_vector;
+  this->gradient_vector = NULL;
+  delete this->sum_xcol;
+  this->sum_xcol = NULL;
+  delete this->sum_nz_xcol;
+  this->sum_nz_xcol = NULL;
+  delete this->ewx;
+  this->ewx = NULL;
 }
+
+void LrModel::cal_target() {
+  this->target = 0;
+  for (INT i = 0; i < this->ss->sample_num; i++) {
+    REAL inner;
+    inner = sparse::inner_product_sd(this->ss->features->rslArray[i],
+                                     this->weight);
+    this->target -= std::log(1 + exp(inner));
+    if (1.0 == this->ss->y[i])
+      this->target += inner;
+  }
+}
+
+void LrModel::cal_gradient() {
+  for (INT i = 0; i < this->ss->feature_num; i++) {
+    REAL gradient = this->weight->get(i) * (this->get_sum_nz_xcol[i] -
+                                          this->logit * this->get_sum_xcol[i]);
+    this->gradient_vector->set(i, gradient);
+  }
+}
+
+REAL LrModel::get_ewx(const INT row) {
+  return this->ewx[row];
+};
+
+REAL LrModel::get_sum_xcol(const INT col) {
+  return this->sum_xcol[col];
+};
+
+REAL LrModel::get_sum_nz_xcol(const INT col) {
+  return this->sum_nz_xcol[col];
+};
 
 /*! Logistic regression training */
-bool train (const TrainingSet *ts, LrPara *lrpara) {
+bool train(const TrainingSet *ts, const LrPara *lrpara) {
   bool flag = true;
+  LrModel *lrmodel = new LrModel(ts->sample_set);
+  BFGS *bfgs = new BFGS(lrmodel, lrpara);
 
-  BFGS *bfgs = new BFGS();
-  if (!bfgs->init()) {
-    flag = false;
-    goto end;
-  }
-  if (!bfgs->read()) {
-    flag = false;
-    goto end;
-  }
-  if (!bfgs->step()) {
-    flag = false;
-    goto end;
-  }
-  if (!bfgs->write()) {
+  if (!bfgs->solve()){
     flag = false;
     goto end;
   }
 
 end:
+  delete lrmodel;
+  lrmodel = NULL;
   delete bfgs;
+  bfgs = NULL;
   return flag;
 }
 
 /*! Logistic regression prediction */
-Ytype_p predict (Model *model, VectorType *feature) {
+Ytype_p predict(const DenseREALVector *weight, const SparseVector *feature) {
   Ytype_p probability;
-  ///TODO:
+  REAL wx = inner_product_sd(feature, weight);
+  REAL exp_wx = exp(wx);
+  probability = exp_wx/(1.0 + exp_wx)
   return probability;
 }
 }

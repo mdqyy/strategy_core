@@ -18,16 +18,30 @@
 #define STRATEGY_CORE_LIN_ALG_DENSE_H_
 
 #include <strategy_core/lin_alg/base.h>
+
+namespace dense {
 extern "C" {
 #include <cblas.h>
 }
 
-class DenseVector::Vector {
+class DenseRealVector:Vector {
  public:
-
- protected:
-
- private:
-
+  INT length;
+  REAL *V;
+  DenseRealVector(const INT length);
+  ~DenseRealVector();
+  bool set(const INT pos, const REAL value);
+  bool get(REAL &value, const INT pos);
 };
+
+class DenseRealMatrix:Matrix {
+ public:
+	INT row;
+	INT col;
+	REAL **M;
+	DenseRealMatrix();
+	~DenseRealMatrix();
+};
+
+}
 #endif //STRATEGY_CORE_LIN_ALG_DENSE_H_

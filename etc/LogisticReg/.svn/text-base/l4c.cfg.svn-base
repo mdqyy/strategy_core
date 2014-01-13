@@ -1,0 +1,8 @@
+[.DEFAULT]
+OutputType=FILE
+Level=ALL
+TruncateType=DALIY
+Format=%d{yyyy-MM-dd HH:mm:ss.SSS}|%a|%l|%g|%h|[%m]
+LogPath=/home/cqy/work/el_strategy/var/LogisticReg/
+LogName=el_strategy_logistic_reg_%d{yyyyMMdd}.log
+
