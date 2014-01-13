@@ -18,11 +18,19 @@
 #include <strategy_core/common/log4c.h>
 
 namespace sparse {
+CrossListNode::CrossListNode (const INT i, const INT j, REAL e) {
+  this->i = i;
+  this->j = j;
+  this->right = NULL;
+  this->down = NULL;
+  this->e = e;
+}
+
 SingleList::~SingleList () {
   CrossListNode *curr = this->head;
   CrossListNode *next;
   while (NULL != curr) {
-    next = curr->right;
+    next = curr->right; /// Delete the node row by row.
     delete curr;
     curr = next;
   }
@@ -163,4 +171,31 @@ void CrossList::output_all () {
     printf("\n");
   }
 }
+
+SparseMatrix::SparseMatrix(const INT row, const INT col) {
+  this->row = row;
+  this->col = col;
+  this->cl = new CrossList(row, col);
+}
+
+SparseMatrix::~SparseMatrix() {
+  delete this->cl;
+  this->cl = NULL;
+}
+
+Diag::Diag(const INT n) {
+  this->row = n;
+  this->col = n;
+  this->cl = new CrossList(n, n);
+  for (INT i = 0; i < n; i++) {
+    CrossListNode *clnode = new CrossListNode(n, n, 1.0);
+    this->cl->append(clnode);
+  }
+}
+
+Diag::~Diag() {
+  delete this->cl;
+  this->cl = NULL;
+}
+
 }
