@@ -25,10 +25,10 @@ BFGS::BFGS(const LrModel *lrmodel, const LrPara *lrpara) {
 }
 
 BFGS::~BFGS() {
-  delete this->lrmodel->weight_vector;
-  this->lrmodel->weight_vector = NULL;
-  delete this->lrmodel->gradient_vector;
-  this->lrmodel->gradient_vector = NULL;
+  delete this->lrmodel;
+  this->lrmodel = NULL;
+  delete this->lrpara;
+  this->lrpara= NULL;
 }
 
 bool BFGS::init() {
