@@ -30,6 +30,7 @@ int main (int argc, char **argv) {
   LogisticReg::init(log_conf_path);
   L4C_INFO("Logistic regression training starts!");
 
+  ///TODO: get_opt()
   LogisticReg::LrPara *lrpara = new LogisticReg::LrPara(conf_file_path, "utf-8");
   Conf conf = Conf(conf_file_path, encoding_type);
   conf.parse(lrpara);

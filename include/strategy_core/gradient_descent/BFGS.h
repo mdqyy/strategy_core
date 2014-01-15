@@ -27,7 +27,6 @@ using namespace LogisticReg;
 class BFGS {
  public:
   LrModel *lrmodel;
-
   BFGS(const LrModel *lrmodel, const LrPara *lrpara);
   ~BFGS();
 

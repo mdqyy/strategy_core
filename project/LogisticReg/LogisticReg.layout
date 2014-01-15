@@ -7,8 +7,8 @@
 	<File name="../../include/strategy_core/common/conf.h" open="0" top="0" tabpos="4">
 		<Cursor position="738" topLine="10" />
 	</File>
-	<File name="../../include/strategy_core/gradient_descent/BFGS.h" open="1" top="1" tabpos="2">
-		<Cursor position="1539" topLine="26" />
+	<File name="../../include/strategy_core/gradient_descent/BFGS.h" open="1" top="0" tabpos="2">
+		<Cursor position="1049" topLine="43" />
 	</File>
 	<File name="../../include/strategy_core/lin_alg/dense.h" open="0" top="0" tabpos="2">
 		<Cursor position="967" topLine="16" />
@@ -26,7 +26,7 @@
 		<Cursor position="638" topLine="23" />
 	</File>
 	<File name="../../src/gradient_descent/BFGS.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="1987" topLine="51" />
+		<Cursor position="978" topLine="12" />
 	</File>
 	<File name="../../src/gradient_descent/LineSearch.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="485" topLine="0" />
@@ -40,7 +40,7 @@
 	<File name="../../src/lin_alg/sparse.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="4713" topLine="169" />
 	</File>
-	<File name="../../src/supervised/LogisticReg.cpp" open="0" top="0" tabpos="2">
-		<Cursor position="6267" topLine="226" />
+	<File name="../../src/supervised/LogisticReg.cpp" open="1" top="1" tabpos="3">
+		<Cursor position="4385" topLine="143" />
 	</File>
 </CodeBlocks_layout_file>
