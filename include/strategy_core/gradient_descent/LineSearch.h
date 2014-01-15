@@ -22,7 +22,7 @@
 class LineSearch {
   ///TODO:
  public:
-  DenseRealVector *step_vector;
+  dense::DenseRealVector *step_vector;
   LineSearch();
   ~LineSearch();
 

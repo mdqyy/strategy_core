@@ -26,17 +26,17 @@ int main (int argc, char **argv) {
   const char *log_conf_path = "/home/cqy/work/strategy_core/etc/LogisticReg/l4c.cfg";
   const char *conf_file_path = "";
   const char *trainingset_path = "/home/cqy/work/strategy_core/data/logistic.sample";
-
+  const char *encoding_type = "utf-8";
   LogisticReg::init(log_conf_path);
   L4C_INFO("Logistic regression training starts!");
 
   ///TODO: get_opt()
-  LogisticReg::LrPara *lrpara = new LogisticReg::LrPara(conf_file_path, "utf-8");
-  Conf conf = Conf(conf_file_path, encoding_type);
-  conf.parse(lrpara);
+  LogisticReg::LrPara *lrpara = new LogisticReg::LrPara(conf_file_path, encoding_type);
+  ///Conf conf = Conf(conf_file_path, encoding_type);
+  ///conf.parse(lrpara);
   LogisticReg::TrainingSet *ts = new LogisticReg::TrainingSet(trainingset_path);
 
-  if (!ts->train(ts, lrpara)) {
+  if (!LogisticReg::train(ts, lrpara)) {
     L4C_FATAL("Logistic regression training failed!");
     flag = -1;
     goto end;

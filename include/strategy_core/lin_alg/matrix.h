@@ -29,6 +29,7 @@
 #define Max 9999999999
 #define VERY_SMALL_NUM 1e-100
 #define PI 3.1415926
+#define Matrix dense::DenseRealMatrix
 
 namespace matrix {
 bool inv(Matrix *B, Matrix *A); /// B = A^(-1)

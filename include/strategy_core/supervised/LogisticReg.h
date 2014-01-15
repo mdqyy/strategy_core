@@ -60,9 +60,9 @@ class TrainingSet {
 class LrModel:algorithm::Model {
  public:
   REAL target;  /// Value of target function.
-  DenseRealVector *weight_vector;
+  dense::DenseRealVector *weight_vector;
   SampleSet *ss;
-  DenseRealVector *gradient_vector;
+  dense::DenseRealVector *gradient_vector;
   REAL *sum_xcol; /// intermediate result: sum(x_ij, i, 1, sample_num)
                   /// init when loading whole data set.
   REAL *sum_nz_xcol; /// intermediate result: sum(x_ij, i, 1, sample_num) | yi != 0
@@ -89,13 +89,13 @@ class LrPara:algorithm::Para {
   REAL epsilon;
   INT max_iter_num;
 
-  LrPara(const char *conf_file_path, const chat *encoding);
+  LrPara(const char *conf_file_path, const char *encoding);
   ~LrPara();
 };
 
 void init(const char *logfile_path);
 bool train(const TrainingSet *ts, const LrPara *lrpara);
-Ytype_p predict(const DenseREALVector *weight, const SparseVector *feature);
+Ytype_p predict(const dense::DenseRealVector *weight, const sparse::SparseVector *feature);
 }
 
 #endif //STRATEGY_CORE_SUPERVISED_LOGISTICREG_H_

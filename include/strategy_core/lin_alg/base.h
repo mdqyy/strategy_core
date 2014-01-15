@@ -20,7 +20,7 @@
 
 #define REAL double
 #define INT size_t
-#defin UINT unsigned int
+#define UINT unsigned int
 
 class Complex {
  public:

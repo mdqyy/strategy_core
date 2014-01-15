@@ -56,7 +56,7 @@
 	<el_strategy/lin_alg/sparse.h>
 	<el_strategy/common/log4c.h>
 
-1388397699 source:/home/cqy/work/strategy_core/examples/LogisticReg_main.cpp
+1389777527 source:/home/cqy/work/strategy_core/examples/LogisticReg_main.cpp
 	<strategy_core/supervised/LogisticReg.h>
 	<string>
 	<iostream>
@@ -86,4 +86,13 @@
 
 1388405422 source:/home/cqy/work/strategy_core/src/gradient_descent/BFGS.cpp
 	<strategy_core/gradient_descent/BFGS.h>
+
+1389005200 source:/home/cqy/work/strategy_core/src/common/algorithm.cpp
+	<strategy_core/common/algorithm.h>
+
+1389005191 source:/home/cqy/work/strategy_core/src/common/common.cpp
+	<strategy_core/common/common.h>
+
+1389779055 source:/home/cqy/work/strategy_core/src/common/conf.cpp
+	<strategy_core/common/conf.h>
 

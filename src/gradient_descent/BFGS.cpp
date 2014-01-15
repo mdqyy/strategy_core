@@ -19,7 +19,7 @@
 #include <strategy_core/gradient_descent/BFGS.h>
 
 /// BFGS
-BFGS::BFGS(const LrModel *lrmodel, const LrPara *lrpara) {
+BFGS::BFGS(LrModel *lrmodel, LrPara *lrpara) {
   this->lrmodel = lrmodel;
   this->lrpara = lrpara;
 }
@@ -34,6 +34,7 @@ BFGS::~BFGS() {
 bool BFGS::init() {
   bool flag = true;
   ///TODO:
+  /*
   this->lrmodel->weight_vector = ;
   this->B = new Diag() ;
   this->B_inv = ;
@@ -44,7 +45,7 @@ bool BFGS::init() {
   if (euclid_norm_d(this->lrmodel->gradient_vector) < this->lrpara->epsilon) {
     break;
   }
-
+  */
 end:
   return flag;
 }

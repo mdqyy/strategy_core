@@ -16,6 +16,8 @@
 
 #include <strategy_core/lin_alg/matrix.h>
 
+using namespace dense;
+
 namespace matrix {
 bool inv(Matrix *B, Matrix *A) {/// B = A^(-1)
   /*!

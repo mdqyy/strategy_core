@@ -78,13 +78,13 @@ class SparseMatrix {
 
   SparseMatrix(const INT row, const INT col);
   ~SparseMatrix();
-}
+};
 
 class Diag:SparseMatrix {
  public:
   Diag(const INT n);
   ~Diag();
-}
+};
 #endif
 }
 #endif //STRATEGY_CORE_LIN_ALG_SPARSE_H_

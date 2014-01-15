@@ -21,7 +21,8 @@ Conf::Conf(const char *conf_file_path, const char *encoding_type) {
   this->encoding_type = encoding_type;
 }
 
-Conf:parse(void *para) {
+bool Conf::parse(algorithm::Para* para) {
+  /*
   bool flag = true;
 
   if (NULL == this->conf_file_path) {
@@ -39,7 +40,7 @@ Conf:parse(void *para) {
   }
 
   /// Read iostream
-  this->doc = xmlCtxtReadFile(this->ctxt, this->conf_file_path, this->encoding, XML_PARSE_DTDATTR|XML_PARSE_NOERROR);
+  this->doc = xmlCtxtReadFile(this->ctxt, this->conf_file_path, this->encoding_type, XML_PARSE_DTDATTR|XML_PARSE_NOERROR);
   if (NULL == doc) {
     L4C_ERROR("Can't parse the content in %s! Algorithms will use default values!", this->conf_file_path);
     flag = false;
@@ -81,4 +82,5 @@ end:
   xmlFreeParserCtxt(this->ctxt);
   xmlCleanupParser();
   return flag;
+  */
 }

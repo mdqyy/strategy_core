@@ -233,30 +233,38 @@ bool train(const TrainingSet *ts, const LrPara *lrpara) {
   LrModel *lrmodel = new LrModel(ts->sample_set);
   BFGS *bfgs = new BFGS(lrmodel, lrpara);
 
+  L4C_INFO("Loading header starts!");
   if (!ts->load_header()) {
     L4C_FATAL("Loading header failed!");
-    flag = -1;
-    goto end;
-  }
-
-  //cout<<ts->sample_num<<' '<<ts->feature_num<<endl;
-
-  if (!ts->load_sample()) {
-    L4C_FATAL("Loading sample failed!");
-    flag = -1;
-    goto end;
-  }
-
-  if (!lrmodel->preprocess()) {
-    L4C_FATAL("Preprocess failed!");
-    flag = -1;
-    goto end;
-  }
-
-  if (!bfgs->solve()) {
     flag = false;
     goto end;
   }
+  L4C_INFO("Loading header finished!");
+
+  //cout<<ts->sample_num<<' '<<ts->feature_num<<endl;
+  L4C_INFO("Loading sample starts!");
+  if (!ts->load_sample()) {
+    L4C_FATAL("Loading sample failed!");
+    flag = false;
+    goto end;
+  }
+  L4C_INFO("Loading sample finished!");
+
+  L4C_INFO("Preprocess starts!");
+  if (!lrmodel->preprocess()) {
+    L4C_FATAL("Preprocess failed!");
+    flag = false;
+    goto end;
+  }
+  L4C_INFO("Preprocess finished!");
+
+  L4C_INFO("Training starts!");
+  if (!bfgs->solve()) {
+    L4C_FATAL("Training failed!");
+    flag = false;
+    goto end;
+  }
+  L4C_INFO("Training finished!");
 
 end:
   delete lrmodel;
@@ -267,7 +275,7 @@ end:
 }
 
 /*! Logistic regression prediction */
-Ytype_p predict(const DenseRealVector *weight, const SparseRealVector *feature) {
+Ytype_p predict(const dense::DenseRealVector *weight, const sparse::SparseRealVector *feature) {
   Ytype_p probability;
   REAL wx = inner_product_sd(feature, weight);
   REAL exp_wx = exp(wx);
