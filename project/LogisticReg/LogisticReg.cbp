@@ -54,6 +54,7 @@
 		<Unit filename="../../src/gradient_descent/BFGS.cpp" />
 		<Unit filename="../../src/gradient_descent/GradientDescent.cpp" />
 		<Unit filename="../../src/gradient_descent/LineSearch.cpp" />
+		<Unit filename="../../src/lin_alg/base.cpp" />
 		<Unit filename="../../src/lin_alg/dense.cpp" />
 		<Unit filename="../../src/lin_alg/matrix.cpp" />
 		<Unit filename="../../src/lin_alg/sparse.cpp" />

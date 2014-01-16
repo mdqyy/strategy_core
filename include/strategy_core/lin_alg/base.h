@@ -6,11 +6,10 @@
  *
  *  \author chenqinyu
  *          contact:
- *              qinyu.chen@corp.elong.com
  *              superthierry14@gmail.com
  *  \date 2013-07
  *
- *  \par http://www.elong.com<BR>
+ *  \par
  */
 //==============================================================================
 #ifndef STRATEGY_CORE_LIN_ALG_BASE_H_
@@ -22,18 +21,28 @@
 #define INT size_t
 #define UINT unsigned int
 
-class Complex {
- public:
-  double re;
-  double in;
-};
-
-class Vector {
-  virtual bool set(INT pos, REAL value) = 0;
-  virtual REAL get(INT pos) = 0;
-};
-
 class Matrix {
+ public:
+  UINT row;
+  UINT col;
+  UINT nz;
+  REAL sparsity;
+  bool is_vector;
+  bool is_sparse;
+  bool is_square;
+  bool is_diag;
 
+  Matrix(const UINT row, const UINT col);
+  ~Matrix();
+};
+
+class Vector:Matrix {
+ public:
+  UINT length;
+  bool by_row;
+  Vector(const UINT row, const UINT col);
+  ~Vector();
+  virtual bool set(UINT pos, REAL value) = 0;
+  virtual REAL get(UINT pos) = 0;
 };
 #endif //STRATEGY_CORE_LIN_ALG_BASE_H_

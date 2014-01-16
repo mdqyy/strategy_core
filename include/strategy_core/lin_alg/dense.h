@@ -6,11 +6,10 @@
  *
  *  \author chenqinyu
  *          contact:
- *              qinyu.chen@corp.elong.com
  *              superthierry14@gmail.com
  *  \date 2013-07
  *
- *  \par http://www.elong.com<BR>
+ *  \par
  */
 //==============================================================================
 
@@ -26,21 +25,25 @@ extern "C" {
 
 class DenseRealVector:Vector {
  public:
-  INT length;
   REAL *V;
-  DenseRealVector(const INT length);
+  DenseRealVector(const UINT row, const UINT col);
   ~DenseRealVector();
-  bool set(const INT pos, const REAL value);
-  bool get(REAL &value, const INT pos);
+
+  UINT get_length();
+  bool is_by_row();
+  bool set(const UINT pos, const REAL value);
+  bool get(REAL &value, const UINT pos);
 };
 
 class DenseRealMatrix:Matrix {
  public:
-	INT row;
-	INT col;
 	REAL **M;
-	DenseRealMatrix();
+  ///TODO:
+	DenseRealMatrix(const UINT row, const UINT col);
 	~DenseRealMatrix();
+
+	UINT get_row();
+	UINT get_col();
 };
 
 }

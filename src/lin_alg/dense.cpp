@@ -6,11 +6,10 @@
  *
  *  \author chenqinyu
  *          contact:
- *              qinyu.chen@corp.elong.com
  *              superthierry14@gmail.com
  *  \date 2013-07
  *
- *  \par http://www.elong.com<BR>
+ *  \par
  */
 //==============================================================================
 
@@ -18,19 +17,29 @@
 #include <strategy_core/common/log4c.h>
 
 namespace dense {
-DenseREALVector::DenseREALVector (const INT length) {
-  this->V = new REAL[length];
+/// DenseRealVector
+DenseRealVector::DenseRealVector (const INT row , const INT col) {
+  Matrix::is_sparse = false;
+  this->V = new REAL[Vector::length];
 }
 
-DenseREALVector::~DenseREALVector() {
+DenseRealVector::~DenseRealVector() {
   delete []this->V;
   this->V = NULL;
 }
 
-bool DenseREALVector::set(const INT pos, const REAL value) {
+UINT DenseRealVector::get_length() {
+  return Vector::length;
+}
+
+bool DenseRealVector::is_by_row() {
+  return Vector::by_row;
+}
+
+bool DenseRealVector::set(const INT pos, const REAL value) {
   bool flag = true;
-  if (pos < 0 or pos >= this->length) {
-    L4C_ERROR("Array reference out of bound in DenseREALVector::set()!");
+  if (pos < 0 or pos >= Vector::length) {
+    L4C_ERROR("Array reference out of bound in DenseRealVector::set()!");
     flag = false;
     goto end;
   }
@@ -41,10 +50,10 @@ end:
   return flag;
 }
 
-bool DenseREALVector::get(const REAL &value, const INT pos) {
+bool DenseRealVector::get(const REAL &value, const INT pos) {
   bool flag = true;
-  if (pos < 0 or pos >= this->length) {
-    L4C_ERROR("Array reference out of bound in DenseREALVector::get()!");
+  if (pos < 0 or pos >= Vector::length) {
+    L4C_ERROR("Array reference out of bound in DenseRealVector::get()!");
     flag = false;
     goto end;
   }
@@ -55,7 +64,14 @@ end:
   return flag;
 }
 
+/// DenseRealMatrix
 DenseRealMatrix::DenseRealMatrix(const INT row, const INT col) {
+  Matrix::is_vector = false;
+  Matrix::is_sparse = false;
+  Matrix::is_square = false;
+  Matrix::is_diag = false;
+  if (row == col)
+    Matrix::is_square = true;
   this->M = new REAL[row];
   for (INT i = 0; i < col; i++)
     this->M[i] = new REAL[col];
@@ -64,7 +80,17 @@ DenseRealMatrix::DenseRealMatrix(const INT row, const INT col) {
 DenseRealMatrix::~DenseRealMatrix() {
   for (INT i = 0; i < this->row; i++) {
     delete []this->M[i];
+    this->M[i] = NULL;
+  }
   this->M = NULL;
+}
+
+DenseRealMatrix::get_row() {
+  return Matrix::row;
+}
+
+DenseRealMatrix::get_col() {
+  return Matrix::col;
 }
 
 }
