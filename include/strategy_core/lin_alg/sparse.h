@@ -19,25 +19,13 @@
 #include <strategy_core/lin_alg/base.h>
 
 namespace sparse {
-#ifndef ElemType
-#define ElemType REAL
-
-/*! Sparse Vector implementation using Linked List */
-class SparseVectorPoint {
- public:
-  INT index;
-  REAL value;
-};
-
-class SparseVector {
-};
-
+/// Cross List
 class CrossListNode {
  public:
   INT i, j; /// position of a non-zero element, a[i,j]
-  ElemType e;
+  REAL e;
   CrossListNode *right, *down;
-  CrossListNode ();
+  CrossListNode (const UINT i, const UINT j, const REAL e);
 };
 
 class SingleList {
@@ -68,21 +56,46 @@ class CrossList {
   void output_all(void);
 };
 
-/*! Sparse Matrix implementation using Cross List */
-class SparseMatrix {
+/*! Sparse Vector implementation using Linked List */
+class RealVectorPoint {
  public:
-  INT row;
-  INT col;
-  CrossList *cl;
-
-  SparseMatrix(const INT row, const INT col);
-  ~SparseMatrix();
+  UINT index;
+  REAL value;
+  RealVectorPoint *next;
+  RealVectorPoint(const UINT index, const REAL value);
 };
 
-class Diag:SparseMatrix {
+class SparseList {
  public:
-  Diag(const INT n);
-  ~Diag();
+  RealVectorPoint *head;
+  RealVectorPoint *tail;
+  INT length;
+  SparseList();
+  ~SparseList();
+};
+
+class SparseRealVector:Vector {
+ public:
+  SingleList *sl;
+  SparseRealVector(const UINT row, const UINT col);
+  ~SparseRealVector();
+
+  bool append(const RealVectorPoint *rvp);
+};
+
+/*! Sparse Matrix implementation using Cross List */
+class SparseRealMatrix:Matrix {
+ public:
+  CrossList *cl;
+
+  SparseRealMatrix(const INT row, const INT col);
+  ~SparseRealMatrix();
+};
+
+class DiagMatrix:SparseRealMatrix {
+ public:
+  DiagMatrix(const INT n);
+  ~DiagMatrix();
 };
 #endif
 }

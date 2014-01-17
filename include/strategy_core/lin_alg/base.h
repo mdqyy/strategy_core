@@ -42,6 +42,7 @@ class Vector:Matrix {
   bool by_row;
   Vector(const UINT row, const UINT col);
   ~Vector();
+  virtual REAL get_next() = 0;
   virtual bool set(UINT pos, REAL value) = 0;
   virtual REAL get(UINT pos) = 0;
 };

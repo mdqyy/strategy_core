@@ -19,21 +19,12 @@
 namespace dense {
 /// DenseRealVector
 DenseRealVector::DenseRealVector (const INT row , const INT col) {
-  Matrix::is_sparse = false;
   this->V = new REAL[Vector::length];
 }
 
 DenseRealVector::~DenseRealVector() {
   delete []this->V;
   this->V = NULL;
-}
-
-UINT DenseRealVector::get_length() {
-  return Vector::length;
-}
-
-bool DenseRealVector::is_by_row() {
-  return Vector::by_row;
 }
 
 bool DenseRealVector::set(const INT pos, const REAL value) {
@@ -66,12 +57,6 @@ end:
 
 /// DenseRealMatrix
 DenseRealMatrix::DenseRealMatrix(const INT row, const INT col) {
-  Matrix::is_vector = false;
-  Matrix::is_sparse = false;
-  Matrix::is_square = false;
-  Matrix::is_diag = false;
-  if (row == col)
-    Matrix::is_square = true;
   this->M = new REAL[row];
   for (INT i = 0; i < col; i++)
     this->M[i] = new REAL[col];

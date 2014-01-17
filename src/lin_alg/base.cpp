@@ -18,6 +18,15 @@
 Matrix::Matrix(const UINT row, const UINT col) {
   this->row = row;
   this->col = col;
+  this->nz = 0;
+  this->sparsity = 0.0;
+  this->is_vector = false;
+  this->is_sparse = false;
+  this->is_diag = false;
+  this->is_square = false;
+  if (row == col) {
+    this->is_square = true;
+  }
 }
 
 Vector::Vector(const UINT row, const UINT col) {

@@ -29,8 +29,6 @@ class DenseRealVector:Vector {
   DenseRealVector(const UINT row, const UINT col);
   ~DenseRealVector();
 
-  UINT get_length();
-  bool is_by_row();
   bool set(const UINT pos, const REAL value);
   bool get(REAL &value, const UINT pos);
 };

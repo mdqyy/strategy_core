@@ -67,6 +67,26 @@ end:
   return flag;
 }
 
+
+bool inner_product(REAL &inner, const Vector *va, const Vector *vb) {
+  bool flag = true;
+  if (NULL == va or NULL = vb) {
+    L4C_ERROR("Fatal error occurs in inner_product_dd: Vector pointer is NULL!");
+    flag = false;
+    goto end;
+  }
+  if ((va->length != vb->length) and (va->by_row) and (not vb->by_row)) {
+    L4C_ERROR("Fatal error occurs in inner_product_dd: Vector parameter error!");
+    flag = false;
+    goto end;
+  }
+
+  REAL _inner = 0;
+
+end:
+  return flag;
+}
+
 bool euclid_norm_d(REAL &norm, const DenseRealVector *drv) {
   bool flag = true;
   if (NULL == drv) {

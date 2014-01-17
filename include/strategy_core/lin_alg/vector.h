@@ -23,6 +23,7 @@
 bool inner_product_sd(REAL &inner, const SparseRealVector *srv, const DenseRealVector *drv);
 bool inner_product_ss(REAL &inner, const SparseRealVector *srva, const SparseRealVector *srvb);
 bool inner_product_dd(REAL &inner, const DenseRealVector *drva, const DenseRealVector *drvb);
+bool inner_product(REAL &inner, const Vector *va, const Vector *vb);
 bool euclid_norm_d(REAL &norm, const DenseRealVector *drv);
 bool copy_d(DenseRealVector *drv_dest, const DenseRealVector *drv_src);
 bool copy_s(SparseRealVector *srv_dest, const SparseRealVector *srv_src);

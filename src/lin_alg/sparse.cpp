@@ -17,15 +17,21 @@
 #include <strategy_core/common/log4c.h>
 
 namespace sparse {
-CrossListNode::CrossListNode (const INT i, const INT j, REAL e) {
+CrossListNode::CrossListNode(const UINT i, const UINT j, const REAL e) {
   this->i = i;
   this->j = j;
+  this->e = e;
   this->right = NULL;
   this->down = NULL;
-  this->e = e;
 }
 
-SingleList::~SingleList () {
+SingleList::SingleList() {
+  this->head = NULL;
+  this->tail = NULL;
+  this->length = 0;
+}
+
+SingleList::~SingleList() {
   CrossListNode *curr = this->head;
   CrossListNode *next;
   while (NULL != curr) {
@@ -37,12 +43,12 @@ SingleList::~SingleList () {
   this->tail = NULL;
 }
 
-CrossList::CrossList (const INT row, const INT col) {
+CrossList::CrossList(const UINT row, const UINT col) {
   this->row = row;
   this->col = col;
 
   this->rslArray = new SingleList *[this->row];
-  for (INT i = 0; i < this->row; i++) {
+  for (UINT i = 0; i < this->row; i++) {
     this->rslArray[i] = new SingleList();
     CrossListNode *clnode = new CrossListNode();
     this->rslArray[i]->head = clnode;
@@ -50,7 +56,7 @@ CrossList::CrossList (const INT row, const INT col) {
   }
 
   this->lslArray = new SingleList *[this->col];
-  for (INT j = 0; j < this->col; j++) {
+  for (UINT j = 0; j < this->col; j++) {
     this->lslArray[j] = new SingleList();
     CrossListNode *clnode = new CrossListNode();
     this->lslArray[j]->head = clnode;
@@ -58,15 +64,15 @@ CrossList::CrossList (const INT row, const INT col) {
   }
 }
 
-CrossList::~CrossList () {
-  for (INT i = 0; i < this->row; i++) {
+CrossList::~CrossList() {
+  for (UINT i = 0; i < this->row; i++) {
     delete this->rslArray[i];
     this->rslArray[i] = NULL;
   }
   delete[] this->rslArray;
   this->rslArray = NULL;
 
-  for (INT j = 0; j < this->col; j++) {
+  for (UINT j = 0; j < this->col; j++) {
     delete this->lslArray[j];
     this->lslArray[j] = NULL;
   }
@@ -74,8 +80,13 @@ CrossList::~CrossList () {
   this->lslArray = NULL;
 }
 
-bool CrossList::append (CrossListNode *clnode) {
+bool CrossList::append(CrossListNode *clnode) {
   bool flag = true;
+  if (NULL == clnode) {
+    L4C_ERROR("CrossListNode pointer is NULL!");
+    flag = false;
+    goto end;
+  }
   if ((clnode->i >= this->row) or (clnode->j >= this->col)) {
     L4C_ERROR("Sparse element's range [%d, %d] out of defined [%d, %d]!",
               clnode->i, clnode->j, this->row, this->col);
@@ -94,7 +105,7 @@ end:
   return flag;
 }
 
-SingleList *CrossList::get_row (const INT row_no) {
+SingleList *CrossList::get_row(const UINT row_no) {
   SingleList *result = NULL;
   if (row_no >= this->row or row_no < 0) {
     L4C_WARN("Sparse vector's row range %d out of defined %d!",
@@ -107,7 +118,7 @@ end:
   return result;
 }
 
-SingleList *CrossList::get_col (const INT col_no) {
+SingleList *CrossList::get_col(const UINT col_no) {
   SingleList *result = NULL;
   if (col_no >= this->col or col_no < 0) {
     L4C_WARN("Sparse vector's column range %d out of defined %d!",
@@ -120,7 +131,7 @@ end:
   return result;
 }
 
-bool CrossList::output_row (const INT row_no) {
+bool CrossList::output_row(const UINT row_no) {
   bool flag = true;
   if (row_no >= this->row or row_no < 0) {
     L4C_WARN("Sparse vector's row range %d out of defined %d!",
@@ -142,7 +153,7 @@ end:
   return flag;
 }
 
-bool CrossList::output_col (const INT col_no) {
+bool CrossList::output_col(const UINT col_no) {
   bool flag = true;
   if (col_no >= this->col or col_no < 0) {
     L4C_WARN("Sparse vector's column range %d out of defined %d!",
@@ -164,35 +175,85 @@ end:
   return flag;
 }
 
-void CrossList::output_all () {
-  for (INT i = 0; i < this->row; i++) {
+void CrossList::output_all() {
+  for (UINT i = 0; i < this->row; i++) {
     this->output_row(i);
     printf("\n");
   }
 }
 
-SparseMatrix::SparseMatrix(const INT row, const INT col) {
-  this->row = row;
-  this->col = col;
+/// SparseRealVector
+RealVectorPoint::RealVectorPoint(const UINT index, const REAL value) {
+  this->index = index;
+  this->value = value;
+}
+
+SparseList::SparseList() {
+  this->head = NULL;
+  this->tail = NULL;
+  this->length = 0;
+}
+
+SparseList::~SparseList() {
+  RealVectorPoint *curr = this->head;
+  RealVectorPoint *next;
+  while (NULL != curr) {
+    next = curr->next; /// Delete the node row by row.
+    delete curr;
+    curr = next;
+  }
+  this->head = NULL;
+  this->tail = NULL;
+}
+
+SparseRealVector::SparseRealVector(const UINT row, const UINT col) {
+  Matrix::is_sparse = true;
+  this->sl = new SingleList();
+}
+
+SparseRealVector::~SparseRealVector() {
+  delete this->sl;
+  this->sl = NULL;
+}
+
+bool SparseRealVector::append(const RealVectorPoint *rvp) {
+  if (NULL == rvp) {
+    L4C_ERROR("RealVectorPoint pointer is NULL!");
+    flag = false;
+    goto end;
+  }
+  this->sl->tail = rvp;
+  Matrix::nz++;
+}
+
+/// SparseRealMatrix
+SparseRealMatrix::SparseRealMatrix(const UINT row, const UINT col) {
+  Matrix::row = row;
+  Matrix::col = col;
+  Matrix::is_sparse = true;
   this->cl = new CrossList(row, col);
 }
 
-SparseMatrix::~SparseMatrix() {
+SparseRealMatrix::~SparseRealMatrix() {
   delete this->cl;
   this->cl = NULL;
 }
 
-Diag::Diag(const INT n) {
-  this->row = n;
-  this->col = n;
+DiagMatrix::DiagMatrix(const UINT n) {
+  Matrix::row = n;
+  Matrix::col = n;
+  Matrix::nz = n;
+  Matrix::sparsity = 1.0/n;
+  Matrix::is_diag = true;
+  Matrix::is_square = true;
   this->cl = new CrossList(n, n);
-  for (INT i = 0; i < n; i++) {
+  for (UINT i = 0; i < n; i++) {
     CrossListNode *clnode = new CrossListNode(n, n, 1.0);
     this->cl->append(clnode);
   }
 }
 
-Diag::~Diag() {
+DiagMatrix::~DiagMatrix() {
   delete this->cl;
   this->cl = NULL;
 }
