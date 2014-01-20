@@ -20,6 +20,11 @@
 #define REAL double
 #define INT size_t
 #define UINT unsigned int
+#define FAIL -999999
+#define Min -9999999999
+#define Max 9999999999
+#define VERY_SMALL_NUM 1e-100
+#define PI 3.1415926
 
 class Matrix {
  public:
@@ -27,23 +32,26 @@ class Matrix {
   UINT col;
   UINT nz;
   REAL sparsity;
-  bool is_vector;
-  bool is_sparse;
-  bool is_square;
-  bool is_diag;
-
+  REAL size;
   Matrix(const UINT row, const UINT col);
-  ~Matrix();
+  inline void cal_sparsity();
+  virtual void print() const;
 };
 
-class Vector:Matrix {
+class Vector:public Matrix {
  public:
   UINT length;
   bool by_row;
   Vector(const UINT row, const UINT col);
   ~Vector();
-  virtual REAL get_next() = 0;
-  virtual bool set(UINT pos, REAL value) = 0;
-  virtual REAL get(UINT pos) = 0;
+  ///virtual REAL get_next() = 0;
+  virtual bool set(const UINT pos, const REAL value) = 0;
+  virtual bool get(REAL &value, const UINT pos) = 0;
 };
+
+class SquareMatrix:Matrix {
+ public:
+  SquareMatrix(const UINT n):Matrix(n, n) {};
+};
+
 #endif //STRATEGY_CORE_LIN_ALG_BASE_H_

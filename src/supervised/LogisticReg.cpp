@@ -65,11 +65,6 @@ TrainingSet::~TrainingSet() {
   this->sample_set = NULL;
 }
 
-void init(const char *log_conf_path) {
-  set_cfg_path(log_conf_path);
-  /// TODO:
-}
-
 bool TrainingSet::load_header() {
   bool flag = true;
   map<string, string> kv;
@@ -155,7 +150,9 @@ end:
 
 /*! LrModel */
 LrModel::LrModel(const SampleSet *ss) {
-  this->SampleSet = ss;
+  this->ss = ss;
+  this->weight_vector = new dense::DenseRealVector(1, this->ss->feature_num);
+  this->gradient_vector = new dense::DenseRealVector(1, this->ss->feature_num);
 }
 
 LrModel::~LrModel() {
@@ -177,8 +174,11 @@ void LrModel::cal_target() {
   this->target = 0;
   for (INT i = 0; i < this->ss->sample_num; i++) {
     REAL inner;
+    /*TODO
+    /// Transform row features to Vector
     inner = sparse::inner_product_sd(this->ss->features->rslArray[i],
                                      this->weight_vector);
+    */
     this->target -= std::log(1 + exp(inner));
     if (1.0 == this->ss->y[i])
       this->target += inner;
@@ -187,9 +187,12 @@ void LrModel::cal_target() {
 
 void LrModel::cal_gradient() {
   for (INT i = 0; i < this->ss->feature_num; i++) {
+    ///TODO
+    /*
     REAL gradient = this->weight_vector->get(i) * (this->get_sum_nz_xcol[i] -
                                           this->logit * this->get_sum_xcol[i]);
     this->gradient_vector->set(i, gradient);
+    */
   }
 }
 
@@ -213,7 +216,26 @@ REAL LrModel::get_sum_nz_xcol(const INT col) {
 };
 
 /*! Logistic regression preprocessing */
-bool LrModel::preprocess() {
+
+
+LrPara::LrPara(const char *conf_file_path, const char *encoding) {
+  this->step_len = 1e-10;
+  this->epsilon = 1e-100;
+  this->max_iter_num = 2000;
+}
+
+LrPara::~LrPara() {
+  ;
+}
+
+/*! Logistic regression inition */
+void init(const char *log_conf_path) {
+  set_cfg_path(log_conf_path);
+  /// TODO:
+}
+
+/*! Logistic regression preprocessing */
+bool preprocess(TrainingSet *ts) {
   bool flag = true;
   ///TODO:
 end:
@@ -221,13 +243,7 @@ end:
 }
 
 /*! Logistic regression training */
-LrPara::LrPara() {
-  this->step_len = 1e-10;
-  this->epsilon = 1e-100;
-  this->max_iter_num = 2000;
-}
-
-bool train(const TrainingSet *ts, const LrPara *lrpara) {
+bool train(TrainingSet *ts, LrPara *lrpara) {
   bool flag = true;
   LrModel *lrmodel = new LrModel(ts->sample_set);
   BFGS *bfgs = new BFGS(lrmodel, lrpara);
@@ -250,7 +266,7 @@ bool train(const TrainingSet *ts, const LrPara *lrpara) {
   L4C_INFO("Loading sample finished!");
 
   L4C_INFO("Preprocess starts!");
-  if (!lrmodel->preprocess()) {
+  if (!preprocess(ts)) {
     L4C_FATAL("Preprocess failed!");
     flag = false;
     goto end;
@@ -276,9 +292,10 @@ end:
 /*! Logistic regression prediction */
 Ytype_p predict(const dense::DenseRealVector *weight, const sparse::SparseRealVector *feature) {
   Ytype_p probability;
-  REAL wx = inner_product_sd(feature, weight);
+  REAL wx = 0;
+  inner_product_sd(wx, feature, weight);
   REAL exp_wx = exp(wx);
-  probability = exp_wx/(1.0 + exp_wx)
+  probability = exp_wx/(1.0 + exp_wx);
   return probability;
 }
 }

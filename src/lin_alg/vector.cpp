@@ -15,7 +15,7 @@
 
 #include <math.h>
 #include <strategy_core/lin_alg/vector.h>
-
+/*
 bool inner_product_sd(REAL &inner, const SparseRealVector *srv, const DenseRealVector *drv) {
   bool flag = true;
   if (NULL == srv or NULL = drv) {
@@ -102,22 +102,4 @@ bool euclid_norm_d(REAL &norm, const DenseRealVector *drv) {
 end:
   return flag;
 }
-
-bool copy_d(DenseRealVector *drv_dest, const DenseRealVector *drv_src) {
-  bool flag = true;
-  if (NULL == drv_dest or NULL == drv_src) {
-    L4C_ERROR("Fatal error occurs in copy_d: Vector pointer is NULL!");
-    flag = false;
-    goto end;
-  }
-  if (drv_dest->length != drv_src->length) {
-    L4C_ERROR("Fatal error occurs in copy_d: Vector parameter error!");
-    flag = false;
-    goto end;
-  }
-
-  memmove(drv_dest->V, drv_src->V, drv_src->length);
-
-end:
-  return flag;
-}
+*/

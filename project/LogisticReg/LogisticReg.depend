@@ -56,7 +56,7 @@
 	<el_strategy/lin_alg/sparse.h>
 	<el_strategy/common/log4c.h>
 
-1389777527 source:/home/cqy/work/strategy_core/examples/LogisticReg_main.cpp
+1390104490 source:/home/cqy/work/strategy_core/examples/LogisticReg_main.cpp
 	<strategy_core/supervised/LogisticReg.h>
 	<string>
 	<iostream>
@@ -75,24 +75,53 @@
 	<unistd.h>
 	<strategy_core/common/log4c.h>
 
-1386308216 source:/home/cqy/work/strategy_core/src/gradient_descent/GradientDescent.cpp
+1389864299 source:/home/cqy/work/strategy_core/src/gradient_descent/GradientDescent.cpp
 	<strategy_core/gradient_descent/GradientDescent.h>
 
-1386308216 source:/home/cqy/work/strategy_core/src/lin_alg/sparse.cpp
+1390043401 source:/home/cqy/work/strategy_core/src/lin_alg/sparse.cpp
 	<strategy_core/lin_alg/sparse.h>
 	<strategy_core/common/log4c.h>
 
-1386308216 source:/home/cqy/work/strategy_core/src/supervised/MaxEntropy.cpp
+1389864258 source:/home/cqy/work/strategy_core/src/supervised/MaxEntropy.cpp
 
-1388405422 source:/home/cqy/work/strategy_core/src/gradient_descent/BFGS.cpp
+1390104122 source:/home/cqy/work/strategy_core/src/gradient_descent/BFGS.cpp
 	<strategy_core/gradient_descent/BFGS.h>
 
-1389005200 source:/home/cqy/work/strategy_core/src/common/algorithm.cpp
+1389864311 source:/home/cqy/work/strategy_core/src/common/algorithm.cpp
 	<strategy_core/common/algorithm.h>
 
-1389005191 source:/home/cqy/work/strategy_core/src/common/common.cpp
+1389864307 source:/home/cqy/work/strategy_core/src/common/common.cpp
 	<strategy_core/common/common.h>
 
-1389779055 source:/home/cqy/work/strategy_core/src/common/conf.cpp
+1389864303 source:/home/cqy/work/strategy_core/src/common/conf.cpp
+	<strategy_core/common/conf.h>
+
+1390024302 source:/home/cqy/work/strategy_core/src/gradient_descent/LineSearch.cpp
+	<strategy_core/gradient_descent/LineSearch.h>
+
+1390068874 source:/home/cqy/work/strategy_core/src/lin_alg/base.cpp
+	<strategy_core/lin_alg/base.h>
+
+1390041788 source:/home/cqy/work/strategy_core/src/lin_alg/dense.cpp
+	<strategy_core/lin_alg/dense.h>
+	<strategy_core/common/log4c.h>
+
+1390041412 source:/home/cqy/work/strategy_core/src/lin_alg/matrix.cpp
+	<strategy_core/lin_alg/matrix.h>
+	<strategy_core/common/log4c.h>
+
+1390069729 source:/home/cqy/work/strategy_core/src/lin_alg/vector.cpp
+	<math.h>
+	<strategy_core/lin_alg/vector.h>
+
+1390104471 source:/home/cqy/work/strategy_core/src/supervised/LogisticReg.cpp
+	<stdlib.h>
+	<string.h>
+	<iostream>
+	<map>
+	<cmath>
+	<strategy_core/supervised/LogisticReg.h>
+	<strategy_core/gradient_descent/BFGS.h>
+	<strategy_core/common/log4c.h>
 	<strategy_core/common/conf.h>
 

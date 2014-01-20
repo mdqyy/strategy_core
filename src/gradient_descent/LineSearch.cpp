@@ -15,15 +15,17 @@
 
 #include <strategy_core/gradient_descent/LineSearch.h>
 
-LineSearch() {
+LineSearch::LineSearch() {
   ;
 }
 
-~LineSearch() {
+LineSearch::~LineSearch() {
   ;
 }
 
-bool step(REAL &lambda, REAL step_len) {
-  ;
+bool LineSearch::step(REAL &lambda, REAL step_len, Matrix *w, Matrix *p) {
+  bool flag = true;
+
+end:
+  return flag;
 }
-};

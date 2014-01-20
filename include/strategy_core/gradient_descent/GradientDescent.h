@@ -18,13 +18,12 @@
 
 #include <strategy_core/lin_alg/base.h>
 #include <strategy_core/lin_alg/sparse.h>
-#define VectorType sparse::SparseVector
 
 namespace GradientDescent {
 class GradientDescent {
 public:
-  VectorType *x; /// X
-  VectorType *g; /// Gradient
+  Vector *x; /// X
+  Vector *g; /// Gradient
   REAL y; /// Y
   REAL step_len;
   INT curr_iter_num;
@@ -32,7 +31,7 @@ public:
   REAL stop_cond;
 
   bool init();
-  void step(REAL (*target_fun)(), VectorType (*gradient_fun)());
+  void step(REAL (*target_fun)(), Vector (*gradient_fun)());
   GradientDescent();
   ~GradientDescent();
 protected:

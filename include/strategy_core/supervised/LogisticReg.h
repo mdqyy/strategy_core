@@ -56,12 +56,12 @@ class TrainingSet {
   bool load_sample(void);
 };
 
-class LrModel:algorithm::Model {
+class LrModel:public algorithm::Model {
  public:
   REAL target;  /// Value of target function.
-  dense::DenseRealVector *weight_vector;
-  SampleSet *ss;
-  dense::DenseRealVector *gradient_vector;
+  Vector *weight_vector;
+  const SampleSet *ss;
+  Vector *gradient_vector;
   REAL *sum_xcol; /// intermediate result: sum(x_ij, i, 1, sample_num)
                   /// init when loading whole data set.
   REAL *sum_nz_xcol; /// intermediate result: sum(x_ij, i, 1, sample_num) | yi != 0
@@ -79,10 +79,11 @@ class LrModel:algorithm::Model {
   REAL get_sum_xcol(const INT col); /// col: [0, feature_num - 1]
   REAL get_sum_nz_xcol(const INT col); /// col: [0, feature_num - 1]
 
-  bool preprocess(const TrainingSet *ts);
+  bool write();
+  bool read();
 };
 
-class LrPara:algorithm::Para {
+class LrPara:public algorithm::Para {
  public:
   REAL step_len;
   REAL epsilon;
@@ -92,9 +93,10 @@ class LrPara:algorithm::Para {
   ~LrPara();
 };
 
+bool preprocess(TrainingSet *ts);
 void init(const char *logfile_path);
-bool train(const TrainingSet *ts, const LrPara *lrpara);
-Ytype_p predict(const dense::DenseRealVector *weight, const sparse::SparseVector *feature);
+bool train(TrainingSet *ts, LrPara *lrpara);
+Ytype_p predict(const dense::DenseRealVector *weight, const sparse::SparseRealVector *feature);
 }
 
 #endif //STRATEGY_CORE_SUPERVISED_LOGISTICREG_H_

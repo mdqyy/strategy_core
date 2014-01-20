@@ -17,6 +17,7 @@
 #include <strategy_core/common/log4c.h>
 
 namespace sparse {
+/// CrossList
 CrossListNode::CrossListNode(const UINT i, const UINT j, const REAL e) {
   this->i = i;
   this->j = j;
@@ -50,17 +51,17 @@ CrossList::CrossList(const UINT row, const UINT col) {
   this->rslArray = new SingleList *[this->row];
   for (UINT i = 0; i < this->row; i++) {
     this->rslArray[i] = new SingleList();
-    CrossListNode *clnode = new CrossListNode();
-    this->rslArray[i]->head = clnode;
-    this->rslArray[i]->tail = clnode;
+    ///CrossListNode *clnode = new CrossListNode();
+    ///this->rslArray[i]->head = clnode;
+    ///this->rslArray[i]->tail = clnode;
   }
 
   this->lslArray = new SingleList *[this->col];
   for (UINT j = 0; j < this->col; j++) {
     this->lslArray[j] = new SingleList();
-    CrossListNode *clnode = new CrossListNode();
-    this->lslArray[j]->head = clnode;
-    this->lslArray[j]->tail = clnode;
+    ///CrossListNode *clnode = new CrossListNode();
+    ///this->lslArray[j]->head = clnode;
+    ///this->lslArray[j]->tail = clnode;
   }
 }
 
@@ -93,6 +94,7 @@ bool CrossList::append(CrossListNode *clnode) {
     flag = false;
     goto end;
   }
+
   this->rslArray[clnode->i]->tail->right = clnode;
   this->rslArray[clnode->i]->tail = clnode;
   this->rslArray[clnode->i]->length++;
@@ -206,9 +208,9 @@ SparseList::~SparseList() {
   this->tail = NULL;
 }
 
-SparseRealVector::SparseRealVector(const UINT row, const UINT col) {
-  Matrix::is_sparse = true;
-  this->sl = new SingleList();
+SparseRealVector::SparseRealVector(const UINT row, const UINT col)
+                 :Vector(row, col){
+  this->sl = new SparseList();
 }
 
 SparseRealVector::~SparseRealVector() {
@@ -216,21 +218,27 @@ SparseRealVector::~SparseRealVector() {
   this->sl = NULL;
 }
 
-bool SparseRealVector::append(const RealVectorPoint *rvp) {
+bool SparseRealVector::append(RealVectorPoint *rvp){
+  bool flag = true;
   if (NULL == rvp) {
     L4C_ERROR("RealVectorPoint pointer is NULL!");
     flag = false;
     goto end;
   }
+
   this->sl->tail = rvp;
+  this->sl->length++;
   Matrix::nz++;
+
+end:
+  return flag;
 }
 
 /// SparseRealMatrix
-SparseRealMatrix::SparseRealMatrix(const UINT row, const UINT col) {
+SparseRealMatrix::SparseRealMatrix(const UINT row, const UINT col)
+                 :Matrix(row, col){
   Matrix::row = row;
   Matrix::col = col;
-  Matrix::is_sparse = true;
   this->cl = new CrossList(row, col);
 }
 
@@ -239,23 +247,13 @@ SparseRealMatrix::~SparseRealMatrix() {
   this->cl = NULL;
 }
 
-DiagMatrix::DiagMatrix(const UINT n) {
-  Matrix::row = n;
-  Matrix::col = n;
+DiagMatrix::DiagMatrix(const UINT n)
+           :SparseSquareMatrix(n){
   Matrix::nz = n;
   Matrix::sparsity = 1.0/n;
-  Matrix::is_diag = true;
-  Matrix::is_square = true;
-  this->cl = new CrossList(n, n);
   for (UINT i = 0; i < n; i++) {
     CrossListNode *clnode = new CrossListNode(n, n, 1.0);
-    this->cl->append(clnode);
+    SparseRealMatrix::cl->append(clnode);
   }
 }
-
-DiagMatrix::~DiagMatrix() {
-  delete this->cl;
-  this->cl = NULL;
-}
-
 }

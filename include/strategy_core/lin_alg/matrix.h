@@ -17,19 +17,11 @@
 #ifndef STRATEGY_CORE_LIN_ALG_MATRIX_H_
 #define STRATEGY_CORE_LIN_ALG_MATRIX_H_
 
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 #include <strategy_core/lin_alg/dense.h>
-
-#define FAIL -999999
-#define Min -9999999999
-#define Max 9999999999
-#define VERY_SMALL_NUM 1e-100
-#define PI 3.1415926
-
+#include <strategy_core/lin_alg/sparse.h>
+#include <typeinfo>
 namespace matrix {
+bool copy(Matrix *M_dest, const Matrix *M_src);
 bool inv(Matrix *B, Matrix *A); /// B = A^(-1)
 bool add(Matrix *C, Matrix *A, Matrix *B);  /// C = A + B
 bool sub(Matrix *C, Matrix *A, Matrix *B);  /// C = A - B
@@ -42,7 +34,6 @@ bool get_min(REAL &min, Matrix *A); /// get min
 bool get_max(REAL &max, Matrix *A);/// get max
 bool num_mul(Matrix *B, Matrix *A, const double num); /// B = num * A
 bool num_add(Matrix *B, Matrix *A, const double num); /// B = [num] + A
-bool nlz(Matrix *B, Matrix *A); /// Normalize
 bool print(const Matrix *A);  /// Output matrix.
 bool hadamard_mul(Matrix *C, Matrix *A, Matrix *B);
 bool kronecker_mul(Matrix *C, Matrix *A, Matrix *B);

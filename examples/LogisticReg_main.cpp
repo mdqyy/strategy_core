@@ -40,7 +40,6 @@ int main (int argc, char **argv) {
     flag = -1;
     goto end;
   }
-
   L4C_INFO("Logistic regression training finished!");
 
 end:

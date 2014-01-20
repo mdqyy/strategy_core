@@ -17,15 +17,16 @@
 #define STRATEGY_CORE_GRADIENT_DESCENT_LINESEARCH_H_
 
 #include <strategy_core/common/common.h>
+#include <strategy_core/lin_alg/base.h>
 
 class LineSearch {
   ///TODO:
  public:
-  dense::DenseRealVector *step_vector;
+  Matrix *step_vector;
   LineSearch();
   ~LineSearch();
 
-  bool step(REAL &lambda, REAL step_len);
+  bool step(REAL &lambda, REAL step_len, Matrix *w, Matrix *p);
 
  private:
   void *target_fun();

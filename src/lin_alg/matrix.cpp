@@ -14,14 +14,42 @@
 //==============================================================================
 
 #include <strategy_core/lin_alg/matrix.h>
+#include <strategy_core/common/log4c.h>
 
 using namespace dense;
 
 namespace matrix {
+
+bool copy(Matrix *M_dest, const Matrix *M_src) {
+  bool flag = true;
+  if (NULL == M_dest or NULL == M_src) {
+    L4C_ERROR("Fatal error occurs in copy_d: Matrix pointer is NULL!");
+    flag = false;
+    goto end;
+  }
+  if ((M_dest->row == M_src->row) and (M_dest->col == M_src->col) ) {
+    L4C_ERROR("Fatal error occurs in copy_d: Matrix parameter error!");
+    flag = false;
+    goto end;
+  }
+
+  if (typeid(M_dest).name == typeid(sparse::SparseRealMatrix).name) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == true and M_src->is_sparse == true) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == false and M_src->is_sparse == false) {
+    dense::copy((DenseRealMatrix *)M_dest, (DenseRealMatrix *)M_src);
+  }
+
+end:
+  return flag;
+}
+
+/// invert
 bool inv(Matrix *B, Matrix *A) {/// B = A^(-1)
-  /*!
-   *  Gauss-Jordan method
-   */
+  /// Gauss-Jordan method
   bool flag = true;
 	if (NULL == A || NULL == B) {
 		L4C_ERROR("Fatal error occurs in inv: Matrix pointer is NULL!");
@@ -34,92 +62,22 @@ bool inv(Matrix *B, Matrix *A) {/// B = A^(-1)
 		goto end;
 	}
 
-	INT *is, *js, i, j, k, l, u, v, n = A->row;
-	REAL d,p;
-	memmove((void *)B->M, (void *)A->M, n*n*sizeof(REAL));
-	is = new INT[n * sizeof(INT)];
-	js = new INT[n * sizeof(INT)];
-
-	for (k = 0; k < n ; k++) {
-		d = 0.0;
-		for (i = k; i < n; i++)
-			for (j = k; j < n; j++) {
-				p = fabs(B->M[i][j]);
-				if (p > d) {
-					d = p;
-					is[k] = i;
-					js[k] = j;
-				}
-			}
-			if (d + 1.0 == 1.0) { /// det(A) == 0
-				L4C_WARN("Warning in inv: det(A) equals zero!");
-				print(A);
-				flag = false;
-				goto end;
-			}
-			if (is[k] != k) {
-				for (j = 0; j < n; j++) {
-					p = B->M[k][j];
-					B->M[k][j] = B->M[is[k]][j];
-					B->M[is[k]][j] = p;
-				}
-			}
-			if (js[k] != k) {
-				for (i = 0; i < n; i++) {
-					p = B->M[i][k];
-					B->M[i][k] = B->M[i][js[k]];
-					B->M[i][js[k]] = p;
-				}
-			}
-			B->M[k][k]=(REAL)(1.0/B->M[k][k]);
-			for (j = 0; j < n; j++) {
-				if (j != k) {
-					B->M[k][j] = B->M[k][j]*B->M[k][k];
-				}
-			}
-			for (i = 0; i < n; i++) {
-				if (i != k) {
-					for (j = 0; j < n; j++) {
-						if (j != k) {
-							B->M[i][j] = B->M[i][j] - B->M[i][k] * B->M[k][j];
-						}
-					}
-				}
-			}
-			for (i = 0; i < n; i++) {
-				if (i != k) {
-					B->M[i][k] = - B->M[i][k] * B->M[k][k];
-				}
-			}
-	}
-
-	for (k = n - 1; k >= 0; k--) {
-		if (js[k] != k) {
-			for (j = 0; j < n; j++) {
-				p = B->M[k][j];
-				B->M[k][j] = B->M[js[k]][j];
-				B->M[js[k]][j] = p;
-			}
-		}
-		if (is[k] != k) {
-			for (i = 0; i < n; i++) {
-				p = B->M[i][k];
-				B->M[i][k] = B->M[i][is[k]];
-				B->M[i][is[k]] = p;
-			}
-		}
-	}
+  if (M_dest->is_sparse == false and M_src->is_sparse == true) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == true and M_src->is_sparse == true) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == false and M_src->is_sparse == false) {
+    dense::inv((DenseRealMatrix *)B, (DenseRealMatrix *)A);
+  }
 
 end:
-	delete[] is;
-	delete[] js;
-	is = NULL;
-	js = NULL;
 	return flag;
 }
 
 // C = A + B
-bool add(Matrix *C, Matrix *A, Matrix *B) { /// C = A + B
+bool add(Matrix *C, const Matrix *A, const Matrix *B) { /// C = A + B
   bool flag = true;
 	if (A == NULL || B == NULL || C == NULL) {
 		L4C_ERROR("Fatal error occurs in add: Matrix pointer is NULL!");
@@ -132,10 +90,15 @@ bool add(Matrix *C, Matrix *A, Matrix *B) { /// C = A + B
 		return -1;
 	}
 
-	UINT i, j;
-	for(i = 0; i < A->row; i++)
-		for(j = 0; j < A->col; j++)
-			C->M[i][j] = A->M[i][j] + B->M[i][j];
+  if (M_dest->is_sparse == false and M_src->is_sparse == true) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == true and M_src->is_sparse == true) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == false and M_src->is_sparse == false) {
+    dense::add((DenseRealMatrix *)C, (DenseRealMatrix *)A, (DenseRealMatrix *)B);
+  }
 
 end:
 	return flag;
@@ -154,10 +117,15 @@ bool sub(Matrix *C, Matrix *A, Matrix *B) { /// C = A - B
 		goto end;
 	}
 
-	UINT i, j;
-	for(i = 0; i < A->row; i++)
-		for(j = 0; j < A->col; j++)
-			C->M[i][j] = A->M[i][j] - B->M[i][j];
+  if (M_dest->is_sparse == false and M_src->is_sparse == true) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == true and M_src->is_sparse == true) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == false and M_src->is_sparse == false) {
+    dense::sub((DenseRealMatrix *)C, (DenseRealMatrix *)A, (DenseRealMatrix *)B);
+  }
 
 end:
 	return flag;
@@ -176,15 +144,15 @@ bool mul(Matrix *C, Matrix *A, Matrix *B) { /// C = A * B
 		goto end;
 	}
 
-	UINT i, j, k;
-	REAL sum;
-	for(i = 0; i < A->row; i++)
-		for(j = 0; j < B->col; j++) {
-			sum = 0;
-			for(k = 0; k < A->col; k++)
-				sum += A->M[i][k] * B->M[k][j];
-			C->M[i][j] = sum;
-		}
+  if (M_dest->is_sparse == false and M_src->is_sparse == true) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == true and M_src->is_sparse == true) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == false and M_src->is_sparse == false) {
+    dense::mul((DenseRealMatrix *)C, (DenseRealMatrix *)A, (DenseRealMatrix *)B);
+  }
 
 end:
 	return flag;
@@ -203,36 +171,41 @@ bool tranv(Matrix *B, Matrix *A) { /// B = A^T
 		goto end;
 	}
 
-	UINT i, j;
-	for (i = 0; i < A->row; i++)
-		for(j = 0; j < A->col; j++)
-			B->M[j][i] = A->M[i][j];
+  if (M_dest->is_sparse == false and M_src->is_sparse == true) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == true and M_src->is_sparse == true) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == false and M_src->is_sparse == false) {
+    dense::tranv((DenseRealMatrix *)B, (DenseRealMatrix *)A);
+  }
 
 end:
 	return flag;
 }
 
 bool t_mul(Matrix *B, Matrix *A) {  /// B = A*A^T
-  ///TODO:;
+  ///TODO
 }
 
-bool f_norm(REAL &fnorm, Matrix *A, ) { /// Frobenius norm of matrix
+bool f_norm(REAL &fnorm, Matrix *A) { /// Frobenius norm of matrix
   bool flag = true;
-  REAL sum = 0.0;
 	if (NULL == A) {
 		L4C_ERROR("Fatal error occurs in f_norm: Matrix pointer is NULL!");
     flag = false;
 		goto end;
 	}
 
-	UINT i, j;
-	REAL tmp = 0.0;
-	for (i = 0; i < A->row; i++)
-		for(j = 0; j < A->col; j++) {
-			tmp = A->M[i][j];
-			sum += tmp * tmp;
-		}
-  fnorm = sum;
+  if (M_dest->is_sparse == false and M_src->is_sparse == true) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == true and M_src->is_sparse == true) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == false and M_src->is_sparse == false) {
+    dense::f_norm(fnorm, (DenseRealMatrix *)A);
+  }
 
 end:
 	return  flag;
@@ -240,21 +213,21 @@ end:
 
 bool m_norm(REAL &mnorm, Matrix *A) { /// Manhattan norm of matrix
   bool flag = true;
-  REAL sum = 0.0;
 	if (NULL == A) {
 		L4C_ERROR("Fatal error occurs in m_norm: Matrix pointer is NULL!");
     flag = false;
 		goto end;
 	}
 
-	UINT i, j;
-	REAL tmp;
-	for (i = 0; i < A->row; i++)
-		for(j = 0; j < A->col; j++) {
-			tmp = A->M[i][j];
-			sum += tmp;
-		}
-  mnorm = sum;
+  if (M_dest->is_sparse == false and M_src->is_sparse == true) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == true and M_src->is_sparse == true) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == false and M_src->is_sparse == false) {
+    dense::m_norm(mnorm, (DenseRealMatrix *)A);
+  }
 
 end:
 	return  flag;
@@ -262,22 +235,21 @@ end:
 
 bool get_min(REAL &min, Matrix *A) {
   bool flag = true;
-  REAL _min = Max;
 	if (NULL == A) {
 		L4C_ERROR("Fatal error occurs in get_min: Matrix pointer is NULL!");
     flag = false;
 		goto end;
 	}
 
-	UINT i, j;
-	REAL tmp;
-	for (i = 0; i < A->row; i++)
-		for(j = 0; j < A->col; j++) {
-			tmp = A->M[i][j];
-			if (tmp < _min)
-				_min = tmp;
-		}
-  min = _min;
+  if (M_dest->is_sparse == false and M_src->is_sparse == true) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == true and M_src->is_sparse == true) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == false and M_src->is_sparse == false) {
+    dense::get_min(min, (DenseRealMatrix *)A);
+  }
 
 end:
   return  flag;
@@ -285,22 +257,21 @@ end:
 
 REAL get_max(REAL &max, Matrix *A) {
   bool flag = true;
-  REAL _max = Min;
 	if (NULL == A) {
 		L4C_ERROR("Fatal error occurs in get_max: Matrix pointer is NULL!");
     flag = false;
 		goto end;
 	}
 
-	UINT i, j;
-	REAL tmp;
-	for (i = 0; i < A->row; i++)
-		for(j = 0; j < A->col; j++) {
-			tmp = A->M[i][j];
-			if (tmp > _max)
-				_max = tmp;
-		}
-  max = _max;
+  if (M_dest->is_sparse == false and M_src->is_sparse == true) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == true and M_src->is_sparse == true) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == false and M_src->is_sparse == false) {
+    dense::get_max(max, (DenseRealMatrix *)A);
+  }
 
 end:
 	return  flag;
@@ -319,10 +290,15 @@ bool num_mul(Matrix *B, Matrix *A, REAL real) { /// B = k * A
 		goto end;
 	}
 
-	UINT i, j;
-	for (i = 0; i < A->row; i++)
-		for(j = 0; j < A->col; j++)
-			B->M[i][j] = real * A->M[i][j];
+  if (M_dest->is_sparse == false and M_src->is_sparse == true) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == true and M_src->is_sparse == true) {
+    ///TODO
+  }
+  else if (M_dest->is_sparse == false and M_src->is_sparse == false) {
+    dense::num_mul((DenseRealMatrix *)B, (DenseRealMatrix *)A, REAL real);
+  }
 
 end:
 	return flag;
@@ -341,10 +317,12 @@ bool num_add(Matrix *B, Matrix *A, REAL real) { /// B = [k] + A
 		goto end;
 	}
 
-	UINT i, j;
-	for (i = 0; i < A->row; i++)
-		for(j = 0; j < A->col; j++)
-			B->M[i][j] = real + A->M[i][j];
+  if (A->is_sparse == true) {
+    ///TODO
+  }
+  else {
+    dense::num_add((DenseRealMatrix *)B, (DenseRealMatrix *)A, REAL real);
+  }
 
 end:
 	return flag;
@@ -363,31 +341,14 @@ bool nlz(Matrix *B, Matrix *A) { /// Normalize
 		goto end;
 	}
 
-	UINT i, j;
-	REAL min, incr, f_norm;
-	///TODO:
-	Matrix T;
-	T.row = row;
-	T.col = col;
-	T.M = new REAL[sizeof(REAL)*T.row*T.col];
-	min = get_min(A);
-	incr = fabs(min) + VERY_SMALL_NUM;
-	Matrix_num_add(A, incr, &T);
-	f_norm = Matrix_m_norm(&T);
-	if (f_norm + 0.0 == 0.0) {
-		L4C_WARN("The Frobenius-Norm of matrix is zero. Apparently this matrix is zero-matrix!");
-		flag = false;
-		goto flag_nlz;
-	}
-	for (i = 0; i < row; i++)
-		for(j = 0; j < col; j++) {
-			//B->M[i][j] = T.M[i][j]/f_norm;
-			B->M[i][j] = 2 * atan(T.M[i][j])/PI;
-		}
+  if (A->is_sparse == true) {
+    ///TODO
+  }
+  else {
+    dense::nlz((DenseRealMatrix *)B, (DenseRealMatrix *)A);
+  }
 
 end:
-	delete []T.M;
-	T.M = NULL;
   return flag;
 }
 
@@ -399,12 +360,12 @@ bool print(const Matrix *A) {
 		goto end;
 	}
 
-	UINT i, j;
-	for (i = 0; i < A->row; i++) {
-		for(j = 0; j < A->col; j++)
-			printf("%f ", A->M[i][j]);
-		printf("\n");
-	}
+  if (A->is_sparse == true) {
+    ///TODO
+  }
+  else {
+    dense::print(const (DenseRealMatrix *)A);
+  }
 
 end:
 	return flag;
@@ -423,10 +384,18 @@ bool hadamard_mul(Matrix *C, Matrix *A, Matrix *B) {///  hadamard mul
 		goto end;
 	}
 
-	UINT i, j;
-	for(i = 0; i < A->row; i++)
-		for(j = 0; j < B->col; j++)
-			C->M[i][j] = A->M[i][j] * B->M[i][j];
+  if (A->is_sparse == false and B->is_sparse == true) {
+    ///TODO
+  }
+  if (A->is_sparse == true and B->is_sparse == false) {
+    ///TODO
+  }
+  else if (A->is_sparse == true and B->is_sparse == true) {
+    ///TODO
+  }
+  else if (A->is_sparse == false and B->is_sparse == false) {
+    dense::hadamard_mul((DenseRealMatrix *)C, (DenseRealMatrix *)B, (DenseRealMatrix *)A);
+  }
 
 end:
 	return flag;
@@ -445,17 +414,21 @@ bool kronecker_mul(Matrix *C, Matrix *A, Matrix *B) {///  kronecker mul
 		goto end;
 	}
 
-	UINT i, j, k, l, m, n;
-	for (i = 0; i < A->row; i++)
-		for (j = 0; j < A->col; j++)
-			for (k = 0; k < B->row; k++)
-				for (l = 0; l < B->col; l++) {
-					m = B->row * i + k;
-					n = B->col * j + l;
-					C->M[m][n] = A->M[i][j] * B->M[k][l];
-				}
+  if (A->is_sparse == false and B->is_sparse == true) {
+    ///TODO
+  }
+  if (A->is_sparse == true and B->is_sparse == false) {
+    ///TODO
+  }
+  else if (A->is_sparse == true and B->is_sparse == true) {
+    ///TODO
+  }
+  else if (A->is_sparse == false and B->is_sparse == false) {
+    dense::hadamard_mul((DenseRealMatrix *)C, (DenseRealMatrix *)B, (DenseRealMatrix *)A);
+  }
 
 end:
 	return flag;
 }
+
 }
