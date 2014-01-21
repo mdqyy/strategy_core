@@ -16,6 +16,7 @@
 #define STRATEGY_CORE_LIN_ALG_BASE_H_
 
 #include <cstddef>
+#include <strategy_core/common/common.h>
 
 #define REAL double
 #define INT size_t
@@ -35,7 +36,6 @@ class Matrix {
   REAL size;
   Matrix(const UINT row, const UINT col);
   inline void cal_sparsity();
-  virtual void print() const;
 };
 
 class Vector:public Matrix {
@@ -43,7 +43,6 @@ class Vector:public Matrix {
   UINT length;
   bool by_row;
   Vector(const UINT row, const UINT col);
-  ~Vector();
   ///virtual REAL get_next() = 0;
   virtual bool set(const UINT pos, const REAL value) = 0;
   virtual bool get(REAL &value, const UINT pos) = 0;

@@ -256,4 +256,35 @@ DiagMatrix::DiagMatrix(const UINT n)
     SparseRealMatrix::cl->append(clnode);
   }
 }
+
+/// Vector Opertations.
+bool inner_product_sd(REAL &inner, const SparseRealVector *srv, const dense::DenseRealVector *drv) {
+  bool flag = true;
+  /*
+  if (NULL == srv or NULL == drv) {
+    L4C_ERROR("Fatal error occurs in inner_product_sd: Vector pointer is NULL!");
+    flag = false;
+    goto end;
+  }
+  if (srv->length != drv->length) {
+    L4C_ERROR("Fatal error occurs in inner_product_sd: Vector parameter error!");
+    flag = false;
+    goto end;
+  }
+
+  REAL _inner = 0;
+  RealVectorPoint curr = srv->head;
+  while (NULL != curr) {
+    _inner += curr->value * drv.get(curr->pos);
+    curr = srv->next;
+  }
+  inner = _inner;
+  */
+end:
+  return flag;
+}
+
+bool inner_product_ss(REAL &inner, const SparseRealVector *srva, const SparseRealVector *srvb) {
+  ;
+}
 }

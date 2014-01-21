@@ -20,8 +20,6 @@
 
 #include <strategy_core/common/common.h>
 #include <strategy_core/supervised/LogisticReg.h>
-#include <strategy_core/lin_alg/matrix.h>
-#include <strategy_core/lin_alg/vector.h>
 #include "LineSearch.h"
 
 using namespace LogisticReg;
@@ -38,23 +36,23 @@ class BFGS {
  private:
   const LrPara *lrpara;
 
-  Matrix *B, *B_inv; /// A symmetric positive definite matrix
-  Matrix *p;
-  Matrix *wk;
-  Matrix *gradient_vector_neg; /// -g
+  dense::DenseRealMatrix *B, *B_inv; /// A symmetric positive definite matrix
+  dense::DenseRealMatrix *p;
+  dense::DenseRealMatrix *wk;
+  dense::DenseRealMatrix *gradient_vector_neg; /// -g
   REAL gradient_vector_norm;
-  Matrix *last_gradient_vector;
-  Matrix *gradient_vector_sub;
-  Matrix *y; /// y = g^(k + 1) - g^k
-  Matrix *last_weight_vector;
-  Matrix *weight_vector_sub;
-  Matrix *delta; /// delta = w^(k + 1) - w^k
-  Matrix *detaT; /// deltaT = delta^T
-  Matrix *U; /// y_yt = y * y^T
+  dense::DenseRealMatrix *last_gradient_vector;
+  dense::DenseRealMatrix *gradient_vector_sub;
+  dense::DenseRealMatrix *y; /// y = g^(k + 1) - g^k
+  dense::DenseRealMatrix *last_weight_vector;
+  dense::DenseRealMatrix *weight_vector_sub;
+  dense::DenseRealMatrix *delta; /// delta = w^(k + 1) - w^k
+  dense::DenseRealMatrix *detaT; /// deltaT = delta^T
+  dense::DenseRealMatrix *U; /// y_yt = y * y^T
   REAL yt_delta; /// yt_delta = y^T * delta
-  Matrix *B_delta; /// B_delta = B * delta
-  Matrix *deltaT_B; /// deltaT_B = delta^T * B
-  Matrix *V;
+  dense::DenseRealMatrix *B_delta; /// B_delta = B * delta
+  dense::DenseRealMatrix *deltaT_B; /// deltaT_B = delta^T * B
+  dense::DenseRealMatrix *V;
   REAL dtBd;
   LineSearch *ls;
   REAL lambda;

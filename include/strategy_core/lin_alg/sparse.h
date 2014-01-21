@@ -17,6 +17,7 @@
 #define STRATEGY_CORE_LIN_ALG_SPARSE_H_
 
 #include <strategy_core/lin_alg/base.h>
+#include <strategy_core/lin_alg/dense.h>
 
 namespace sparse {
 /// Cross List
@@ -103,6 +104,10 @@ class ZeroMatrix:public SparseRealMatrix {
   ZeroMatrix(const UINT row, const UINT col):SparseRealMatrix(row, col) {};
 };
 
+/// Vector Opertations.
+bool inner_product_sd(REAL &inner, const SparseRealVector *srv, const dense::DenseRealVector *drv);
+bool inner_product_ss(REAL &inner, const SparseRealVector *srva, const SparseRealVector *srvb);
+
 /// Matrix operations
 bool copy(Matrix *M_dest, const Matrix *M_src);
 bool inv(Matrix *B, Matrix *A); /// B = A^(-1)
@@ -118,7 +123,6 @@ bool get_max(REAL &max, Matrix *A);/// get max
 bool num_mul(Matrix *B, Matrix *A, const double num); /// B = num * A
 bool num_add(Matrix *B, Matrix *A, const double num); /// B = [num] + A
 bool nlz(Matrix *B, Matrix *A); /// Normalize
-bool print(const Matrix *A);  /// Output matrix.
 bool hadamard_mul(Matrix *C, Matrix *A, Matrix *B);
 bool kronecker_mul(Matrix *C, Matrix *A, Matrix *B);
 }

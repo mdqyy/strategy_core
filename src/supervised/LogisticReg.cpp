@@ -151,8 +151,8 @@ end:
 /*! LrModel */
 LrModel::LrModel(const SampleSet *ss) {
   this->ss = ss;
-  this->weight_vector = new dense::DenseRealVector(1, this->ss->feature_num);
-  this->gradient_vector = new dense::DenseRealVector(1, this->ss->feature_num);
+  this->weight_vector = new dense::DenseRealMatrix(1, this->ss->feature_num);
+  this->gradient_vector = new dense::DenseRealMatrix(1, this->ss->feature_num);
 }
 
 LrModel::~LrModel() {
@@ -222,10 +222,6 @@ LrPara::LrPara(const char *conf_file_path, const char *encoding) {
   this->step_len = 1e-10;
   this->epsilon = 1e-100;
   this->max_iter_num = 2000;
-}
-
-LrPara::~LrPara() {
-  ;
 }
 
 /*! Logistic regression inition */

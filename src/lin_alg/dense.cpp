@@ -80,6 +80,31 @@ UINT DenseRealMatrix::get_col() const {
   return Matrix::col;
 }
 
+/// DenseRealVector operations
+bool inner_product_dd(REAL &inner, const DenseRealMatrix *drva, const DenseRealMatrix *drvb) {
+  bool flag = true;
+
+end:
+  return flag;
+}
+
+/// norm = |V|
+bool euclid_norm_d(REAL &norm, const DenseRealMatrix *drv) {
+  bool flag = true;
+  REAL temp = 0.0;
+  if (NULL == drv) {
+    L4C_ERROR("Fatal error occurs in euclid_norm_d: DenseRealMatrix pointer is NULL!");
+    flag = false;
+    goto end;
+  }
+
+  inner_product_dd(temp, (const DenseRealMatrix *)drv, (const DenseRealMatrix *)drv);
+  norm = sqrt(temp);
+
+end:
+  return flag;
+}
+
 /// DenseRealMatrix operations
 bool copy(DenseRealMatrix *M_dest, const DenseRealMatrix *M_src) {
   bool flag = true;
@@ -135,7 +160,6 @@ bool inv(DenseRealMatrix *B, DenseRealMatrix *A) {/// B = A^(-1)
 			}
 			if (d + 1.0 == 1.0) { /// det(A) == 0
 				L4C_WARN("Warning in inv: det(A) equals zero!");
-				print(A);
 				flag = false;
 				goto end;
 			}
@@ -296,6 +320,10 @@ end:
 
 bool t_mul(DenseRealMatrix *B, DenseRealMatrix *A) {  /// B = A*A^T
   ///TODO:;
+  bool flag = true;
+
+end:
+  return flag;
 }
 
 bool f_norm(REAL &fnorm, DenseRealMatrix *A) { /// Frobenius norm of DenseRealMatrix
@@ -365,7 +393,7 @@ end:
   return  flag;
 }
 
-REAL get_max(REAL &max, DenseRealMatrix *A) {
+bool get_max(REAL &max, DenseRealMatrix *A) {
   bool flag = true;
   REAL _max = Min;
 	if (NULL == A) {
@@ -436,25 +464,6 @@ end:
 	return flag;
 }
 
-bool print(const DenseRealMatrix *A) {
-  bool flag = true;
-	if (NULL == A) {
-		L4C_ERROR("Fatal error occurs in print: DenseRealMatrix pointer is NULL!");
-    flag = false;
-		goto end;
-	}
-
-	UINT i, j;
-	for (i = 0; i < A->row; i++) {
-		for(j = 0; j < A->col; j++)
-			printf("%f ", A->M[i][j]);
-		printf("\n");
-	}
-
-end:
-	return flag;
-}
-
 bool hadamard_mul(DenseRealMatrix *C, DenseRealMatrix *A, DenseRealMatrix *B) {///  hadamard mul
   bool flag = true;
 	if (NULL == A || NULL == B || NULL == C) {
@@ -505,4 +514,3 @@ end:
 }
 
 }
-

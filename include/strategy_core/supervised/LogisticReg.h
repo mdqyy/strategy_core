@@ -56,12 +56,12 @@ class TrainingSet {
   bool load_sample(void);
 };
 
-class LrModel:public algorithm::Model {
+class LrModel {
  public:
   REAL target;  /// Value of target function.
-  Vector *weight_vector;
+  dense::DenseRealMatrix *weight_vector;
   const SampleSet *ss;
-  Vector *gradient_vector;
+  dense::DenseRealMatrix *gradient_vector;
   REAL *sum_xcol; /// intermediate result: sum(x_ij, i, 1, sample_num)
                   /// init when loading whole data set.
   REAL *sum_nz_xcol; /// intermediate result: sum(x_ij, i, 1, sample_num) | yi != 0
@@ -83,14 +83,14 @@ class LrModel:public algorithm::Model {
   bool read();
 };
 
-class LrPara:public algorithm::Para {
+class LrPara {
  public:
   REAL step_len;
   REAL epsilon;
   INT max_iter_num;
 
   LrPara(const char *conf_file_path, const char *encoding);
-  ~LrPara();
+  ~LrPara() {};
 };
 
 bool preprocess(TrainingSet *ts);

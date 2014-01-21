@@ -41,9 +41,7 @@
 		<Unit filename="../../include/strategy_core/gradient_descent/LineSearch.h" />
 		<Unit filename="../../include/strategy_core/lin_alg/base.h" />
 		<Unit filename="../../include/strategy_core/lin_alg/dense.h" />
-		<Unit filename="../../include/strategy_core/lin_alg/matrix.h" />
 		<Unit filename="../../include/strategy_core/lin_alg/sparse.h" />
-		<Unit filename="../../include/strategy_core/lin_alg/vector.h" />
 		<Unit filename="../../include/strategy_core/supervised/LogisticReg.h" />
 		<Unit filename="../../src/common/algorithm.cpp" />
 		<Unit filename="../../src/common/common.cpp" />
@@ -56,9 +54,7 @@
 		<Unit filename="../../src/gradient_descent/LineSearch.cpp" />
 		<Unit filename="../../src/lin_alg/base.cpp" />
 		<Unit filename="../../src/lin_alg/dense.cpp" />
-		<Unit filename="../../src/lin_alg/matrix.cpp" />
 		<Unit filename="../../src/lin_alg/sparse.cpp" />
-		<Unit filename="../../src/lin_alg/vector.cpp" />
 		<Unit filename="../../src/supervised/LogisticReg.cpp" />
 		<Unit filename="../../src/supervised/MaxEntropy.cpp" />
 		<Extensions>
