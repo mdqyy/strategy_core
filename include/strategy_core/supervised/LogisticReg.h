@@ -58,9 +58,9 @@ class TrainingSet {
 
 class LrModel {
  public:
+  const SampleSet *ss;
   REAL target;  /// Value of target function.
   dense::DenseRealMatrix *weight_vector;
-  const SampleSet *ss;
   dense::DenseRealMatrix *gradient_vector;
   REAL *sum_xcol; /// intermediate result: sum(x_ij, i, 1, sample_num)
                   /// init when loading whole data set.
@@ -80,7 +80,6 @@ class LrModel {
   REAL get_sum_nz_xcol(const INT col); /// col: [0, feature_num - 1]
 
   bool write();
-  bool read();
 };
 
 class LrPara {
@@ -93,8 +92,8 @@ class LrPara {
   ~LrPara() {};
 };
 
-bool preprocess(TrainingSet *ts);
 void init(const char *logfile_path);
+bool preprocess(TrainingSet *ts);
 bool train(TrainingSet *ts, LrPara *lrpara);
 Ytype_p predict(const dense::DenseRealVector *weight, const sparse::SparseRealVector *feature);
 }

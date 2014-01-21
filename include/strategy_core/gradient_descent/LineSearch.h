@@ -18,12 +18,13 @@
 
 #include <strategy_core/common/common.h>
 #include <strategy_core/lin_alg/base.h>
+#include <strategy_core/lin_alg/dense.h>
 
 class LineSearch {
   ///TODO:
  public:
   Matrix *step_vector;
-  LineSearch();
+  LineSearch(const UINT row, const UINT col);
   ~LineSearch();
 
   bool step(REAL &lambda, REAL step_len, Matrix *w, Matrix *p);

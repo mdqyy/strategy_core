@@ -26,6 +26,7 @@ class CrossListNode {
   INT i, j; /// position of a non-zero element, a[i,j]
   REAL e;
   CrossListNode *right, *down;
+  CrossListNode() {};
   CrossListNode(const UINT i, const UINT j, const REAL e);
 };
 

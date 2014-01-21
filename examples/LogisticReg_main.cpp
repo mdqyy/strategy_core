@@ -21,7 +21,7 @@ using namespace std;
 
 int main (int argc, char **argv) {
   int flag = 0;
-///for (INT i = 0; i < 1; i++) { /// test memory leak
+///for (INT i = 0; i < 1; i++) { /// Test memory-leaking
   const char *log_conf_path = "/home/cqy/work/strategy_core/etc/LogisticReg/l4c.cfg";
   const char *conf_file_path = "";
   const char *trainingset_path = "/home/cqy/work/strategy_core/data/logistic.sample";
@@ -35,6 +35,15 @@ int main (int argc, char **argv) {
   ///conf.parse(lrpara);
   LogisticReg::TrainingSet *ts = new LogisticReg::TrainingSet(trainingset_path);
 
+  L4C_INFO("Logistic regression preprocessing starts!");
+  if (!LogisticReg::preprocess(ts)) {
+    L4C_FATAL("Logistic regression preprocessing failed!");
+    flag = false;
+    goto end;
+  }
+  L4C_INFO("Logistic regression preprocessing finished!");
+
+  L4C_INFO("Logistic regression training starts!");
   if (!LogisticReg::train(ts, lrpara)) {
     L4C_FATAL("Logistic regression training failed!");
     flag = -1;

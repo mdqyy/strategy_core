@@ -151,8 +151,8 @@ end:
 /*! LrModel */
 LrModel::LrModel(const SampleSet *ss) {
   this->ss = ss;
-  this->weight_vector = new dense::DenseRealMatrix(1, this->ss->feature_num);
-  this->gradient_vector = new dense::DenseRealMatrix(1, this->ss->feature_num);
+  this->weight_vector = new dense::DenseRealMatrix(this->ss->feature_num, 1);
+  this->gradient_vector = new dense::DenseRealMatrix(this->ss->feature_num, 1);
 }
 
 LrModel::~LrModel() {
@@ -215,9 +215,6 @@ REAL LrModel::get_sum_nz_xcol(const INT col) {
   return this->sum_nz_xcol[col];
 };
 
-/*! Logistic regression preprocessing */
-
-
 LrPara::LrPara(const char *conf_file_path, const char *encoding) {
   this->step_len = 1e-10;
   this->epsilon = 1e-100;
@@ -233,16 +230,6 @@ void init(const char *log_conf_path) {
 /*! Logistic regression preprocessing */
 bool preprocess(TrainingSet *ts) {
   bool flag = true;
-  ///TODO:
-end:
-  return flag;
-}
-
-/*! Logistic regression training */
-bool train(TrainingSet *ts, LrPara *lrpara) {
-  bool flag = true;
-  LrModel *lrmodel = new LrModel(ts->sample_set);
-  BFGS *bfgs = new BFGS(lrmodel, lrpara);
 
   L4C_INFO("Loading header starts!");
   if (!ts->load_header()) {
@@ -260,14 +247,16 @@ bool train(TrainingSet *ts, LrPara *lrpara) {
     goto end;
   }
   L4C_INFO("Loading sample finished!");
-  /*
-  L4C_INFO("Preprocess starts!");
-  if (!preprocess(ts)) {
-    L4C_FATAL("Preprocess failed!");
-    flag = false;
-    goto end;
-  }
-  L4C_INFO("Preprocess finished!");
+
+end:
+  return flag;
+}
+
+/*! Logistic regression training */
+bool train(TrainingSet *ts, LrPara *lrpara) {
+  bool flag = true;
+  LrModel *lrmodel = new LrModel(ts->sample_set);
+  BFGS *bfgs = new BFGS(lrmodel, lrpara);
 
   L4C_INFO("Training starts!");
   if (!bfgs->solve()) {
@@ -276,12 +265,12 @@ bool train(TrainingSet *ts, LrPara *lrpara) {
     goto end;
   }
   L4C_INFO("Training finished!");
-  */
+
 end:
-  delete lrmodel;
-  lrmodel = NULL;
   delete bfgs;
   bfgs = NULL;
+  delete lrmodel;
+  lrmodel = NULL;
   return flag;
 }
 

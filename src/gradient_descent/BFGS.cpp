@@ -21,48 +21,51 @@
 BFGS::BFGS(LrModel *lrmodel, LrPara *lrpara) {
   this->lrmodel = lrmodel;
   this->lrpara = lrpara;
+  const UINT d = this->lrmodel->ss->feature_num;
+
+  this->B = new dense::DenseRealMatrix(d, d);
+  this->B_inv = new dense::DenseRealMatrix(d, d);
+  this->p = new dense::DenseRealMatrix(d, 1);
+  this->gradient_vector_neg = new dense::DenseRealMatrix(d, 1);
+  this->last_gradient_vector = new dense::DenseRealMatrix(d, 1);
+  this->y = new dense::DenseRealMatrix(d, 1);
+  this->last_weight_vector = new dense::DenseRealMatrix(d, 1);
+  this->delta = new dense::DenseRealMatrix(d, 1);
+  this->detaT = new dense::DenseRealMatrix(1, d);
+  this->U = new dense::DenseRealMatrix(d, 1);
+  this->B_delta = new dense::DenseRealMatrix(d, 1);
+  this->deltaT_B = new dense::DenseRealMatrix(1, d);
+  this->V = new dense::DenseRealMatrix(d, d);
+  this->ls = new LineSearch(d, 1);
 }
 
 BFGS::~BFGS() {
-  ///TODO:
-  /*
-  this->lrmodel->weight_vector = ;
-  this->B = new Diag() ;
-  this->B_inv = ;
-  this->p = ;
-  this->wk = ;
-  this->ls = new LineSearch();
-  this->lrmodel->cal_gradient();
-  if (euclid_norm_d(this->lrmodel->gradient_vector) < this->lrpara->epsilon) {
-    break;
-  }
-  */
+  delete this->B;
+  delete this->B_inv;
+  delete this->p;
+  delete this->gradient_vector_neg;
+  delete this->last_gradient_vector;
+  delete this->y;
+  delete this->last_weight_vector;
+  delete this->delta;
+  delete this->detaT;
+  delete this->U;
+  delete this->B_delta;
+  delete this->deltaT_B;
+  delete this->V;
+  delete ls;
 }
 
 bool BFGS::init() {
   bool flag = true;
-  ///TODO:
-  /*
-  this->lrmodel->weight_vector = ;
-  this->B = new Diag() ;
-  this->B_inv = ;
-  this->p = ;
-  this->wk = ;
-  this->ls = new LineSearch();
-  this->lrmodel->cal_gradient();
-  if (euclid_norm_d(this->lrmodel->gradient_vector) < this->lrpara->epsilon) {
-    break;
-  }
-  */
+
 end:
   return flag;
 }
 
-bool BFGS::solve() {
+bool BFGS::iter() {
   bool flag = true;
-  if (!this->init()) {
-    flag = false;
-    L4C_ERROR("BFGS init failed!");
+  if (dense::euclid_norm_d(this->gradient_vector_norm, this->lrmodel->gradient_vector) < this->lrpara->epsilon) {
     goto end;
   }
 
@@ -78,8 +81,8 @@ bool BFGS::solve() {
       goto end;
     }
     else {
-      dense::sub(this->gradient_vector_sub, this->lrmodel->gradient_vector, this->last_gradient_vector);
-      dense::sub(this->weight_vector_sub, this->lrmodel->weight_vector, this->last_weight_vector);
+      dense::sub(this->y, this->lrmodel->gradient_vector, this->last_gradient_vector);
+      dense::sub(this->delta, this->lrmodel->weight_vector, this->last_weight_vector);
       dense::mul(this->U, this->B, this->delta);
       dense::inner_product_dd(this->yt_delta, this->y, this->delta);
       dense::num_mul(this->U, this->U, 1.0/this->yt_delta);  /// U = U / m
@@ -91,7 +94,31 @@ bool BFGS::solve() {
       dense::sub(this->U, this->U, this->V); /// U = U - V
       dense::add(this->B, this->B, this->U); /// B = B + U
     }
+    L4C_INFO("BFGS iteration turn %d completed!", (i + 1));
   }
+
+end:
+  return flag;
+}
+
+bool BFGS::solve() {
+  bool flag = true;
+
+  L4C_INFO("BFGS inition begins!");
+  if (!this->init()) {
+    L4C_FATAL("BFGS inition failed!");
+    flag = false;
+    goto end;
+  }
+  L4C_INFO("BFGS inition finished!");
+
+  L4C_INFO("BFGS iteration begins!");
+  if (!this->iter()) {
+    L4C_FATAL("BFGS iteration failed!");
+    flag = false;
+    goto end;
+  }
+  L4C_INFO("BFGS iteration finished!");
 
 end:
   return flag;
@@ -101,5 +128,5 @@ end:
 bool LBFGS::init() {
 }
 
-bool LBFGS::solve() {
+bool LBFGS::iter() {
 }
