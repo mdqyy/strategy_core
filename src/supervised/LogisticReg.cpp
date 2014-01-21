@@ -260,7 +260,7 @@ bool train(TrainingSet *ts, LrPara *lrpara) {
     goto end;
   }
   L4C_INFO("Loading sample finished!");
-
+  /*
   L4C_INFO("Preprocess starts!");
   if (!preprocess(ts)) {
     L4C_FATAL("Preprocess failed!");
@@ -276,7 +276,7 @@ bool train(TrainingSet *ts, LrPara *lrpara) {
     goto end;
   }
   L4C_INFO("Training finished!");
-
+  */
 end:
   delete lrmodel;
   lrmodel = NULL;

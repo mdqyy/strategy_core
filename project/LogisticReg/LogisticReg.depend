@@ -114,7 +114,7 @@
 	<math.h>
 	<strategy_core/lin_alg/vector.h>
 
-1390224113 source:/home/cqy/work/strategy_core/src/supervised/LogisticReg.cpp
+1390277424 source:/home/cqy/work/strategy_core/src/supervised/LogisticReg.cpp
 	<stdlib.h>
 	<string.h>
 	<iostream>

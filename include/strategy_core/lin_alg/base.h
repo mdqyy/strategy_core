@@ -43,7 +43,6 @@ class Vector:public Matrix {
   UINT length;
   bool by_row;
   Vector(const UINT row, const UINT col);
-  ///virtual REAL get_next() = 0;
   virtual bool set(const UINT pos, const REAL value) = 0;
   virtual bool get(REAL &value, const UINT pos) = 0;
 };
