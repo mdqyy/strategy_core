@@ -40,11 +40,8 @@ SampleSet::SampleSet (const INT sample_num, const INT feature_num) {
 }
 
 SampleSet::~SampleSet () {
-  delete this->features;
-  this->features = NULL;
-
-  delete[] this->y;
-  this->y = NULL;
+  delete this->features;  this->features = NULL;
+  delete []this->y; this->y = NULL;
 }
 
 /*! TrainingSet */
@@ -59,10 +56,8 @@ TrainingSet::TrainingSet(const char *training_set_path) {
 TrainingSet::~TrainingSet() {
   if (NULL != this->opf)
     fclose(this->opf);
-  delete this->line;
-  this->line = NULL;
-  delete this->sample_set;
-  this->sample_set = NULL;
+  //delete this->line;  this->line = NULL;
+  delete this->sample_set;  this->sample_set = NULL;
 }
 
 bool TrainingSet::load_header() {
@@ -151,21 +146,20 @@ end:
 /*! LrModel */
 LrModel::LrModel(const SampleSet *ss) {
   this->ss = ss;
-  this->weight_vector = new dense::DenseRealMatrix(this->ss->feature_num, 1);
-  this->gradient_vector = new dense::DenseRealMatrix(this->ss->feature_num, 1);
+  const UINT d = this->ss->feature_num; /// Dimenstion
+  this->weight_vector = new dense::DenseRealMatrix(d, 1);
+  this->gradient_vector = new dense::DenseRealMatrix(d, 1);
+  this->sum_xcol = new REAL[d];
+  this->sum_nz_xcol = new REAL[d];
+  this->ewx = new REAL[d];
 }
 
 LrModel::~LrModel() {
-  delete this->weight_vector;
-  this->weight_vector = NULL;
-  delete this->gradient_vector;
-  this->gradient_vector = NULL;
-  delete this->sum_xcol;
-  this->sum_xcol = NULL;
-  delete this->sum_nz_xcol;
-  this->sum_nz_xcol = NULL;
-  delete this->ewx;
-  this->ewx = NULL;
+  delete this->weight_vector; this->weight_vector = NULL;
+  delete this->gradient_vector; this->gradient_vector = NULL;
+  delete []this->sum_xcol;  this->sum_xcol = NULL;
+  delete []this->sum_nz_xcol; this->sum_nz_xcol = NULL;
+  delete []this->ewx; this->ewx = NULL;
 }
 
 void LrModel::cal_target() {

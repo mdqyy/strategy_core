@@ -67,11 +67,9 @@ CrossList::CrossList(const UINT row, const UINT col) {
 
 CrossList::~CrossList() {
   for (UINT i = 0; i < this->row; i++) {
-    delete this->rslArray[i];
-    this->rslArray[i] = NULL;
+    delete this->rslArray[i]; this->rslArray[i] = NULL;
   }
-  delete[] this->rslArray;
-  this->rslArray = NULL;
+  delete []this->rslArray;  this->rslArray = NULL;
 
   /*
   for (UINT j = 0; j < this->col; j++) {
@@ -79,8 +77,7 @@ CrossList::~CrossList() {
     this->lslArray[j] = NULL;
   }
   */
-  delete[] this->lslArray;
-  this->lslArray = NULL;
+  delete []this->lslArray; this->lslArray = NULL;
 }
 
 bool CrossList::append(CrossListNode *clnode) {

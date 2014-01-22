@@ -50,10 +50,10 @@ bool euclid_norm_d(REAL &norm, const DenseRealMatrix *drv);
 
 /// DenseRealMatrix operations
 bool copy(DenseRealMatrix *M_dest, const DenseRealMatrix *M_src);
-bool inv(DenseRealMatrix *B, DenseRealMatrix *A); /// B = A^(-1)
+bool inv(DenseRealMatrix *B, const DenseRealMatrix *A); /// B = A^(-1)
 bool add(DenseRealMatrix *C, DenseRealMatrix *A, DenseRealMatrix *B);  /// C = A + B
 bool sub(DenseRealMatrix *C, DenseRealMatrix *A, DenseRealMatrix *B);  /// C = A - B
-bool mul(DenseRealMatrix *C, DenseRealMatrix *A, DenseRealMatrix *B);  /// C = A * B
+bool mul(DenseRealMatrix *C, const DenseRealMatrix *A, const DenseRealMatrix *B);  /// C = A * B
 bool t_mul(DenseRealMatrix *B, DenseRealMatrix *A);  /// B = A * A^T
 bool tranv(DenseRealMatrix *B, DenseRealMatrix *A); /// B = A^T
 bool f_norm(REAL &fnorm, DenseRealMatrix *A); /// Frobenius norm.
@@ -62,7 +62,7 @@ bool get_min(REAL &min, DenseRealMatrix *A); /// get min
 bool get_max(REAL &max, DenseRealMatrix *A);/// get max
 bool num_mul(DenseRealMatrix *B, DenseRealMatrix *A, const double num); /// B = num * A
 bool num_add(DenseRealMatrix *B, DenseRealMatrix *A, const double num); /// B = [num] + A
-bool hadamard_mul(DenseRealMatrix *C, DenseRealMatrix *A, DenseRealMatrix *B);
-bool kronecker_mul(DenseRealMatrix *C, DenseRealMatrix *A, DenseRealMatrix *B);
+bool hadamard_mul(DenseRealMatrix *C, const DenseRealMatrix *A, const DenseRealMatrix *B);
+bool kronecker_mul(DenseRealMatrix *C, const DenseRealMatrix *A, const DenseRealMatrix *B);
 }
 #endif //STRATEGY_CORE_LIN_ALG_DENSE_H_

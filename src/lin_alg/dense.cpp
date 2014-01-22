@@ -24,8 +24,7 @@ DenseRealVector::DenseRealVector(const INT row , const INT col)
 }
 
 DenseRealVector::~DenseRealVector() {
-  delete []this->V;
-  this->V = NULL;
+  delete []this->V; this->V = NULL;
 }
 
 bool DenseRealVector::set(const INT pos, const REAL value) {
@@ -66,10 +65,9 @@ DenseRealMatrix::DenseRealMatrix(const INT row, const INT col)
 
 DenseRealMatrix::~DenseRealMatrix() {
   for (INT i = 0; i < Matrix::row; i++) {
-    delete []this->M[i];
-    this->M[i] = NULL;
+    delete []this->M[i];  this->M[i] = NULL;
   }
-  this->M = NULL;
+  delete []this->M; this->M = NULL;
 }
 
 UINT DenseRealMatrix::get_row() const {
@@ -119,21 +117,21 @@ bool copy(DenseRealMatrix *M_dest, const DenseRealMatrix *M_src) {
     goto end;
   }
 
-  memmove((void *)M_dest->M, (void *)M_src->M, M_src->row * M_src->col *sizeof(REAL));
+  memmove((void *)M_dest->M, (void *)M_src->M, M_src->row * M_src->col * sizeof(REAL));
 
 end:
   return flag;
 }
 
-bool inv(DenseRealMatrix *B, DenseRealMatrix *A) {/// B = A^(-1)
+bool inv(DenseRealMatrix *B, const DenseRealMatrix *A) {/// B = A^(-1)
   /*!
    *  Gauss-Jordan method
    */
   bool flag = true;
 	INT *is, *js, i, j, k, l, u, v, n = A->row;
 	REAL d,p;
-	is = new INT[n * sizeof(INT)];
-	js = new INT[n * sizeof(INT)];
+	is = new INT[n];
+	js = new INT[n];
 	if (NULL == A || NULL == B) {
 		L4C_ERROR("Fatal error occurs in inv: DenseRealMatrix pointer is NULL!");
 		flag = false;
@@ -145,7 +143,7 @@ bool inv(DenseRealMatrix *B, DenseRealMatrix *A) {/// B = A^(-1)
 		goto end;
 	}
 
-	memmove((void *)B->M, (void *)A->M, n*n*sizeof(REAL));
+	copy(B, A);
 
 	for (k = 0; k < n ; k++) {
 		d = 0.0;
@@ -269,7 +267,7 @@ end:
 	return flag;
 }
 
-bool mul(DenseRealMatrix *C, DenseRealMatrix *A, DenseRealMatrix *B) { /// C = A * B
+bool mul(DenseRealMatrix *C, const DenseRealMatrix *A, const DenseRealMatrix *B) { /// C = A * B
   bool flag = true;
 	if (NULL == A || NULL == B || NULL == C) {
 		L4C_ERROR("Fatal error occurs in mul: DenseRealMatrix pointer is NULL!");
@@ -286,7 +284,7 @@ bool mul(DenseRealMatrix *C, DenseRealMatrix *A, DenseRealMatrix *B) { /// C = A
 	REAL sum;
 	for(i = 0; i < A->row; i++)
 		for(j = 0; j < B->col; j++) {
-			sum = 0;
+			sum = 0.0;
 			for(k = 0; k < A->col; k++)
 				sum += A->M[i][k] * B->M[k][j];
 			C->M[i][j] = sum;
@@ -464,7 +462,7 @@ end:
 	return flag;
 }
 
-bool hadamard_mul(DenseRealMatrix *C, DenseRealMatrix *A, DenseRealMatrix *B) {///  hadamard mul
+bool hadamard_mul(DenseRealMatrix *C, const DenseRealMatrix *A, const DenseRealMatrix *B) {///  hadamard mul
   bool flag = true;
 	if (NULL == A || NULL == B || NULL == C) {
 		L4C_ERROR("Fatal error occurs in hadamard_mul: DenseRealMatrix pointer is NULL!");
@@ -486,7 +484,7 @@ end:
 	return flag;
 }
 
-bool kronecker_mul(DenseRealMatrix *C, DenseRealMatrix *A, DenseRealMatrix *B) {///  kronecker mul
+bool kronecker_mul(DenseRealMatrix *C, const DenseRealMatrix *A, const DenseRealMatrix *B) {///  kronecker mul
   bool flag = true;
 	if (NULL == A || NULL == B || NULL == C) {
 		L4C_ERROR("Fatal error occurs in kronecker_mul: DenseRealMatrix pointer is NULL!");

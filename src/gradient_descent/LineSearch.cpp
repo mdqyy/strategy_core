@@ -20,8 +20,7 @@ LineSearch::LineSearch(const UINT row, const UINT col) {
 }
 
 LineSearch::~LineSearch() {
-  delete this->step_vector;
-  this->step_vector = NULL;
+  delete this->step_vector; this->step_vector = NULL;
 }
 
 bool LineSearch::step(REAL &lambda, REAL step_len, Matrix *w, Matrix *p) {

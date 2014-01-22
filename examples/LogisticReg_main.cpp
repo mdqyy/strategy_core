@@ -21,8 +21,9 @@ using namespace std;
 
 int main (int argc, char **argv) {
   int flag = 0;
-for (INT i = 0; i < 10000000; i++) { /// Test memory-leaking
-  const char *log_conf_path = "/home/cqy/work/strategy_core/etc/LogisticReg/l4c.cfg";
+//for (INT i = 0; i < 10000000; i++) { /// Test memory-leaking
+  const char *log_conf_path = "";
+  //const char *log_conf_path = "/home/cqy/work/strategy_core/etc/LogisticReg/l4c.cfg";
   const char *conf_file_path = "";
   const char *trainingset_path = "/home/cqy/work/strategy_core/data/logistic.sample";
   const char *encoding_type = "utf-8";
@@ -38,7 +39,7 @@ for (INT i = 0; i < 10000000; i++) { /// Test memory-leaking
   L4C_INFO("Logistic regression preprocessing starts!");
   if (!LogisticReg::preprocess(ts)) {
     L4C_FATAL("Logistic regression preprocessing failed!");
-    flag = false;
+    flag = -1;
     goto end;
   }
   L4C_INFO("Logistic regression preprocessing finished!");
@@ -56,6 +57,6 @@ end:
   ts = NULL;
   delete lrpara;
   lrpara = NULL;
-}
+//}
   return flag;
 }

@@ -46,7 +46,7 @@ class BFGS {
   dense::DenseRealMatrix *y;/// y = g^(k + 1) - g^k
   dense::DenseRealMatrix *last_weight_vector;
   dense::DenseRealMatrix *delta; /// delta = w^(k + 1) - w^k
-  dense::DenseRealMatrix *detaT; /// deltaT = delta^T
+  dense::DenseRealMatrix *deltaT; /// deltaT = delta^T
   dense::DenseRealMatrix *U; /// y_yt = y * y^T
   REAL yt_delta; /// yt_delta = y^T * delta
   dense::DenseRealMatrix *B_delta; /// B_delta = B * delta

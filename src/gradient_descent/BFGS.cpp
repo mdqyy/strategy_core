@@ -31,7 +31,7 @@ BFGS::BFGS(LrModel *lrmodel, LrPara *lrpara) {
   this->y = new dense::DenseRealMatrix(d, 1);
   this->last_weight_vector = new dense::DenseRealMatrix(d, 1);
   this->delta = new dense::DenseRealMatrix(d, 1);
-  this->detaT = new dense::DenseRealMatrix(1, d);
+  this->deltaT = new dense::DenseRealMatrix(1, d);
   this->U = new dense::DenseRealMatrix(d, 1);
   this->B_delta = new dense::DenseRealMatrix(d, 1);
   this->deltaT_B = new dense::DenseRealMatrix(1, d);
@@ -40,24 +40,30 @@ BFGS::BFGS(LrModel *lrmodel, LrPara *lrpara) {
 }
 
 BFGS::~BFGS() {
-  delete this->B;
-  delete this->B_inv;
-  delete this->p;
-  delete this->gradient_vector_neg;
-  delete this->last_gradient_vector;
-  delete this->y;
-  delete this->last_weight_vector;
-  delete this->delta;
-  delete this->detaT;
-  delete this->U;
-  delete this->B_delta;
-  delete this->deltaT_B;
-  delete this->V;
-  delete ls;
+  delete this->B; this->B = NULL;
+  delete this->B_inv; this->B_inv = NULL;
+  delete this->p; this->p = NULL;
+  delete this->gradient_vector_neg; this->gradient_vector_neg = NULL;
+  delete this->last_gradient_vector;  this->last_gradient_vector = NULL;
+  delete this->y; this->y = NULL;
+  delete this->last_weight_vector;  this->last_weight_vector = NULL;
+  delete this->delta; this->delta = NULL;
+  delete this->deltaT; this->deltaT = NULL;
+  delete this->U; this->U = NULL;
+  delete this->B_delta; this->B_delta = NULL;
+  delete this->deltaT_B;  this->deltaT_B = NULL;
+  delete this->V; this->V = NULL;
+  delete this->ls;  this->ls = NULL;
 }
 
 bool BFGS::init() {
   bool flag = true;
+
+  if (dense::euclid_norm_d(this->gradient_vector_norm, this->lrmodel->gradient_vector) < this->lrpara->epsilon) {
+    L4C_WARN("Won't begin iteration, please check the parameters!");
+    flag = false;
+    goto end;
+  }
 
 end:
   return flag;
@@ -65,9 +71,6 @@ end:
 
 bool BFGS::iter() {
   bool flag = true;
-  if (dense::euclid_norm_d(this->gradient_vector_norm, this->lrmodel->gradient_vector) < this->lrpara->epsilon) {
-    goto end;
-  }
 
   for (INT i = 0; i < this->lrpara->max_iter_num; i++) {
     dense::inv(this->B_inv, this->B);
@@ -87,7 +90,7 @@ bool BFGS::iter() {
       dense::inner_product_dd(this->yt_delta, this->y, this->delta);
       dense::num_mul(this->U, this->U, 1.0/this->yt_delta);  /// U = U / m
       dense::mul(this->B_delta, this->B, this->delta);
-      dense::mul(this->deltaT_B, this->detaT, this->B);
+      dense::mul(this->deltaT_B, this->deltaT, this->B);
       dense::mul(this->V, this->B_delta, this->deltaT_B);
       dense::inner_product_dd(this->dtBd, this->deltaT_B, this->delta);
       dense::num_mul(this->V, this->V, 1.0/this->dtBd);  /// V = V / n
