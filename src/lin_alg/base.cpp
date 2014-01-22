@@ -24,7 +24,6 @@ Matrix::Matrix(const UINT row, const UINT col) {
 }
 
 inline void Matrix::cal_sparsity() {
-  ///TODO?
   this->sparsity = (REAL)(this->nz) / (this->size);
 }
 

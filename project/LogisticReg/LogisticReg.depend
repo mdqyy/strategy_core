@@ -56,7 +56,7 @@
 	<el_strategy/lin_alg/sparse.h>
 	<el_strategy/common/log4c.h>
 
-1390292489 source:/home/cqy/work/strategy_core/examples/LogisticReg_main.cpp
+1390325864 source:/home/cqy/work/strategy_core/examples/LogisticReg_main.cpp
 	<strategy_core/supervised/LogisticReg.h>
 	<string>
 	<iostream>
@@ -78,7 +78,7 @@
 1389864299 source:/home/cqy/work/strategy_core/src/gradient_descent/GradientDescent.cpp
 	<strategy_core/gradient_descent/GradientDescent.h>
 
-1390292735 source:/home/cqy/work/strategy_core/src/lin_alg/sparse.cpp
+1390325778 source:/home/cqy/work/strategy_core/src/lin_alg/sparse.cpp
 	<strategy_core/lin_alg/sparse.h>
 	<strategy_core/common/log4c.h>
 
@@ -99,7 +99,7 @@
 1390290928 source:/home/cqy/work/strategy_core/src/gradient_descent/LineSearch.cpp
 	<strategy_core/gradient_descent/LineSearch.h>
 
-1390222012 source:/home/cqy/work/strategy_core/src/lin_alg/base.cpp
+1390316364 source:/home/cqy/work/strategy_core/src/lin_alg/base.cpp
 	<strategy_core/lin_alg/base.h>
 
 1390276153 source:/home/cqy/work/strategy_core/src/lin_alg/dense.cpp
@@ -114,7 +114,7 @@
 	<math.h>
 	<strategy_core/lin_alg/vector.h>
 
-1390291956 source:/home/cqy/work/strategy_core/src/supervised/LogisticReg.cpp
+1390325107 source:/home/cqy/work/strategy_core/src/supervised/LogisticReg.cpp
 	<stdlib.h>
 	<string.h>
 	<iostream>

@@ -23,17 +23,16 @@ namespace sparse {
 /// Cross List
 class CrossListNode {
  public:
-  INT i, j; /// position of a non-zero element, a[i,j]
+  UINT i, j; /// position of a non-zero element, a[i,j]
   REAL e;
   CrossListNode *right, *down;
-  CrossListNode() {};
+  CrossListNode() {right = NULL; down = NULL;};
   CrossListNode(const UINT i, const UINT j, const REAL e);
 };
 
 class SingleList {
  public:
-  CrossListNode *head;
-  CrossListNode *tail;
+  CrossListNode *head, *tail;
   UINT length;
   SingleList();
   ~SingleList();

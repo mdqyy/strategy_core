@@ -51,7 +51,7 @@ CrossList::CrossList(const UINT row, const UINT col) {
   this->rslArray = new SingleList *[this->row];
   for (UINT i = 0; i < this->row; i++) {
     this->rslArray[i] = new SingleList();
-    CrossListNode *clnode = new CrossListNode(-1, -1, 0);
+    CrossListNode *clnode = new CrossListNode();
     this->rslArray[i]->head = clnode;
     this->rslArray[i]->tail = clnode;
   }
@@ -59,7 +59,7 @@ CrossList::CrossList(const UINT row, const UINT col) {
   this->lslArray = new SingleList *[this->col];
   for (UINT j = 0; j < this->col; j++) {
     this->lslArray[j] = new SingleList();
-    CrossListNode *clnode = new CrossListNode(-1, -1, 0);
+    CrossListNode *clnode = new CrossListNode();
     this->lslArray[j]->head = clnode;
     this->lslArray[j]->tail = clnode;
   }
@@ -73,10 +73,12 @@ CrossList::~CrossList() {
   delete[] this->rslArray;
   this->rslArray = NULL;
 
+  /*
   for (UINT j = 0; j < this->col; j++) {
     delete this->lslArray[j];
     this->lslArray[j] = NULL;
   }
+  */
   delete[] this->lslArray;
   this->lslArray = NULL;
 }

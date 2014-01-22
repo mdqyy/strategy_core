@@ -158,8 +158,6 @@ LrModel::LrModel(const SampleSet *ss) {
 LrModel::~LrModel() {
   delete this->weight_vector;
   this->weight_vector = NULL;
-  delete this->ss;
-  this->ss = NULL;
   delete this->gradient_vector;
   this->gradient_vector = NULL;
   delete this->sum_xcol;

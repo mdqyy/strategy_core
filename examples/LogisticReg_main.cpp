@@ -21,7 +21,7 @@ using namespace std;
 
 int main (int argc, char **argv) {
   int flag = 0;
-///for (INT i = 0; i < 1; i++) { /// Test memory-leaking
+for (INT i = 0; i < 10000000; i++) { /// Test memory-leaking
   const char *log_conf_path = "/home/cqy/work/strategy_core/etc/LogisticReg/l4c.cfg";
   const char *conf_file_path = "";
   const char *trainingset_path = "/home/cqy/work/strategy_core/data/logistic.sample";
@@ -56,6 +56,6 @@ end:
   ts = NULL;
   delete lrpara;
   lrpara = NULL;
-///}
+}
   return flag;
 }
