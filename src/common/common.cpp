@@ -15,5 +15,5 @@
 
 #include <strategy_core/common/common.h>
 
-namespace memory {
+namespace Log {
 }

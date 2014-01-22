@@ -22,7 +22,10 @@ BFGS::BFGS(LrModel *lrmodel, LrPara *lrpara) {
   this->lrmodel = lrmodel;
   this->lrpara = lrpara;
   const UINT d = this->lrmodel->ss->feature_num;
-
+  this->gradient_vector_norm = 0;
+  this->yt_delta = 0;
+  this->dtBd = 0;
+  this->lambda = 0;
   this->B = new dense::DenseRealMatrix(d, d);
   this->B_inv = new dense::DenseRealMatrix(d, d);
   this->p = new dense::DenseRealMatrix(d, 1);

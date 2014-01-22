@@ -56,7 +56,7 @@ TrainingSet::TrainingSet(const char *training_set_path) {
 TrainingSet::~TrainingSet() {
   if (NULL != this->opf)
     fclose(this->opf);
-  //delete this->line;  this->line = NULL;
+  free(this->line);  this->line = NULL;
   delete this->sample_set;  this->sample_set = NULL;
 }
 
@@ -231,7 +231,6 @@ bool preprocess(TrainingSet *ts) {
   }
   L4C_INFO("Loading header finished!");
 
-  //cout<<ts->sample_num<<' '<<ts->feature_num<<endl;
   L4C_INFO("Loading sample starts!");
   if (!ts->load_sample()) {
     L4C_FATAL("Loading sample failed!");

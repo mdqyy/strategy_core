@@ -18,7 +18,7 @@
 
 namespace dense {
 /// DenseRealVector
-DenseRealVector::DenseRealVector(const INT row , const INT col)
+DenseRealVector::DenseRealVector(const UINT row , const UINT col)
                                 :Vector(row, col) {
   this->V = new REAL[Vector::length];
 }
@@ -27,7 +27,7 @@ DenseRealVector::~DenseRealVector() {
   delete []this->V; this->V = NULL;
 }
 
-bool DenseRealVector::set(const INT pos, const REAL value) {
+bool DenseRealVector::set(const UINT pos, const REAL value) {
   bool flag = true;
   if (pos < 0 or pos >= Vector::length) {
     L4C_ERROR("Array reference out of bound in DenseRealVector::set()!");
@@ -41,7 +41,7 @@ end:
   return flag;
 }
 
-bool DenseRealVector::get(REAL &value, const INT pos) {
+bool DenseRealVector::get(REAL &value, const UINT pos) {
   bool flag = true;
   if (pos < 0 or pos >= Vector::length) {
     L4C_ERROR("Array reference out of bound in DenseRealVector::get()!");
@@ -56,7 +56,7 @@ end:
 }
 
 /// DenseRealMatrix
-DenseRealMatrix::DenseRealMatrix(const INT row, const INT col)
+DenseRealMatrix::DenseRealMatrix(const UINT row, const UINT col)
                                 :Matrix(row, col) {
   this->M = new REAL *[row];
   for (UINT i = 0; i < this->row; i++)
@@ -64,7 +64,7 @@ DenseRealMatrix::DenseRealMatrix(const INT row, const INT col)
 }
 
 DenseRealMatrix::~DenseRealMatrix() {
-  for (INT i = 0; i < Matrix::row; i++) {
+  for (UINT i = 0; i < Matrix::row; i++) {
     delete []this->M[i];  this->M[i] = NULL;
   }
   delete []this->M; this->M = NULL;
@@ -124,14 +124,15 @@ end:
 }
 
 bool inv(DenseRealMatrix *B, const DenseRealMatrix *A) {/// B = A^(-1)
-  /*!
-   *  Gauss-Jordan method
-   */
+  /// Gauss-Jordan method
   bool flag = true;
 	INT *is, *js, i, j, k, l, u, v, n = A->row;
-	REAL d,p;
+	REAL d, p;
 	is = new INT[n];
 	js = new INT[n];
+	memset(is, 0, sizeof(is) * sizeof(INT));
+	memset(js, 0, sizeof(js) * sizeof(INT));
+
 	if (NULL == A || NULL == B) {
 		L4C_ERROR("Fatal error occurs in inv: DenseRealMatrix pointer is NULL!");
 		flag = false;

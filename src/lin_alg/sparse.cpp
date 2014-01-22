@@ -71,12 +71,9 @@ CrossList::~CrossList() {
   }
   delete []this->rslArray;  this->rslArray = NULL;
 
-  /*
   for (UINT j = 0; j < this->col; j++) {
-    delete this->lslArray[j];
-    this->lslArray[j] = NULL;
+    delete this->lslArray[j]; this->lslArray[j] = NULL;
   }
-  */
   delete []this->lslArray; this->lslArray = NULL;
 }
 

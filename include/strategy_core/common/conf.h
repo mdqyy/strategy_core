@@ -20,7 +20,6 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
-#include <libxml/parser.h>
 #include "algorithm.h"
 #include "log4c.h"
 
@@ -34,8 +33,5 @@ class Conf {
   private:
     const char *conf_file_path;
     const char *encoding_type;
-    xmlParserCtxtPtr ctxt;
-    xmlDocPtr doc;
-    xmlNodePtr cur;
 };
 #endif //STRATEGY_CORE_COMMON_CONF_H_
