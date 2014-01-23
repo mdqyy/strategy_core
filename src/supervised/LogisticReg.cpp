@@ -258,10 +258,8 @@ bool train(TrainingSet *ts, LrPara *lrpara) {
   L4C_INFO("Training finished!");
 
 end:
-  delete bfgs;
-  bfgs = NULL;
-  delete lrmodel;
-  lrmodel = NULL;
+  delete bfgs; bfgs = NULL;
+  delete lrmodel; lrmodel = NULL;
   return flag;
 }
 
