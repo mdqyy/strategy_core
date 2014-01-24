@@ -11,3 +11,8 @@
 *.lai
 *.la
 *.a
+
+# added by cqy
+bin
+var
+third
