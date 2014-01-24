@@ -26,19 +26,19 @@ BFGS::BFGS(LrModel *lrmodel, LrPara *lrpara) {
   this->yt_delta = 0;
   this->dtBd = 0;
   this->lambda = 0;
-  this->B = new dense::DenseRealMatrix(d, d);
-  this->B_inv = new dense::DenseRealMatrix(d, d);
-  this->p = new dense::DenseRealMatrix(d, 1);
-  this->gradient_vector_neg = new dense::DenseRealMatrix(d, 1);
-  this->last_gradient_vector = new dense::DenseRealMatrix(d, 1);
-  this->y = new dense::DenseRealMatrix(d, 1);
-  this->last_weight_vector = new dense::DenseRealMatrix(d, 1);
-  this->delta = new dense::DenseRealMatrix(d, 1);
-  this->deltaT = new dense::DenseRealMatrix(1, d);
-  this->U = new dense::DenseRealMatrix(d, 1);
-  this->B_delta = new dense::DenseRealMatrix(d, 1);
-  this->deltaT_B = new dense::DenseRealMatrix(1, d);
-  this->V = new dense::DenseRealMatrix(d, d);
+  this->B = new dense::RealMatrix(d, d);
+  this->B_inv = new dense::RealMatrix(d, d);
+  this->p = new dense::RealMatrix(d, 1);
+  this->gradient_vector_neg = new dense::RealMatrix(d, 1);
+  this->last_gradient_vector = new dense::RealMatrix(d, 1);
+  this->y = new dense::RealVector(d, 1);
+  this->last_weight_vector = new dense::RealMatrix(d, 1);
+  this->delta = new dense::RealVector(d, 1);
+  this->deltaT = new dense::RealMatrix(1, d);
+  this->U = new dense::RealMatrix(d, 1);
+  this->B_delta = new dense::RealMatrix(d, 1);
+  this->deltaT_B = new dense::RealVector(1, d);
+  this->V = new dense::RealMatrix(d, d);
   this->ls = new LineSearch(d, 1);
 }
 
@@ -62,7 +62,7 @@ BFGS::~BFGS() {
 bool BFGS::init() {
   bool flag = true;
 
-  if (dense::euclid_norm_d(this->gradient_vector_norm, this->lrmodel->gradient_vector) < this->lrpara->epsilon) {
+  if (dense::e_norm(this->gradient_vector_norm, this->lrmodel->gradient_vector) < this->lrpara->epsilon) {
     L4C_WARN("Won't begin iteration, please check the parameters!");
     flag = false;
     goto end;
@@ -79,23 +79,23 @@ bool BFGS::iter() {
     dense::inv(this->B_inv, this->B);
     dense::mul(this->p, this->B_inv, this->gradient_vector_neg);
     this->ls->step(this->lambda, this->lrpara->step_len, this->lrmodel->weight_vector, this->p);
-    dense::copy(this->lrmodel->weight_vector, (const dense::DenseRealMatrix *)this->ls->step_vector);
+    dense::copy(this->lrmodel->weight_vector, this->ls->step_vector);
     dense::copy(this->last_gradient_vector, this->lrmodel->gradient_vector);
     dense::copy(this->last_weight_vector, this->lrmodel->weight_vector);
     this->lrmodel->cal_gradient();
-    if (dense::euclid_norm_d(this->gradient_vector_norm, this->lrmodel->gradient_vector) < this->lrpara->epsilon) {
+    if (dense::e_norm(this->gradient_vector_norm, this->lrmodel->gradient_vector) < this->lrpara->epsilon) {
       goto end;
     }
     else {
       dense::sub(this->y, this->lrmodel->gradient_vector, this->last_gradient_vector);
       dense::sub(this->delta, this->lrmodel->weight_vector, this->last_weight_vector);
       dense::mul(this->U, this->B, this->delta);
-      dense::inner_product_dd(this->yt_delta, this->y, this->delta);
+      dense::inner_product(this->yt_delta, (const dense::RealVector *)this->y, (const dense::RealVector *)this->delta);
       dense::num_mul(this->U, this->U, 1.0/this->yt_delta);  /// U = U / m
       dense::mul(this->B_delta, this->B, this->delta);
       dense::mul(this->deltaT_B, this->deltaT, this->B);
       dense::mul(this->V, this->B_delta, this->deltaT_B);
-      dense::inner_product_dd(this->dtBd, this->deltaT_B, this->delta);
+      dense::inner_product(this->dtBd, (const dense::RealVector *)this->deltaT_B, (const dense::RealVector *)this->delta);
       dense::num_mul(this->V, this->V, 1.0/this->dtBd);  /// V = V / n
       dense::sub(this->U, this->U, this->V); /// U = U - V
       dense::add(this->B, this->B, this->U); /// B = B + U

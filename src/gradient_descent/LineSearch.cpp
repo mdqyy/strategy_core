@@ -16,7 +16,7 @@
 #include <strategy_core/gradient_descent/LineSearch.h>
 
 LineSearch::LineSearch(const UINT row, const UINT col) {
-  this->step_vector = new dense::DenseRealMatrix(row, col);
+  this->step_vector = new dense::RealMatrix(row, col);
 }
 
 LineSearch::~LineSearch() {

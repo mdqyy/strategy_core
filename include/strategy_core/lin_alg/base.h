@@ -15,10 +15,10 @@
 #ifndef STRATEGY_CORE_LIN_ALG_BASE_H_
 #define STRATEGY_CORE_LIN_ALG_BASE_H_
 
-#include <cstddef>
+#include <cmath>
 #include <strategy_core/common/common.h>
 
-#define REAL double
+#define REAL float
 #define INT size_t
 #define UINT unsigned int
 #define FAIL -999999
@@ -33,23 +33,24 @@ class Matrix {
   UINT col;
   UINT nz;
   REAL sparsity;
-  REAL size;
-  Matrix(const UINT row, const UINT col);
+  Matrix(const UINT row, const UINT col):row(row),
+                                         col(col),
+                                         nz(0),
+                                         sparsity(0.0) {};
   inline void cal_sparsity();
 };
 
-class Vector:public Matrix {
+class Square:virtual public Matrix {
  public:
-  UINT length;
-  bool by_row;
+  UINT size;
+  Square(const UINT n):Matrix(size, size),
+                       size(size) {};
+};
+
+class Vector:virtual public Matrix {
+ public:
+  UINT size;
+	bool by_row;
   Vector(const UINT row, const UINT col);
-  virtual bool set(const UINT pos, const REAL value) = 0;
-  virtual bool get(REAL &value, const UINT pos) = 0;
 };
-
-class SquareMatrix:Matrix {
- public:
-  SquareMatrix(const UINT n):Matrix(n, n) {};
-};
-
 #endif //STRATEGY_CORE_LIN_ALG_BASE_H_

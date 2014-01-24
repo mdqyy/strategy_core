@@ -23,7 +23,7 @@
 class LineSearch {
   ///TODO:
  public:
-  dense::DenseRealMatrix *step_vector;
+  dense::RealMatrix *step_vector;
   LineSearch(const UINT row, const UINT col);
   ~LineSearch();
 

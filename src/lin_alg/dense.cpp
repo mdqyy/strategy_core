@@ -17,102 +17,90 @@
 #include <strategy_core/common/log4c.h>
 
 namespace dense {
+/// RealMatrix
+RealMatrix::RealMatrix(const UINT row, const UINT col):Matrix(row, col) {
+	this->M = new REAL *[row];
+	for (UINT i = 0; i < row; i++) {
+		this->M[i] = new REAL[col];
+		memset(this->M[i], 0.0, col * sizeof(REAL));
+	}
+}
+
+RealMatrix::~RealMatrix() {
+	for (UINT i = 0; i < this->row; i++) {
+		delete []this->M[i]; this->M[i] = NULL;
+	}
+	delete []this->M; this->M = NULL;
+}
+
+void RealMatrix::print() const {
+	std::cout << "[\n";
+	for (UINT i = 0; i < this->row; i++) {
+		for (UINT j = 0; j < this->col - 1; j++)	{
+			std::cout << this->M[i][j] << ",";
+		}
+		std::cout << this->M[i][this->col - 1] << std::endl;
+	}
+	std::cout << "]\n";
+}
+
 /// DenseRealVector
-DenseRealVector::DenseRealVector(const UINT row , const UINT col)
-                                :Vector(row, col) {
-  this->V = new REAL[Vector::length];
-}
-
-DenseRealVector::~DenseRealVector() {
-  delete []this->V; this->V = NULL;
-}
-
-bool DenseRealVector::set(const UINT pos, const REAL value) {
+bool RealVector::set(const UINT pos, const REAL value) {
   bool flag = true;
-  if (pos < 0 or pos >= Vector::length) {
-    L4C_ERROR("Array reference out of bound in DenseRealVector::set()!");
+  if (pos < 0 or pos >= Vector::size) {
+    L4C_ERROR("Array reference out of bound in RealVector::set()!");
     flag = false;
     goto end;
   }
 
-  this->V[pos] = value;
+  if (Vector::by_row) {
+    RealMatrix::M[0][pos] = value;
+  }
+  else {
+    RealMatrix::M[pos][0] = value;
+  }
 
 end:
   return flag;
 }
 
-bool DenseRealVector::get(REAL &value, const UINT pos) {
+bool RealVector::get(REAL &value, const UINT pos) {
   bool flag = true;
-  if (pos < 0 or pos >= Vector::length) {
-    L4C_ERROR("Array reference out of bound in DenseRealVector::get()!");
+  if (pos < 0 or pos >= Vector::size) {
+    L4C_ERROR("Array reference out of bound in RealVector::get()!");
     flag = false;
     goto end;
   }
 
-  value = this->V[pos];
+  if (Vector::by_row) {
+    value = RealMatrix::M[0][pos];
+  }
+  else {
+    value = RealMatrix::M[pos][0];
+  }
 
 end:
   return flag;
-}
-
-/// DenseRealMatrix
-DenseRealMatrix::DenseRealMatrix(const UINT row, const UINT col)
-                                :Matrix(row, col) {
-  this->M = new REAL *[row];
-  for (UINT i = 0; i < this->row; i++)
-    this->M[i] = new REAL[col];
-}
-
-DenseRealMatrix::~DenseRealMatrix() {
-  for (UINT i = 0; i < Matrix::row; i++) {
-    delete []this->M[i];  this->M[i] = NULL;
-  }
-  delete []this->M; this->M = NULL;
-}
-
-UINT DenseRealMatrix::get_row() const {
-  return Matrix::row;
-}
-
-UINT DenseRealMatrix::get_col() const {
-  return Matrix::col;
 }
 
 /// DenseRealVector operations
-bool inner_product_dd(REAL &inner, const DenseRealMatrix *drva, const DenseRealMatrix *drvb) {
+bool inner_product(REAL &inner, const RealVector *rva, const RealVector *rvb) {
   bool flag = true;
 
 end:
   return flag;
 }
 
-/// norm = |V|
-bool euclid_norm_d(REAL &norm, const DenseRealMatrix *drv) {
-  bool flag = true;
-  REAL temp = 0.0;
-  if (NULL == drv) {
-    L4C_ERROR("Fatal error occurs in euclid_norm_d: DenseRealMatrix pointer is NULL!");
-    flag = false;
-    goto end;
-  }
-
-  inner_product_dd(temp, (const DenseRealMatrix *)drv, (const DenseRealMatrix *)drv);
-  norm = sqrt(temp);
-
-end:
-  return flag;
-}
-
-/// DenseRealMatrix operations
-bool copy(DenseRealMatrix *M_dest, const DenseRealMatrix *M_src) {
+/// RealMatrix operations
+bool copy(RealMatrix *M_dest, const RealMatrix *M_src) {
   bool flag = true;
   if (NULL == M_dest or NULL == M_src) {
-    L4C_ERROR("Fatal error occurs in copy_d: DenseRealMatrix pointer is NULL!");
+    L4C_ERROR("Fatal error occurs in copy: RealMatrix pointer is NULL!");
     flag = false;
     goto end;
   }
-  if (M_dest->row == M_src->row and M_dest->col == M_src->col) {
-    L4C_ERROR("Fatal error occurs in copy: DenseRealMatrix parameter error!");
+  if (not (M_dest->row == M_src->row and M_dest->col == M_src->col)) {
+    L4C_ERROR("Fatal error occurs in copy: RealMatrix parameter error!");
     flag = false;
     goto end;
   }
@@ -123,7 +111,7 @@ end:
   return flag;
 }
 
-bool inv(DenseRealMatrix *B, const DenseRealMatrix *A) {/// B = A^(-1)
+bool inv(RealMatrix *B, const RealMatrix *A) {/// B = A^(-1)
   /// Gauss-Jordan method
   bool flag = true;
 	INT *is, *js, i, j, k, l, u, v, n = A->row;
@@ -134,12 +122,12 @@ bool inv(DenseRealMatrix *B, const DenseRealMatrix *A) {/// B = A^(-1)
 	memset(js, 0, sizeof(js) * sizeof(INT));
 
 	if (NULL == A || NULL == B) {
-		L4C_ERROR("Fatal error occurs in inv: DenseRealMatrix pointer is NULL!");
+		L4C_ERROR("Fatal error occurs in inv: RealMatrix pointer is NULL!");
 		flag = false;
 		goto end;
 	}
 	if (A->row != A->col || B->row != B->col || A->row != B->row) {
-		L4C_ERROR("Fatal error occurs in inv: DenseRealMatrix parameter error!");
+		L4C_ERROR("Fatal error occurs in inv: RealMatrix parameter error!");
     flag = false;
 		goto end;
 	}
@@ -158,7 +146,7 @@ bool inv(DenseRealMatrix *B, const DenseRealMatrix *A) {/// B = A^(-1)
 				}
 			}
 			if (d + 1.0 == 1.0) { /// det(A) == 0
-				L4C_WARN("Warning in inv: det(A) equals zero!");
+				L4C_WARN("Warning in inv: Determinant of A equals zero!");
 				flag = false;
 				goto end;
 			}
@@ -224,16 +212,16 @@ end:
 }
 
 // C = A + B
-bool add(DenseRealMatrix *C, DenseRealMatrix *A, DenseRealMatrix *B) { /// C = A + B
+bool add(RealMatrix *C, RealMatrix *A, RealMatrix *B) { /// C = A + B
   bool flag = true;
 	if (A == NULL || B == NULL || C == NULL) {
-		L4C_ERROR("Fatal error occurs in add: DenseRealMatrix pointer is NULL!");
+		L4C_ERROR("Fatal error occurs in add: RealMatrix pointer is NULL!");
 		flag = false;
 		goto end;
 	}
 	if (A->row != B->row || A->col != B->col ||
       B->row != C->row || B->col != C->col) {
-		L4C_ERROR("Fatal error occurs in add: DenseRealMatrix parameter error!");
+		L4C_ERROR("Fatal error occurs in add: RealMatrix parameter error!");
 		return -1;
 	}
 
@@ -246,15 +234,15 @@ end:
 	return flag;
 }
 
-bool sub(DenseRealMatrix *C, DenseRealMatrix *A, DenseRealMatrix *B) { /// C = A - B
+bool sub(RealMatrix *C, RealMatrix *A, RealMatrix *B) { /// C = A - B
   bool flag = true;
 	if (NULL == A || NULL == B || NULL == C) {
-		L4C_ERROR("Fatal error occurs in sub: DenseRealMatrix pointer is NULL!");
+		L4C_ERROR("Fatal error occurs in sub: RealMatrix pointer is NULL!");
     flag = false;
 		goto end;
 	}
 	if (A->row != B->row || A->col != B->col || B->row != C->row || B->col != C->col) {
-		L4C_ERROR("Fatal error occurs in sub: DenseRealMatrix parameter error!");
+		L4C_ERROR("Fatal error occurs in sub: RealMatrix parameter error!");
     flag = false;
 		goto end;
 	}
@@ -268,15 +256,15 @@ end:
 	return flag;
 }
 
-bool mul(DenseRealMatrix *C, const DenseRealMatrix *A, const DenseRealMatrix *B) { /// C = A * B
+bool mul(RealMatrix *C, const RealMatrix *A, const RealMatrix *B) { /// C = A * B
   bool flag = true;
 	if (NULL == A || NULL == B || NULL == C) {
-		L4C_ERROR("Fatal error occurs in mul: DenseRealMatrix pointer is NULL!");
+		L4C_ERROR("Fatal error occurs in mul: RealMatrix pointer is NULL!");
     flag = false;
 		goto end;
 	}
 	if (A->col != B->row || A->row != C->row || B->col != C->col) {
-		L4C_ERROR("Fatal error occurs in mul: DenseRealMatrix parameter error!");
+		L4C_ERROR("Fatal error occurs in mul: RealMatrix parameter error!");
     flag = false;
 		goto end;
 	}
@@ -295,15 +283,15 @@ end:
 	return flag;
 }
 
-bool tranv(DenseRealMatrix *B, DenseRealMatrix *A) { /// B = A^T
+bool tranv(RealMatrix *B, RealMatrix *A) { /// B = A^T
   bool flag = true;
 	if (NULL == A || NULL == B) {
-		L4C_ERROR("Fatal error occurs in tranv: DenseRealMatrix pointer is NULL!");
+		L4C_ERROR("Fatal error occurs in tranv: RealMatrix pointer is NULL!");
     flag = false;
 		goto end;
 	}
 	if (A->row != B->col|| A->col != B->row) {
-		L4C_ERROR("Fatal error occurs in tranv: DenseRealMatrix parameter error!");
+		L4C_ERROR("Fatal error occurs in tranv: RealMatrix parameter error!");
     flag = false;
 		goto end;
 	}
@@ -317,7 +305,7 @@ end:
 	return flag;
 }
 
-bool t_mul(DenseRealMatrix *B, DenseRealMatrix *A) {  /// B = A*A^T
+bool t_mul(RealMatrix *B, RealMatrix *A) {  /// B = A*A^T
   ///TODO:;
   bool flag = true;
 
@@ -325,13 +313,28 @@ end:
   return flag;
 }
 
-bool f_norm(REAL &fnorm, DenseRealMatrix *A) { /// Frobenius norm of DenseRealMatrix
+bool e_norm(REAL &norm, const RealMatrix *A) { /// norm = |V|
+  bool flag = true;
+  REAL temp = 0.0;
+  if (NULL == A) {
+    L4C_ERROR("Fatal error occurs in euclid_norm_d: RealMatrix pointer is NULL!");
+    flag = false;
+    goto end;
+  }
+
+  norm = sqrt(f_norm(norm, A));
+
+end:
+  return flag;
+}
+
+bool f_norm(REAL &fnorm, const RealMatrix *A) { /// Frobenius norm of RealMatrix
   bool flag = true;
   REAL sum = 0.0;
   REAL tmp = 0.0;
   UINT i, j;
 	if (NULL == A) {
-		L4C_ERROR("Fatal error occurs in f_norm: DenseRealMatrix pointer is NULL!");
+		L4C_ERROR("Fatal error occurs in f_norm: RealMatrix pointer is NULL!");
     flag = false;
 		goto end;
 	}
@@ -347,11 +350,11 @@ end:
 	return flag;
 }
 
-bool m_norm(REAL &mnorm, DenseRealMatrix *A) { /// Manhattan norm of DenseRealMatrix
+bool m_norm(REAL &mnorm, const RealMatrix *A) { /// Manhattan norm of RealMatrix
   bool flag = true;
   REAL sum = 0.0;
 	if (NULL == A) {
-		L4C_ERROR("Fatal error occurs in m_norm: DenseRealMatrix pointer is NULL!");
+		L4C_ERROR("Fatal error occurs in m_norm: RealMatrix pointer is NULL!");
     flag = false;
 		goto end;
 	}
@@ -369,11 +372,11 @@ end:
 	return  flag;
 }
 
-bool get_min(REAL &min, DenseRealMatrix *A) {
+bool get_min(REAL &min, const RealMatrix *A) {
   bool flag = true;
   REAL _min = Max;
 	if (NULL == A) {
-		L4C_ERROR("Fatal error occurs in get_min: DenseRealMatrix pointer is NULL!");
+		L4C_ERROR("Fatal error occurs in get_min: RealMatrix pointer is NULL!");
     flag = false;
 		goto end;
 	}
@@ -392,11 +395,11 @@ end:
   return  flag;
 }
 
-bool get_max(REAL &max, DenseRealMatrix *A) {
+bool get_max(REAL &max, const RealMatrix *A) {
   bool flag = true;
   REAL _max = Min;
 	if (NULL == A) {
-		L4C_ERROR("Fatal error occurs in get_max: DenseRealMatrix pointer is NULL!");
+		L4C_ERROR("Fatal error occurs in get_max: RealMatrix pointer is NULL!");
     flag = false;
 		goto end;
 	}
@@ -415,15 +418,15 @@ end:
 	return  flag;
 }
 
-bool num_mul(DenseRealMatrix *B, DenseRealMatrix *A, REAL real) { /// B = k * A
+bool num_mul(RealMatrix *B, RealMatrix *A, const REAL real) { /// B = k * A
   bool flag = true;
 	if (NULL == A || NULL == B) {
-		L4C_ERROR("Fatal error occurs in num_mul: DenseRealMatrix pointer is NULL!");
+		L4C_ERROR("Fatal error occurs in num_mul: RealMatrix pointer is NULL!");
     flag = false;
 		goto end;
 	}
 	if (A->row != B->row || A->col != B->col) {
-		L4C_ERROR("Fatal error occurs in num_mul: DenseRealMatrix parameter error!");
+		L4C_ERROR("Fatal error occurs in num_mul: RealMatrix parameter error!");
     flag = false;
 		goto end;
 	}
@@ -437,15 +440,15 @@ end:
 	return flag;
 }
 
-bool num_add(DenseRealMatrix *B, DenseRealMatrix *A, REAL real) { /// B = [k] + A
+bool num_add(RealMatrix *B, RealMatrix *A, REAL real) { /// B = [k] + A
   bool flag = true;
 	if (NULL == A || NULL == B) {
-		L4C_ERROR("Fatal error occurs in num_add: DenseRealMatrix pointer is NULL!");
+		L4C_ERROR("Fatal error occurs in num_add: RealMatrix pointer is NULL!");
     flag = false;
 		goto end;
 	}
 	if (A->row != B->row || A->col != B->col) {
-		L4C_ERROR("Fatal error occurs in num_add: DenseRealMatrix parameter error!");
+		L4C_ERROR("Fatal error occurs in num_add: RealMatrix parameter error!");
     flag = false;
 		goto end;
 	}
@@ -463,15 +466,15 @@ end:
 	return flag;
 }
 
-bool hadamard_mul(DenseRealMatrix *C, const DenseRealMatrix *A, const DenseRealMatrix *B) {///  hadamard mul
+bool hadamard_mul(RealMatrix *C, const RealMatrix *A, const RealMatrix *B) {///  hadamard mul
   bool flag = true;
 	if (NULL == A || NULL == B || NULL == C) {
-		L4C_ERROR("Fatal error occurs in hadamard_mul: DenseRealMatrix pointer is NULL!");
+		L4C_ERROR("Fatal error occurs in hadamard_mul: RealMatrix pointer is NULL!");
     flag = false;
 		goto end;
 	}
 	if (A->col != B->row || A->row != C->row || B->col != C->col) {
-		L4C_ERROR("Fatal error occurs in hadamard_mul: DenseRealMatrix parameter error!");
+		L4C_ERROR("Fatal error occurs in hadamard_mul: RealMatrix parameter error!");
     flag = false;
 		goto end;
 	}
@@ -485,15 +488,15 @@ end:
 	return flag;
 }
 
-bool kronecker_mul(DenseRealMatrix *C, const DenseRealMatrix *A, const DenseRealMatrix *B) {///  kronecker mul
+bool kronecker_mul(RealMatrix *C, const RealMatrix *A, const RealMatrix *B) {///  kronecker mul
   bool flag = true;
 	if (NULL == A || NULL == B || NULL == C) {
-		L4C_ERROR("Fatal error occurs in kronecker_mul: DenseRealMatrix pointer is NULL!");
+		L4C_ERROR("Fatal error occurs in kronecker_mul: RealMatrix pointer is NULL!");
     flag = false;
 		goto end;
 	}
 	if (C->row != A->row*B->row) {
-		L4C_ERROR("Fatal error occurs in kronecker_mul: DenseRealMatrix C must be a DenseRealMatrix of d(C) = d(A)*d(B)!");
+		L4C_ERROR("Fatal error occurs in kronecker_mul: RealMatrix C must be a RealMatrix of d(C) = d(A)*d(B)!");
     flag = false;
 		goto end;
 	}

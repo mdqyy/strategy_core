@@ -18,19 +18,19 @@
 
 #include <strategy_core/lin_alg/dense.h>
 #include <strategy_core/lin_alg/sparse.h>
+#include <strategy_core/lin_alg/sd.h>
+#include <strategy_core/discrete/CrossList.h>
 #include <strategy_core/common/algorithm.h>
-#include <string>
 
 using namespace std;
 
 namespace LogisticReg {
-#define VectorType sparse::SparseVector
 #define Ytype_t INT
 #define Ytype_p REAL
 
 class SampleSet {
  public:
-  sparse::CrossList *features; /// X
+  CrossList *features; /// X
   Ytype_t *y; /// Y
   INT sample_num;
   INT feature_num;
@@ -60,8 +60,8 @@ class LrModel {
  public:
   const SampleSet *ss;
   REAL target;  /// Value of target function.
-  dense::DenseRealMatrix *weight_vector;
-  dense::DenseRealMatrix *gradient_vector;
+  dense::RealMatrix *weight_vector;
+  dense::RealMatrix *gradient_vector;
   REAL *sum_xcol; /// intermediate result: sum(x_ij, i, 1, sample_num)
                   /// init when loading whole data set.
   REAL *sum_nz_xcol; /// intermediate result: sum(x_ij, i, 1, sample_num) | yi != 0
@@ -95,7 +95,7 @@ class LrPara {
 void init(const char *logfile_path);
 bool preprocess(TrainingSet *ts);
 bool train(TrainingSet *ts, LrPara *lrpara);
-Ytype_p predict(const dense::DenseRealVector *weight, const sparse::SparseRealVector *feature);
+Ytype_p predict(const dense::RealVector *weight, const sparse::RealVector *feature);
 }
 
 #endif //STRATEGY_CORE_SUPERVISED_LOGISTICREG_H_

@@ -37,21 +37,21 @@ class BFGS {
 
  private:
   const LrPara *lrpara;
-  dense::DenseRealMatrix *B, *B_inv; /// A symmetric positive definite matrix
-  dense::DenseRealMatrix *p;
-  dense::DenseRealMatrix *wk;
-  dense::DenseRealMatrix *gradient_vector_neg; /// -g
+  dense::RealMatrix *B, *B_inv; /// A symmetric positive definite matrix
+  dense::RealMatrix *p;
+  dense::RealMatrix *wk;
+  dense::RealMatrix *gradient_vector_neg; /// -g
   REAL gradient_vector_norm;
-  dense::DenseRealMatrix *last_gradient_vector;
-  dense::DenseRealMatrix *y;/// y = g^(k + 1) - g^k
-  dense::DenseRealMatrix *last_weight_vector;
-  dense::DenseRealMatrix *delta; /// delta = w^(k + 1) - w^k
-  dense::DenseRealMatrix *deltaT; /// deltaT = delta^T
-  dense::DenseRealMatrix *U; /// y_yt = y * y^T
+  dense::RealMatrix *last_gradient_vector;
+  dense::RealMatrix *y;/// y = g^(k + 1) - g^k
+  dense::RealMatrix *last_weight_vector;
+  dense::RealMatrix *delta; /// delta = w^(k + 1) - w^k
+  dense::RealMatrix *deltaT; /// deltaT = delta^T
+  dense::RealMatrix *U; /// y_yt = y * y^T
   REAL yt_delta; /// yt_delta = y^T * delta
-  dense::DenseRealMatrix *B_delta; /// B_delta = B * delta
-  dense::DenseRealMatrix *deltaT_B; /// deltaT_B = delta^T * B
-  dense::DenseRealMatrix *V;
+  dense::RealMatrix *B_delta; /// B_delta = B * delta
+  dense::RealMatrix *deltaT_B; /// deltaT_B = delta^T * B
+  dense::RealMatrix *V;
   LineSearch *ls;
   REAL dtBd;
   REAL lambda;

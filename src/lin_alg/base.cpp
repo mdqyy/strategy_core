@@ -15,25 +15,17 @@
 
 #include <strategy_core/lin_alg/base.h>
 
-Matrix::Matrix(const UINT row, const UINT col) {
-  this->row = row;
-  this->col = col;
-  this->size = row * col;
-  this->nz = 0;
-  this->sparsity = 0.0;
-}
-
 inline void Matrix::cal_sparsity() {
-  this->sparsity = (REAL)(this->nz) / (this->size);
+  this->sparsity = (REAL)(this->nz) / (this->row * this->col);
 }
 
 Vector::Vector(const UINT row, const UINT col):Matrix(row, col) {
-  if (1 == row and 1 < col) {
-    this->by_row = true;
-    this->length = col;
-  }
-  else if (1 == col and 1 < row) {
-    this->by_row = false;
-    this->length = row;
-  }
+	if (1 == row) {
+		this->size = col;
+		this->by_row = false;
+	}
+	else {
+		this->size = row;
+		this->by_row = true;
+	}
 }

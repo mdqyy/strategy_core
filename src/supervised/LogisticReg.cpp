@@ -13,15 +13,9 @@
  */
 //==============================================================================
 
-#include <stdlib.h>
-#include <string.h>
-#include <iostream>
-#include <map>
-#include <cmath>
 #include <strategy_core/supervised/LogisticReg.h>
 #include <strategy_core/gradient_descent/BFGS.h>
-#include <strategy_core/common/log4c.h>
-#include <strategy_core/common/conf.h>
+#include <map>
 
 #define MAX_LINE_LEN 1024*1024 /// 1 MB for each line.
 #define MAX_VAR_LEN 128
@@ -35,7 +29,7 @@ namespace LogisticReg {
 SampleSet::SampleSet (const INT sample_num, const INT feature_num) {
   this->sample_num = sample_num;
   this->feature_num = feature_num;
-  this->features = new sparse::CrossList(sample_num, feature_num);
+  this->features = new CrossList(sample_num, feature_num);
   this->y = new Ytype_t[sample_num];
 }
 
@@ -122,7 +116,7 @@ bool TrainingSet::load_sample() {
       if (TOKENIZER == line[curr_pos] or END_OF_LINE == line[curr_pos]) {
         strncpy(feature_value, this->line + last_pos, curr_pos - last_pos);
         fvalue = atof(feature_value);
-        sparse::CrossListNode *clnode = new sparse::CrossListNode(row_id, fid, fvalue);
+        CrossListNode *clnode = new CrossListNode(row_id, fid, fvalue);
         last_pos = curr_pos + 1;
         if (!sample_set->features->append(clnode)) {
           L4C_FATAL("Insert element error at (%d, %d, %f)!",
@@ -147,8 +141,8 @@ end:
 LrModel::LrModel(const SampleSet *ss) {
   this->ss = ss;
   const UINT d = this->ss->feature_num; /// Dimenstion
-  this->weight_vector = new dense::DenseRealMatrix(d, 1);
-  this->gradient_vector = new dense::DenseRealMatrix(d, 1);
+  this->weight_vector = new dense::RealMatrix(d, 1);
+  this->gradient_vector = new dense::RealMatrix(d, 1);
   this->sum_xcol = new REAL[d];
   this->sum_nz_xcol = new REAL[d];
   this->ewx = new REAL[d];
@@ -264,10 +258,10 @@ end:
 }
 
 /*! Logistic regression prediction */
-Ytype_p predict(const dense::DenseRealVector *weight, const sparse::SparseRealVector *feature) {
+Ytype_p predict(const dense::RealVector *weight, const sparse::RealVector *feature) {
   Ytype_p probability;
   REAL wx = 0;
-  inner_product_sd(wx, feature, weight);
+  sd::inner_product(wx, feature, weight);
   REAL exp_wx = exp(wx);
   probability = exp_wx/(1.0 + exp_wx);
   return probability;

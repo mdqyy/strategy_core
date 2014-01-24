@@ -17,42 +17,9 @@
 #define STRATEGY_CORE_LIN_ALG_SPARSE_H_
 
 #include <strategy_core/lin_alg/base.h>
-#include <strategy_core/lin_alg/dense.h>
+#include <strategy_core/discrete/CrossList.h>
 
 namespace sparse {
-/// Cross List
-class CrossListNode {
- public:
-  UINT i, j; /// position of a non-zero element, a[i,j]
-  REAL e;
-  CrossListNode *right, *down;
-  CrossListNode() {right = NULL; down = NULL;};
-  CrossListNode(const UINT i, const UINT j, const REAL e);
-};
-
-class SingleList {
- public:
-  CrossListNode *head, *tail;
-  UINT length;
-  SingleList();
-  ~SingleList();
-};
-
-class CrossList {
- public:
-  SingleList **rslArray, **lslArray;
-  UINT row, col, nz; /// num of rows, columns and non-zero elements.
-  CrossList(const UINT row, const UINT col);
-  ~CrossList();
-
-  bool append(CrossListNode *clnode);
-  SingleList *get_row(const UINT row_no);
-  SingleList *get_col(const UINT col_no);
-  bool output_row(const UINT row_no);
-  bool output_col(const UINT col_no);
-  void output_all(void);
-};
-
 /*! Sparse Vector implementation using Linked List */
 class RealVectorPoint {
  public:
@@ -71,59 +38,59 @@ class SparseList {
   ~SparseList();
 };
 
-class SparseRealVector:public Vector {
- public:
-  SparseList *sl;
-  SparseRealVector(const UINT row, const UINT col);
-  ~SparseRealVector();
-
-  bool append(RealVectorPoint *rvp);
-};
-
-/*! Sparse Matrix implementation using Cross List */
-class SparseRealMatrix:public Matrix {
+/// Sparse Matrix implementation using Cross List
+class RealMatrix:public Matrix {
  public:
   CrossList *cl;
 
-  SparseRealMatrix(const UINT row, const UINT col);
-  ~SparseRealMatrix();
+  RealMatrix(const UINT row, const UINT col);
+  virtual ~RealMatrix();
+  virtual bool append(CrossListNode *clnode);
+  virtual void print() const;
 };
 
-class SparseSquareMatrix:public SparseRealMatrix {
+class ZeroMatrix:RealMatrix {
  public:
-  SparseSquareMatrix(const UINT n):SparseRealMatrix(n, n) {};
+  ZeroMatrix(const UINT row, const UINT col):RealMatrix(row, col) {};
 };
 
-class DiagMatrix:public SparseSquareMatrix {
+class RealSquare:public Square,
+                 public RealMatrix {
  public:
-  DiagMatrix(const UINT n);
+  RealSquare(const UINT size):Matrix(size, size),
+                              Square(size),
+                              RealMatrix(size, size) {};
 };
 
-class ZeroMatrix:public SparseRealMatrix {
+/// RealVector
+class RealVector:public Vector {
  public:
-  ZeroMatrix(const UINT row, const UINT col):SparseRealMatrix(row, col) {};
-};
+  SparseList *sl;
 
-/// Vector Opertations.
-bool inner_product_sd(REAL &inner, const SparseRealVector *srv, const dense::DenseRealVector *drv);
-bool inner_product_ss(REAL &inner, const SparseRealVector *srva, const SparseRealVector *srvb);
+  RealVector(const UINT row, const UINT col);
+  ~RealVector();
+  bool append(RealVectorPoint *rvp);
+};
 
 /// Matrix operations
-bool copy(Matrix *M_dest, const Matrix *M_src);
-bool inv(Matrix *B, Matrix *A); /// B = A^(-1)
-bool add(Matrix *C, Matrix *A, Matrix *B);  /// C = A + B
-bool sub(Matrix *C, Matrix *A, Matrix *B);  /// C = A - B
-bool mul(Matrix *C, Matrix *A, Matrix *B);  /// C = A * B
-bool t_mul(Matrix *B, Matrix *A);  /// B = A * A^T
-bool tranv(Matrix *B, Matrix *A); /// B = A^T
-bool f_norm(REAL &fnorm, Matrix *A); /// Frobenius norm.
-bool m_norm(REAL &mnorm, Matrix *A); /// Manhattan norm of matrix
-bool get_min(REAL &min, Matrix *A); /// get min
-bool get_max(REAL &max, Matrix *A);/// get max
-bool num_mul(Matrix *B, Matrix *A, const double num); /// B = num * A
-bool num_add(Matrix *B, Matrix *A, const double num); /// B = [num] + A
-bool nlz(Matrix *B, Matrix *A); /// Normalize
-bool hadamard_mul(Matrix *C, Matrix *A, Matrix *B);
-bool kronecker_mul(Matrix *C, Matrix *A, Matrix *B);
+bool copy(RealMatrix *M_dest, const RealMatrix *M_src);
+bool inv(RealMatrix *B, RealMatrix *A); /// B = A^(-1)
+bool add(RealMatrix *C, RealMatrix *A, RealMatrix *B);  /// C = A + B
+bool sub(RealMatrix *C, RealMatrix *A, RealMatrix *B);  /// C = A - B
+bool mul(RealMatrix *C, RealMatrix *A, RealMatrix *B);  /// C = A * B
+bool t_mul(RealMatrix *B, RealMatrix *A);  /// B = A * A^T
+bool tranv(RealMatrix *B, RealMatrix *A); /// B = A^T
+bool f_norm(REAL &fnorm, RealMatrix *A); /// Frobenius norm.
+bool m_norm(REAL &mnorm, RealMatrix *A); /// Manhattan norm of matrix
+bool get_min(REAL &min, RealMatrix *A); /// get min
+bool get_max(REAL &max, RealMatrix *A);/// get max
+bool num_mul(RealMatrix *B, RealMatrix *A, const double num); /// B = num * A
+bool num_add(RealMatrix *B, RealMatrix *A, const double num); /// B = [num] + A
+bool nlz(RealMatrix *B, RealMatrix *A); /// Normalize
+bool hadamard_mul(RealMatrix *C, RealMatrix *A, RealMatrix *B);
+bool kronecker_mul(RealMatrix *C, RealMatrix *A, RealMatrix *B);
+
+/// Vector operations
+bool inner_product(REAL &inner, const RealVector *rva, const RealVector *rvb);
 }
 #endif //STRATEGY_CORE_LIN_ALG_SPARSE_H_
