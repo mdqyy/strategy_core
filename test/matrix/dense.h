@@ -1,11 +1,15 @@
 #include "base.h"
 #include <iostream>
 #include <cstring>
+extern "C"
+{
+#include <cblas.h> 
+}
 
 namespace dense {
 class RealMatrix:virtual public Matrix {
  public:
- 	REAL **M;
+ 	REAL *M;
 	RealMatrix(UINT row, UINT col);
 	virtual ~RealMatrix();
 	virtual void print() const;
@@ -27,6 +31,6 @@ class RealSquare:public Square,
 												RealMatrix(size, size) {};
 };
 
-bool copy(RealMatrix *M_dest, const RealMatrix *M_src);
-bool inv(RealMatrix *B, const RealMatrix *A);
+bool copy(RealMatrix &M_dest, const RealMatrix &M_src);
+bool mul(RealMatrix &C, const RealMatrix &A, const RealMatrix &B);
 }

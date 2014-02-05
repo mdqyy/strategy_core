@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="../../examples/LogisticReg_main.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="1321" topLine="16" />
+	<File name="../../examples/LogisticReg_main.cpp" open="1" top="1" tabpos="3">
+		<Cursor position="4132" topLine="84" />
 	</File>
 	<File name="../../include/strategy_core/common/algorithm.h" open="0" top="0" tabpos="0">
 		<Cursor position="525" topLine="8" />
@@ -34,8 +34,8 @@
 	<File name="../../include/strategy_core/lin_alg/sd.h" open="0" top="0" tabpos="0">
 		<Cursor position="275" topLine="0" />
 	</File>
-	<File name="../../include/strategy_core/lin_alg/sparse.h" open="1" top="1" tabpos="2">
-		<Cursor position="1681" topLine="55" />
+	<File name="../../include/strategy_core/lin_alg/sparse.h" open="1" top="0" tabpos="2">
+		<Cursor position="1792" topLine="55" />
 	</File>
 	<File name="../../include/strategy_core/supervised/LogisticReg.h" open="0" top="0" tabpos="2">
 		<Cursor position="669" topLine="18" />

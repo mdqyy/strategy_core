@@ -1,0 +1,676 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+ 
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>CLAPACK的安装与简单使用 - daiyuchao的专栏
+        - 博客频道 - CSDN.NET</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="CLAPACK是LAPACK的C语言接口。LAPACK的全称是Linear Algebra PACKage，是非常著名的线性代数库。LAPACK是用Fortran写的，为了方便C/C++程序的使用，就有了LAPACK的C接口库CLAPACK。LAPACK的主页是http://www.netlib.org/lapack/，CLAPACK则在http://www.netlib.org/clapack/" />
+    <script src="http://static.blog.csdn.net/scripts/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript" src="http://static.blog.csdn.net/scripts/ad.js?v=1.1"></script>
+        <!--new top-->
+               <link rel="stylesheet" href="http://static.csdn.net/public/common/toolbar/css/index.css">        <!--new top-->
+
+    <link rel="Stylesheet" type="text/css" href="http://static.blog.csdn.net/skin/default/css/style.css?v=1.1" />
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="/daiyuchao/rss/list" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link type="text/css" rel="stylesheet" href="http://static.blog.csdn.net/scripts/SyntaxHighlighter/styles/default.css" />
+ 
+
+</head>
+<body>
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="http://static.csdn.net/public/common/toolbar/js/html.js" type="text/javascript"></script>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h1>
+                <a href="http://blog.csdn.net/daiyuchao">daiyuchao的专栏</a></h1>
+            <h2>执着于技术，孜孜不倦</h2>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>
+                <li id="btnContents"><a href="http://blog.csdn.net/daiyuchao?viewmode=contents"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_mulu'])">
+                    <img src="http://static.blog.csdn.net/images/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/daiyuchao?viewmode=list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_zhaiyao'])">
+                    <img src="http://static.blog.csdn.net/images/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/daiyuchao/rss/list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_RSS'])">
+                    <img src="http://static.blog.csdn.net/images/ico_rss.gif">订阅</span></a></li>
+</ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "daiyuchao";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/daiyuchao";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "";
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+<div class="notice tracking-ad" data-mod='popu_3' > 
+
+<a href="http://bbs.csdn.net/topics/390693728"target="_blank">
+<font color=blue>新年新气象------CSDN2014新版导航就要跟大家见面了
+ </font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="http://bbs.csdn.net/topics/390693540" target="_blank"><font color=red>2014年1月微软MVP当选名单揭晓！
+</font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/17356319"target="_blank">
+<font color=red>“我的2013”年度征文获奖名单已公布
+ </font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="http://www.csdn.net/article/2014-01-22/2818223"target="_blank">
+<font color=red>专访宋海涛：我们在做一款比Google Glass更酷的设备 </font></a>
+
+
+</div>                    <link href="http://static.blog.csdn.net/css/comment1.css" type="text/css" rel="stylesheet" />
+<link href="http://static.blog.csdn.net/css/style1.css" type="text/css" rel="stylesheet" />
+<div id="article_details" class="details">
+    <div class="article_title">
+    <span class="ico ico_type_Original"></span>
+    <h3>
+        <span class="link_title"><a href="/daiyuchao/article/details/2026162">
+        CLAPACK的安装与简单使用
+        </a></span>
+    </h3>
+</div>
+
+    <div class="article_manage">
+        <span class="link_categories">
+        分类：
+            <a href="/daiyuchao/article/category/300998">C/C++/C#</a> 
+        </span>
+    <span class="link_postdate">2008-01-04 22:37</span>
+    <span class="link_view" title="阅读次数">8502人阅读</span>
+    <span class="link_comments" title="评论次数"><a href="#comments" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(4)</span>
+    <span class="link_collect"><a href="javascript:void(0);" onclick="javascript:_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shoucang']);collectArticle('CLAPACK的安装与简单使用','2026162');return false;" title="收藏">收藏</a></span>
+    <span class="link_report"><a href="#report"  onclick="javascript:_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_jubao']);report(2026162,2);return false;" title="举报">举报</a></span>
+    
+</div>
+<div class="tag2box"><a href='http://www.csdn.net/tag/integer' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">integer</a><a href='http://www.csdn.net/tag/fortran' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">fortran</a><a href='http://www.csdn.net/tag/iostream' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">iostream</a><a href='http://www.csdn.net/tag/%e5%ad%98%e5%82%a8' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">存储</a><a href='http://www.csdn.net/tag/%e8%af%ad%e8%a8%80' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">语言</a><a href='http://www.csdn.net/tag/c%2b%2b' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">c++</a></div>
+
+    
+<div id="article_content" class="article_content">
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">CLAPACK</span><span style="FONT-SIZE: 10.5pt">是</span><span style="FONT-SIZE: 10.5pt">LAPACK</span><span style="FONT-SIZE: 10.5pt">的</span><span style="FONT-SIZE: 10.5pt">C</span><span style="FONT-SIZE: 10.5pt">语言接口。</span><span style="FONT-SIZE: 10.5pt">LAPACK</span><span style="FONT-SIZE: 10.5pt">的全称是</span><span style="FONT-SIZE: 10.5pt">Linear Algebra PACKage</span><span style="FONT-SIZE: 10.5pt">，是非常著名的线性代数库。</span><span style="FONT-SIZE: 10.5pt">LAPACK</span><span style="FONT-SIZE: 10.5pt">是用</span><span style="FONT-SIZE: 10.5pt">Fortran</span><span style="FONT-SIZE: 10.5pt">写的，为了方便</span><span style="FONT-SIZE: 10.5pt">C/C++</span><span style="FONT-SIZE: 10.5pt">程序的使用，就有了</span><span style="FONT-SIZE: 10.5pt">LAPACK</span><span style="FONT-SIZE: 10.5pt">的</span><span style="FONT-SIZE: 10.5pt">C</span><span style="FONT-SIZE: 10.5pt">接口库</span><span style="FONT-SIZE: 10.5pt">CLAPACK</span><span style="FONT-SIZE: 10.5pt">。</span><span style="FONT-SIZE: 10.5pt">LAPACK</span><span style="FONT-SIZE: 10.5pt">的主页是</span><span style="FONT-SIZE: 10.5pt">http://www.netlib.org/lapack/</span><span style="FONT-SIZE: 10.5pt">，</span><span style="FONT-SIZE: 10.5pt">CLAPACK</span><span style="FONT-SIZE: 10.5pt">则在</span><span style="FONT-SIZE: 10.5pt">http://www.netlib.org/clapack/</span><span style="FONT-SIZE: 10.5pt">。</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">&nbsp;</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">安装</span><span style="FONT-SIZE: 10.5pt">CLAPACK</span><span style="FONT-SIZE: 10.5pt">首先自从其主页上下载</span><span style="FONT-SIZE: 10.5pt">CLAPACK</span><span style="FONT-SIZE: 10.5pt">包</span><span style="FONT-SIZE: 10.5pt">http://www.netlib.org/clapack/clapack.tgz</span><span style="FONT-SIZE: 10.5pt">，解压。在其目录下的</span><span style="FONT-SIZE: 10.5pt">INSTALL</span><span style="FONT-SIZE: 10.5pt">目录中有</span><span style="FONT-SIZE: 10.5pt">make.inc</span><span style="FONT-SIZE: 10.5pt">的范本文件，比如在</span><span style="FONT-SIZE: 10.5pt">linux</span><span style="FONT-SIZE: 10.5pt">下就是</span><span style="FONT-SIZE: 10.5pt">make.inc.LINUX</span><span style="FONT-SIZE: 10.5pt">，将这个文件拷到</span><span style="FONT-SIZE: 10.5pt">CLAPACK</span><span style="FONT-SIZE: 10.5pt">目录下并改名为</span><span style="FONT-SIZE: 10.5pt">make.inc</span><span style="FONT-SIZE: 10.5pt">，并修改此文件中的相应参数，如果<a id="hl_0" onmouseover="window.clearTimeout(_ht[0]);qs_show_frame(event,this,0);" style="FONT-SIZE: 1em" onclick="_write_cookie('click244',0);" onmouseout="_on_div[0]=false;_ht[0]=window.setTimeout('qs_is_on_div(0)',500);" target="_blank" href="http://clk.qunsee.com/click/click.php?cpid=1021&amp;ads_id=244&amp;pid=99000630&amp;cid=634&amp;url=http%3A//www.chanet.com.cn/click.cgi%3Fa%3D59068%26d%3D20667%26u%3D%26e%3D&amp;k=%u9700%u8981&amp;s=http%3A//www.diybl.com/course/3_program/c++/cppsl/20071211/91667.html&amp;rn=77607&amp;v=1&amp;ref=http%3A//www.google.cn/search%3Fhl%3Dzh-CN%26q%3Dclapack%26meta%3D&amp;province=%u9655%u897F&amp;city=%u897F%u5B89">需要</a>的话。</span><span style="FONT-SIZE: 10.5pt">CLAPACK</span><span style="FONT-SIZE: 10.5pt">需要</span><span style="FONT-SIZE: 10.5pt">F2CLIBS</span><span style="FONT-SIZE: 10.5pt">的</span><span style="FONT-SIZE: 10.5pt">libI77.a</span><span style="FONT-SIZE: 10.5pt">和</span><span style="FONT-SIZE: 10.5pt">libF77.a</span><span style="FONT-SIZE: 10.5pt">，一个</span><span style="FONT-SIZE: 10.5pt">tmglib</span><span style="FONT-SIZE: 10.5pt">和</span><span style="FONT-SIZE: 10.5pt">blas</span><span style="FONT-SIZE: 10.5pt">，这几个库都包含在了</span><span style="FONT-SIZE: 10.5pt">CLAPACK</span><span style="FONT-SIZE: 10.5pt">的安装包中，但是</span><span style="FONT-SIZE: 10.5pt">blas</span><span style="FONT-SIZE: 10.5pt">可以选用其他优化过的版本以得到更好的性能。在此我们使用</span><span style="FONT-SIZE: 10.5pt">CLAPACK</span><span style="FONT-SIZE: 10.5pt">中的</span><span style="FONT-SIZE: 10.5pt">blas</span><span style="FONT-SIZE: 10.5pt">。</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">&nbsp;</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">首先编译</span><span style="FONT-SIZE: 10.5pt">F2CLIBS</span><span style="FONT-SIZE: 10.5pt">，用于将</span><span style="FONT-SIZE: 10.5pt">fortran</span><span style="FONT-SIZE: 10.5pt">转换为</span><span style="FONT-SIZE: 10.5pt">c</span><span style="FONT-SIZE: 10.5pt">语言，在</span><span style="FONT-SIZE: 10.5pt">CLAPACK</span><span style="FONT-SIZE: 10.5pt">目录下，</span><span style="FONT-SIZE: 10.5pt">make f2clib</span><span style="FONT-SIZE: 10.5pt">，在</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">CLAPACK/F2CLIBS</span><span style="FONT-SIZE: 10.5pt">下就会生成</span><span style="FONT-SIZE: 10.5pt">libI77.a</span><span style="FONT-SIZE: 10.5pt">和</span><span style="FONT-SIZE: 10.5pt">libF77.a</span><span style="FONT-SIZE: 10.5pt">。</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">编译</span><span style="FONT-SIZE: 10.5pt">tmglib</span><span style="FONT-SIZE: 10.5pt">，</span><span style="FONT-SIZE: 10.5pt">在</span><span style="FONT-SIZE: 10.5pt">CLAPACK</span><span style="FONT-SIZE: 10.5pt">目录下，</span><span style="FONT-SIZE: 10.5pt">make tmglib</span><span style="FONT-SIZE: 10.5pt">，会生成</span><span style="FONT-SIZE: 10.5pt">CLAPACK/tmglib_LINUX.a</span><span style="FONT-SIZE: 10.5pt">。</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">编译</span><span style="FONT-SIZE: 10.5pt">blas</span><span style="FONT-SIZE: 10.5pt">，</span><span style="FONT-SIZE: 10.5pt">在</span><span style="FONT-SIZE: 10.5pt">CLAPACK</span><span style="FONT-SIZE: 10.5pt">目录下，</span><span style="FONT-SIZE: 10.5pt">make blaslib</span><span style="FONT-SIZE: 10.5pt">，会生成</span><span style="FONT-SIZE: 10.5pt">CLAPACK/blas_LINUX.a</span><span style="FONT-SIZE: 10.5pt">。</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">最后是编译</span><span style="FONT-SIZE: 10.5pt">CLAPACK</span><span style="FONT-SIZE: 10.5pt">，</span><span style="FONT-SIZE: 10.5pt">make</span><span style="FONT-SIZE: 10.5pt">，会生成</span><span style="FONT-SIZE: 10.5pt">CLAPACK/lapack_LINUX.a</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">&nbsp;</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">CLAPACK</span><span style="FONT-SIZE: 10.5pt">下的</span><span style="FONT-SIZE: 10.5pt">clapack.h</span><span style="FONT-SIZE: 10.5pt">就是所需要的头文件，除此之外还需要的一个头文件是</span><span style="FONT-SIZE: 10.5pt">F2CLIBS/f2c.h</span><span style="FONT-SIZE: 10.5pt">。</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">&nbsp;</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">现在就通过使用</span><span style="FONT-SIZE: 10.5pt">CLAPACK</span><span style="FONT-SIZE: 10.5pt">中的一个函数</span><span style="FONT-SIZE: 10.5pt">sgesv_</span><span style="FONT-SIZE: 10.5pt">解线性方程组来学习一下使用的方法。</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">&nbsp;</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">包括此函数在内的所有函数可以在</span><span style="FONT-SIZE: 10.5pt">CLAPACK/SRC</span><span style="FONT-SIZE: 10.5pt">下找到源代码，并在代码中有函数参数的说明信息。</span><span style="FONT-SIZE: 10.5pt">sgesv_</span><span style="FONT-SIZE: 10.5pt">的代码文件就是</span><span style="FONT-SIZE: 10.5pt">sgesv.c</span><span style="FONT-SIZE: 10.5pt">。</span></div>
+<div><span style="FONT-SIZE: 10.5pt">&nbsp;</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">int sgesv_(integer *n, integer *nrhs, real *a, integer *lda, integer *ipiv, real *b, integer *ldb, integer *info)</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">&nbsp;</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">sgesv_</span><span style="FONT-SIZE: 10.5pt">的功能是使用</span><span style="FONT-SIZE: 10.5pt">LU</span><span style="FONT-SIZE: 10.5pt">分解法解线性方程组</span><span style="FONT-SIZE: 10.5pt">AX=B</span><span style="FONT-SIZE: 10.5pt">，其中</span><span style="FONT-SIZE: 10.5pt">A</span><span style="FONT-SIZE: 10.5pt">是一个</span><span style="FONT-SIZE: 10.5pt">n*n</span><span style="FONT-SIZE: 10.5pt">的方阵。</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">&nbsp;</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">integer *n, </span><span style="FONT-SIZE: 10.5pt">方程的个数，也就是</span><span style="FONT-SIZE: 10.5pt">A</span><span style="FONT-SIZE: 10.5pt">的行数和列数</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">integer *nrhs, B</span><span style="FONT-SIZE: 10.5pt">的列数</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">real *a, </span><span style="FONT-SIZE: 10.5pt">存储矩阵</span><span style="FONT-SIZE: 10.5pt">A</span><span style="FONT-SIZE: 10.5pt">数据的一维数组，在</span><span style="FONT-SIZE: 10.5pt">fortran</span><span style="FONT-SIZE: 10.5pt">中，数组是列主序存储，在此</span><span style="FONT-SIZE: 10.5pt">a</span><span style="FONT-SIZE: 10.5pt">中的二维数据也必须是列主序</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">integer *lda, </span><span style="FONT-SIZE: 10.5pt">等于</span><span style="FONT-SIZE: 10.5pt">n</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">integer *ipiv, </span><span style="FONT-SIZE: 10.5pt">一个输出数据数组，数组大小是</span><span style="FONT-SIZE: 10.5pt">n</span><span style="FONT-SIZE: 10.5pt">，具体什么功能不太明白，但是似乎不影响最后结果，谁明白请告诉我</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">real *b,</span><span style="FONT-SIZE: 10.5pt">存储矩阵</span><span style="FONT-SIZE: 10.5pt">B</span><span style="FONT-SIZE: 10.5pt">数据的一维数组，在</span><span style="FONT-SIZE: 10.5pt">fortran</span><span style="FONT-SIZE: 10.5pt">中，数组是列主序存储，在此</span><span style="FONT-SIZE: 10.5pt">b</span><span style="FONT-SIZE: 10.5pt">中的二维数据也必须是列主序</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">integer *ldb, </span><span style="FONT-SIZE: 10.5pt">等于</span><span style="FONT-SIZE: 10.5pt">n</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">integer *info,</span><span style="FONT-SIZE: 10.5pt">输出参数，如果返回此参数为</span><span style="FONT-SIZE: 10.5pt">0</span><span style="FONT-SIZE: 10.5pt">，表示函数正常退出，否则表示出错</span></div>
+<div><span style="FONT-SIZE: 10.5pt">&nbsp;</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">在此，我用了高教同济<a id="hl_3" onmouseover="window.clearTimeout(_ht[3]);qs_show_frame(event,this,3);" style="FONT-SIZE: 1em" onclick="_write_cookie('click51',3);" onmouseout="_on_div[3]=false;_ht[3]=window.setTimeout('qs_is_on_div(3)',500);" target="_blank" href="http://clk.qunsee.com/click/click.php?cpid=27&amp;ads_id=51&amp;pid=99000630&amp;cid=634&amp;url=http%3A//www.yingjiesheng.com/&amp;k=%u5927%u5B66&amp;s=http%3A//www.diybl.com/course/3_program/c++/cppsl/20071211/91667.html&amp;rn=845541&amp;v=1&amp;ref=http%3A//www.google.cn/search%3Fhl%3Dzh-CN%26q%3Dclapack%26meta%3D&amp;province=%u9655%u897F&amp;city=%u897F%u5B89">大学</a>版线性代数第二版</span><span style="FONT-SIZE: 10.5pt">106</span><span style="FONT-SIZE: 10.5pt">页，</span><span style="FONT-SIZE: 10.5pt">2</span><span style="FONT-SIZE: 10.5pt">题</span><span style="FONT-SIZE: 10.5pt">(1)</span><span style="FONT-SIZE: 10.5pt">的数据。</span></div>
+<div><span style="FONT-SIZE: 10.5pt">&nbsp;</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">A:</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">4,2,</span><span style="FONT-SIZE: 10.5pt">－</span><span style="FONT-SIZE: 10.5pt">1</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">3,</span><span style="FONT-SIZE: 10.5pt">－</span><span style="FONT-SIZE: 10.5pt">1,2</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">11,0,3</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">&nbsp;</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">B:</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">2</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">10</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">8</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">&nbsp;</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">代码：</span></div>
+<div><strong><span style="FONT-SIZE: 10pt; COLOR: #7f0055">#include</span></strong><span style="FONT-SIZE: 10pt; COLOR: #2a00ff">&lt;iostream&gt;</span></div>
+<div><strong><span style="FONT-SIZE: 10pt; COLOR: #7f0055">using</span></strong><strong><span style="FONT-SIZE: 10pt; COLOR: #7f0055">namespace</span></strong><span style="FONT-SIZE: 10pt; COLOR: black"> std;</span></div>
+<div><strong><span style="FONT-SIZE: 10pt; COLOR: #7f0055">#include</span></strong><span style="FONT-SIZE: 10pt; COLOR: #2a00ff">&lt;F2CLIBS/f2c.h&gt;</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: #3f7f5f">//</span><span style="FONT-SIZE: 10pt; COLOR: #3f7f5f">因为程序是</span><span style="FONT-SIZE: 10pt; COLOR: #3f7f5f">C++</span><span style="FONT-SIZE: 10pt; COLOR: #3f7f5f">，而</span><span style="FONT-SIZE: 10pt; COLOR: #3f7f5f">CLAPACK</span><span style="FONT-SIZE: 10pt; COLOR: #3f7f5f">是</span><span style="FONT-SIZE: 10pt; COLOR: #3f7f5f">C</span><span style="FONT-SIZE: 10pt; COLOR: #3f7f5f">语言写的，所以在此处用</span><span style="FONT-SIZE: 10pt; COLOR: #3f7f5f">extern</span><span style="FONT-SIZE: 10pt; COLOR: #3f7f5f">关键字</span></div>
+<div><strong><span style="FONT-SIZE: 10pt; COLOR: #7f0055">extern</span></strong><span style="FONT-SIZE: 10pt; COLOR: #2a00ff">&quot;C&quot;</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">{</span></div>
+<div><span style="FONT-SIZE: 10pt">&nbsp;</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; </span><strong><span style="FONT-SIZE: 10pt; COLOR: #7f0055">#include</span></strong><span style="FONT-SIZE: 10pt; COLOR: #2a00ff">&lt;clapack.h&gt;</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">} </span></div>
+<div><strong><span style="FONT-SIZE: 10pt; COLOR: #7f0055">int</span></strong><span style="FONT-SIZE: 10pt; COLOR: black"> <strong>main</strong>(</span><strong><span style="FONT-SIZE: 10pt; COLOR: #7f0055">void</span></strong><span style="FONT-SIZE: 10pt; COLOR: black">) {</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; </span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; integer&nbsp;M=3 ;</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; integer&nbsp;N=1;</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; </span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; real a[9]={4,3,11,2,-1,0,-1,2,3};</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; real b[3]={2,10,8};</span></div>
+<div><span style="FONT-SIZE: 10pt">&nbsp;</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; integer lda;</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; integer ldb;</span></div>
+<div><span style="FONT-SIZE: 10pt">&nbsp;</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; integer INFO; </span></div>
+<div><span style="FONT-SIZE: 10pt">&nbsp;</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; lda=M;</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; ldb=M;</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; </span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; integer ipiv[M];</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; </span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; sgesv_(&amp;M, &amp;N, a, &amp;lda,ipiv, b, &amp;ldb, &amp;INFO);</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; </span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; </span><strong><span style="FONT-SIZE: 10pt; COLOR: #7f0055">if</span></strong><span style="FONT-SIZE: 10pt; COLOR: black">(INFO==0)</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; {</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><strong><span style="FONT-SIZE: 10pt; COLOR: #7f0055">for</span></strong><span style="FONT-SIZE: 10pt; COLOR: black">(</span><strong><span style="FONT-SIZE: 10pt; COLOR: #7f0055">int</span></strong><span style="FONT-SIZE: 10pt; COLOR: black"> i=0;i&lt;M;i++)</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout&lt;&lt;b[i]&lt;&lt;</span><strong><span style="FONT-SIZE: 10pt; COLOR: #642880">endl</span></strong><span style="FONT-SIZE: 10pt; COLOR: black">;</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; }</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; </span><strong><span style="FONT-SIZE: 10pt; COLOR: #7f0055">else</span></strong></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; {</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout&lt;&lt;</span><span style="FONT-SIZE: 10pt; COLOR: #2a00ff">&quot;Failed.&quot;</span><span style="FONT-SIZE: 10pt; COLOR: black">&lt;&lt;</span><strong><span style="FONT-SIZE: 10pt; COLOR: #642880">endl</span></strong><span style="FONT-SIZE: 10pt; COLOR: black">;</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp; </span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; </span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">&nbsp;&nbsp;&nbsp; </span><strong><span style="FONT-SIZE: 10pt; COLOR: #7f0055">return</span></strong><span style="FONT-SIZE: 10pt; COLOR: black"> EXIT_SUCCESS;</span></div>
+<div><span style="FONT-SIZE: 10pt; COLOR: black">}</span></div>
+<div><font size="3">&nbsp;</font></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">程序编译链接的时候，</span><span style="FONT-SIZE: 10.5pt">lapack_LINUX.a</span><span style="FONT-SIZE: 10.5pt">，</span><span style="FONT-SIZE: 10.5pt">tmglib_LINUX.a</span><span style="FONT-SIZE: 10.5pt">，</span><span style="FONT-SIZE: 10.5pt">blas_LINUX.a</span><span style="FONT-SIZE: 10.5pt">，</span><span style="FONT-SIZE: 10.5pt">libF77.a</span><span style="FONT-SIZE: 10.5pt">，</span><span style="FONT-SIZE: 10.5pt">libI77.a </span><span style="FONT-SIZE: 10.5pt">这几个库文件都需要链接进去。</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">&nbsp;</span></div>
+<div style="TEXT-INDENT: 21.2pt"><span style="FONT-SIZE: 10.5pt">运算结果：</span></div>
+<div style="MARGIN: 0cm 0cm 0pt 21.2pt"><span style="FONT-SIZE: 10.5pt">-14</span></div>
+<div style="MARGIN: 0cm 0cm 0pt 21.2pt"><span style="FONT-SIZE: 10.5pt">56</span></div>
+<div style="MARGIN: 0cm 0cm 0pt 21.2pt"><span style="FONT-SIZE: 10.5pt">54</span></div>
+&nbsp;
+</div>
+
+
+
+<!-- Baidu Button BEGIN -->
+<div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare" style="float: right;">
+<a class="bds_qzone"></a>
+<a class="bds_tsina"></a>
+<a class="bds_tqq"></a>
+<a class="bds_renren"></a>
+<a class="bds_t163"></a>
+<span class="bds_more">更多</span>
+<a class="shareCount"></a>
+</div>
+<!-- Baidu Button END -->
+
+
+<!--192.168.100.34-->
+<div class="article_next_prev">
+            <li class="prev_article"><span>上一篇：</span><a href="/daiyuchao/article/details/1912265" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian'])">面向对象编程（C++描述）总结</a></li>
+            <li class="next_article"><span>下一篇：</span><a href="/daiyuchao/article/details/2026173" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian'])">应用Clapack计算逆矩阵</a></li>
+</div>
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+</div>
+    <div id="ad_cen">
+        <script type="text/javascript">            BAIDU_CLB_SLOT_ID = "117306";</script>
+        <script type="text/javascript" src="http://cbjs.baidu.com/js/o.js"></script>
+    </div>
+    <script type="text/javascript">
+        //new Ad(4, 'ad_cen');
+    </script>
+<div id="comment_title" class="panel_head">
+    查看评论<a name="comments"></a></div>
+<div id="comment_list">
+</div>
+<div id="comment_bar">
+</div>
+<div id="comment_form">
+</div>
+<div class="announce">
+    * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+<script type="text/javascript">
+    var fileName = '2026162';
+    var commentscount = 4;
+    var islock = false
+</script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/comment.js"></script>
+    <div id="ad_bot">
+    </div>
+    <script type="text/javascript">
+    new Ad(5, 'ad_bot');
+    </script>
+<div id="report_dialog">
+</div>
+<div id="d-top" style="display: none;">
+    <a id="d-top-a" href="#" title="回到顶部" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_huidaodingbu'])">
+        <img src="http://static.blog.csdn.net/images/top.png" alt="TOP" /></a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        var d_top = $('#d-top');
+        document.onscroll = function ()
+        {
+            var scrTop = (document.body.scrollTop || document.documentElement.scrollTop);
+            if (scrTop > 500)
+            {
+                d_top.show();
+            } else
+            {
+                d_top.hide();
+            }
+        }
+        $('#d-top-a').click(function ()
+        {
+            scrollTo(0, 0);
+            this.blur();
+            return false;
+        });
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+<div class="tag_list">
+    <h5>
+        <a href="http://www.csdn.net/tag/" target="_blank">核心技术类目</a></h5>
+    <div class="classify">
+<a title="全部主题" href="http://www.csdn.net/tag" target="_blank" onclick="LogClickCount(this,336);">全部主题</a>
+<a title="Java" href="http://www.csdn.net/tag/Java" target="_blank" onclick="LogClickCount(this,336);">Java</a>
+<a title="VPN" href="http://www.csdn.net/tag/vpn" target="_blank" onclick="LogClickCount(this,336);">VPN</a>
+<a title="Android" href="http://www.csdn.net/tag/android" target="_blank" onclick="LogClickCount(this,336);">Android</a>
+<a title="iOS" href="http://www.csdn.net/tag/ios" target="_blank" onclick="LogClickCount(this,336);">iOS</a>
+<a title="ERP" href="http://www.csdn.net/tag/erp" target="_blank" onclick="LogClickCount(this,336);">ERP</a>
+<a title="IE10" href="http://www.csdn.net/tag/ie10" target="_blank" onclick="LogClickCount(this,336);">IE10</a>
+<a title="Eclipse" href="http://www.csdn.net/tag/eclipse" target="_blank" onclick="LogClickCount(this,336);">Eclipse</a>
+<a title="CRM" href="http://www.csdn.net/tag/crm" target="_blank" onclick="LogClickCount(this,336);">CRM</a>
+<a title="JavaScript" href="http://www.csdn.net/tag/javascript" target="_blank" onclick="LogClickCount(this,336);">JavaScript</a>
+<a title="Ubuntu" href="http://www.csdn.net/tag/ubuntu" target="_blank" onclick="LogClickCount(this,336);">Ubuntu</a>
+<a title="NFC" href="http://www.csdn.net/tag/nfc" target="_blank" onclick="LogClickCount(this,336);">NFC</a>
+<a title="WAP" href="http://www.csdn.net/tag/wap" target="_blank" onclick="LogClickCount(this,336);">WAP</a>
+<a title="jQuery" href="http://www.csdn.net/tag/jquery" target="_blank" onclick="LogClickCount(this,336);">jQuery</a>
+<a title="数据库" href="http://www.csdn.net/tag/数据库" target="_blank" onclick="LogClickCount(this,336);">数据库</a>
+<a title="BI" href="http://www.csdn.net/tag/bi" target="_blank" onclick="LogClickCount(this,336);">BI</a>
+<a title="HTML5" href="http://www.csdn.net/tag/html5" target="_blank" onclick="LogClickCount(this,336);">HTML5</a>
+<a title="Spring" href="http://www.csdn.net/tag/spring" target="_blank" onclick="LogClickCount(this,336);">Spring</a>
+<a title="Apache" href="http://www.csdn.net/tag/apache" target="_blank" onclick="LogClickCount(this,336);">Apache</a>
+<a title="Hadoop" href="http://www.csdn.net/tag/hadoop" target="_blank" onclick="LogClickCount(this,336);">Hadoop</a>
+<a title=".NET" href="http://www.csdn.net/tag/.net" target="_blank" onclick="LogClickCount(this,336);">.NET</a>
+<a title="API" href="http://www.csdn.net/tag/api" target="_blank" onclick="LogClickCount(this,336);">API</a>
+<a title="HTML" href="http://www.csdn.net/tag/html" target="_blank" onclick="LogClickCount(this,336);">HTML</a>
+<a title="SDK" href="http://www.csdn.net/tag/sdk" target="_blank" onclick="LogClickCount(this,336);">SDK</a>
+<a title="IIS" href="http://www.csdn.net/tag/iis" target="_blank" onclick="LogClickCount(this,336);">IIS</a>
+<a title="Fedora" href="http://www.csdn.net/tag/fedora" target="_blank" onclick="LogClickCount(this,336);">Fedora</a>
+<a title="XML" href="http://www.csdn.net/tag/xml" target="_blank" onclick="LogClickCount(this,336);">XML</a>
+<a title="LBS" href="http://www.csdn.net/tag/lbs" target="_blank" onclick="LogClickCount(this,336);">LBS</a>
+<a title="Unity" href="http://www.csdn.net/tag/unity" target="_blank" onclick="LogClickCount(this,336);">Unity</a>
+<a title="Splashtop" href="http://www.csdn.net/tag/splashtop" target="_blank" onclick="LogClickCount(this,336);">Splashtop</a>
+<a title="UML" href="http://www.csdn.net/tag/uml" target="_blank" onclick="LogClickCount(this,336);">UML</a>
+<a title="components" href="http://www.csdn.net/tag/components" target="_blank" onclick="LogClickCount(this,336);">components</a>
+<a title="Windows Mobile" href="http://www.csdn.net/tag/windowsmobile" target="_blank" onclick="LogClickCount(this,336);">Windows Mobile</a>
+<a title="Rails" href="http://www.csdn.net/tag/rails" target="_blank" onclick="LogClickCount(this,336);">Rails</a>
+<a title="QEMU" href="http://www.csdn.net/tag/qemu" target="_blank" onclick="LogClickCount(this,336);">QEMU</a>
+<a title="KDE" href="http://www.csdn.net/tag/kde" target="_blank" onclick="LogClickCount(this,336);">KDE</a>
+<a title="Cassandra" href="http://www.csdn.net/tag/cassandra" target="_blank" onclick="LogClickCount(this,336);">Cassandra</a>
+<a title="CloudStack" href="http://www.csdn.net/tag/cloudstack" target="_blank" onclick="LogClickCount(this,336);">CloudStack</a>
+<a title="FTC" href="http://www.csdn.net/tag/ftc" target="_blank" onclick="LogClickCount(this,336);">FTC</a>
+<a title="coremail" href="http://www.csdn.net/tag/coremail" target="_blank" onclick="LogClickCount(this,336);">coremail</a>
+<a title="OPhone " href="http://www.csdn.net/tag/ophone " target="_blank" onclick="LogClickCount(this,336);">OPhone </a>
+<a title="CouchBase" href="http://www.csdn.net/tag/couchbase" target="_blank" onclick="LogClickCount(this,336);">CouchBase</a>
+<a title="云计算" href="http://www.csdn.net/tag/云计算" target="_blank" onclick="LogClickCount(this,336);">云计算</a>
+<a title="iOS6" href="http://www.csdn.net/tag/iOS6" target="_blank" onclick="LogClickCount(this,336);">iOS6</a>
+<a title="Rackspace " href="http://www.csdn.net/tag/rackspace " target="_blank" onclick="LogClickCount(this,336);">Rackspace </a>
+<a title="Web App" href="http://www.csdn.net/tag/webapp" target="_blank" onclick="LogClickCount(this,336);">Web App</a>
+<a title="SpringSide" href="http://www.csdn.net/tag/springside" target="_blank" onclick="LogClickCount(this,336);">SpringSide</a>
+<a title="Maemo" href="http://www.csdn.net/tag/maemo" target="_blank" onclick="LogClickCount(this,336);">Maemo</a>
+<a title="Compuware" href="http://www.csdn.net/tag/compuware" target="_blank" onclick="LogClickCount(this,336);">Compuware</a>
+<a title="大数据" href="http://www.csdn.net/tag/大数据" target="_blank" onclick="LogClickCount(this,336);">大数据</a>
+<a title="aptech" href="http://www.csdn.net/tag/aptech" target="_blank" onclick="LogClickCount(this,336);">aptech</a>
+<a title="Perl" href="http://www.csdn.net/tag/perl" target="_blank" onclick="LogClickCount(this,336);">Perl</a>
+<a title="Tornado" href="http://www.csdn.net/tag/tornado" target="_blank" onclick="LogClickCount(this,336);">Tornado</a>
+<a title="Ruby" href="http://www.csdn.net/tag/ruby" target="_blank" onclick="LogClickCount(this,336);">Ruby</a>
+<a title="Hibernate" href="http://www.csdn.net/hibernate" target="_blank" onclick="LogClickCount(this,336);">Hibernate</a>
+<a title="ThinkPHP" href="http://www.csdn.net/tag/thinkphp" target="_blank" onclick="LogClickCount(this,336);">ThinkPHP</a>
+<a title="Spark" href="http://www.csdn.net/tag/spark" target="_blank" onclick="LogClickCount(this,336);">Spark</a>
+<a title="HBase" href="http://www.csdn.net/tag/hbase" target="_blank" onclick="LogClickCount(this,336);">HBase</a>
+<a title="Pure" href="http://www.csdn.net/tag/pure" target="_blank" onclick="LogClickCount(this,336);">Pure</a>
+<a title="Solr" href="http://www.csdn.net/tag/solr" target="_blank" onclick="LogClickCount(this,336);">Solr</a>
+<a title="Angular" href="http://www.csdn.net/tag/angular" target="_blank" onclick="LogClickCount(this,336);">Angular</a>
+<a title="Cloud Foundry" href="http://www.csdn.net/tag/cloudfoundry" target="_blank" onclick="LogClickCount(this,336);">Cloud Foundry</a>
+<a title="Redis" href="http://www.csdn.net/tag/redis" target="_blank" onclick="LogClickCount(this,336);">Redis</a>
+<a title="Scala" href="http://www.csdn.net/tag/scala" target="_blank" onclick="LogClickCount(this,336);">Scala</a>
+<a title="Django" href="http://www.csdn.net/tag/django" target="_blank" onclick="LogClickCount(this,336);">Django</a>
+<a title="Bootstrap" href="http://www.csdn.net/tag/bootstrap" target="_blank" onclick="LogClickCount(this,336);">Bootstrap</a>
+    </div>
+</div>
+
+                    <div class="clear">
+                    </div>
+                </div>
+            </div>
+            <div id="side">
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/daiyuchao" target="_blank">
+    <img src="http://avatar.csdn.net/6/6/5/1_daiyuchao.jpg" title="访问我的空间" style="max-width:90%"/>
+    </a>
+    <br />
+    <span><a href="http://my.csdn.net/daiyuchao" class="user_name" target="_blank">daiyuchao</a></span>
+</div>
+<div class="interact">
+<a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_guanzhu'])"></a>
+<a href="javascript:void(0);" class="letter" onclick="loginto(1)" title="[发私信]" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_sixin'])"></a>
+</div>
+<div id="blog_medal">
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>114059次</span></li>
+    <li>积分：<span>1723分</span></li>
+    <li>排名：<span>第6469名</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>36篇</span></li>
+    <li>转载：<span>29篇</span></li>
+    <li>译文：<span>2篇</span></li>
+    <li>评论：<span>146条</span></li>
+</ul>
+</ul>
+</div>
+
+
+<div class="panel" id="panel_Search">
+    <ul class="panel_head"><span>文章搜索</span></ul>
+    <ul class="panel_body">
+        <form id="frmSearch" action="http://so.csdn.net/search" class="form_search" target="_blank">
+        <span><input id="inputSearch" type="text" class="blogsearch" title="请输入关键字" /></span>
+        <input id="btnSubmit" type="submit" value="搜索" title="search in blog" />
+        <input type="hidden" name="q" id="inputQ" />
+        <input type="hidden" name="t" value="blog" />
+        <a id="btnSearchBlog" target="_blank"></a>
+        </form>
+    </ul>
+</div><div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">
+<li>
+<a href="http://blog.csdn.net/daiyuchao/article/category/300998">C/C++/C#</a><span>(19)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/daiyuchao/article/category/644811">Cygwin应用</a><span>(1)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/daiyuchao/article/category/300995">图像处理技术</a><span>(8)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/daiyuchao/article/category/300999">生活娱乐</a><span>(4)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/daiyuchao/article/category/300996">计算机视觉</a><span>(25)</span>
+</li>
+</ul>
+</div><div id="panel_Archive" class="panel">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list">
+<!--归档统计-->
+<li><a href="http://blog.csdn.net/daiyuchao/article/month/2012/12">2012年12月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2012/05">2012年05月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2012/04">2012年04月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2011/12">2011年12月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2011/07">2011年07月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2011/05">2011年05月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2011/04">2011年04月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2011/03">2011年03月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2011/01">2011年01月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2010/06">2010年06月</a><span>(6)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2010/03">2010年03月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2010/02">2010年02月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2010/01">2010年01月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2009/12">2009年12月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2009/11">2009年11月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2009/08">2009年08月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2009/07">2009年07月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2009/06">2009年06月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2009/04">2009年04月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2009/03">2009年03月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2008/12">2008年12月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2008/07">2008年07月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2008/05">2008年05月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2008/03">2008年03月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2008/01">2008年01月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2007/12">2007年12月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2007/11">2007年11月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2007/07">2007年07月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2007/06">2007年06月</a><span>(5)</span></li><li><a href="http://blog.csdn.net/daiyuchao/article/month/2007/05">2007年05月</a><span>(14)</span></li>
+</div>
+</ul>
+</div>
+<div id="hotarticls" class="panel">
+<ul class="panel_head"><span>阅读排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="/daiyuchao/article/details/2026162" title="CLAPACK的安装与简单使用">CLAPACK的安装与简单使用</a><span>(8502)</span>
+</li>
+<li>
+<a href="/daiyuchao/article/details/1598915" title="JPEG压缩编码方法与实现 ">JPEG压缩编码方法与实现 </a><span>(5877)</span>
+</li>
+<li>
+<a href="/daiyuchao/article/details/2218039" title="C++科学计算库－gsl ">C++科学计算库－gsl </a><span>(5779)</span>
+</li>
+<li>
+<a href="/daiyuchao/article/details/6221812" title="CVPR 2011 Papers">CVPR 2011 Papers</a><span>(5761)</span>
+</li>
+<li>
+<a href="/daiyuchao/article/details/1598898" title="基于尺度不变特征变换的图像匹配研究">基于尺度不变特征变换的图像匹配研究</a><span>(5709)</span>
+</li>
+<li>
+<a href="/daiyuchao/article/details/4311623" title="ICIP 2009 Papers">ICIP 2009 Papers</a><span>(5075)</span>
+</li>
+<li>
+<a href="/daiyuchao/article/details/7446261" title="CVPR 2012 Papers">CVPR 2012 Papers</a><span>(5073)</span>
+</li>
+<li>
+<a href="/daiyuchao/article/details/4253436" title="ICCV 2009 Paper List">ICCV 2009 Paper List</a><span>(4590)</span>
+</li>
+<li>
+<a href="/daiyuchao/article/details/1891410" title="Compressive Sensing">Compressive Sensing</a><span>(4218)</span>
+</li>
+<li>
+<a href="/daiyuchao/article/details/2396404" title="局部特征算子简述">局部特征算子简述</a><span>(4042)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls2" class="panel">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="/daiyuchao/article/details/1598915" title="JPEG压缩编码方法与实现 ">JPEG压缩编码方法与实现 </a><span>(69)</span>
+</li>
+<li>
+<a href="/daiyuchao/article/details/1598898" title="基于尺度不变特征变换的图像匹配研究">基于尺度不变特征变换的图像匹配研究</a><span>(15)</span>
+</li>
+<li>
+<a href="/daiyuchao/article/details/3473208" title="Sparse Bundle Adhustment 1.5使用指南">Sparse Bundle Adhustment 1.5使用指南</a><span>(12)</span>
+</li>
+<li>
+<a href="/daiyuchao/article/details/1605963" title="如何将利用OpenCV加载的图像显示在窗口位置？">如何将利用OpenCV加载的图像显示在窗口位置？</a><span>(9)</span>
+</li>
+<li>
+<a href="/daiyuchao/article/details/3473209" title="对于计算机视觉的一些思考">对于计算机视觉的一些思考</a><span>(6)</span>
+</li>
+<li>
+<a href="/daiyuchao/article/details/2032704" title="基于一维物体的摄像机定标">基于一维物体的摄像机定标</a><span>(5)</span>
+</li>
+<li>
+<a href="/daiyuchao/article/details/2396404" title="局部特征算子简述">局部特征算子简述</a><span>(5)</span>
+</li>
+<li>
+<a href="/daiyuchao/article/details/2218039" title="C++科学计算库－gsl ">C++科学计算库－gsl </a><span>(4)</span>
+</li>
+<li>
+<a href="/daiyuchao/article/details/2026162" title="CLAPACK的安装与简单使用">CLAPACK的安装与简单使用</a><span>(4)</span>
+</li>
+<li>
+<a href="/daiyuchao/article/details/6419543" title="如何发表顶级期刊论文 (转)">如何发表顶级期刊论文 (转)</a><span>(3)</span>
+</li>
+</ul>
+</div>
+<div id="homepageArticles" class="panel tracking-ad" data-mod="popu_4">
+<ul class="panel_head"><span>推荐文章</span></ul>
+<ul class="panel_body" id="ad_commend"></ul>
+</div>
+<script type="text/javascript">
+ new Ad(12, 'ad_commend');
+</script><div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+    <a href="/daiyuchao/article/details/3473208#comments">Sparse Bundle Adhustment 1.5使用指南</a>
+    <p style="margin:0px;"><a href="/sunhuan1988" class="user_name">sunhuan1988</a>:
+楼主，那个数据知道怎么获取的不？？主要是pts。txt，那个3D点怎么获得的啊
+    </p>
+    </li>
+    <li>
+    <a href="/daiyuchao/article/details/3473208#comments">Sparse Bundle Adhustment 1.5使用指南</a>
+    <p style="margin:0px;"><a href="/sunhuan1988" class="user_name">sunhuan1988</a>:
+@babudou1234:哥们你在搞SBA吗？、有时间可以交流一下！！！我Q：597525200
+    </p>
+    </li>
+    <li>
+    <a href="/daiyuchao/article/details/6579885#comments">ICCV 2011 </a>
+    <p style="margin:0px;"><a href="/u011883358" class="user_name">u011883358</a>:
+你好 问一下 你列的这些文章你都有代码吗？
+    </p>
+    </li>
+    <li>
+    <a href="/daiyuchao/article/details/5081390#comments">Mathtype输入Latex模式公</a>
+    <p style="margin:0px;"><a href="/bubifengyun" class="user_name">bubifengyun</a>:
+说了一堆废话，能告诉你是怎么在MathType里面输入latex的吗
+    </p>
+    </li>
+    <li>
+    <a href="/daiyuchao/article/details/1598915#comments">JPEG压缩编码方法与实现 </a>
+    <p style="margin:0px;"><a href="/jxlczsx" class="user_name">jxlczsx</a>:
+你好:可否将其中的JpegCompression.h也拿出来交流一下,否则我们无法调试程序邮箱:JX...
+    </p>
+    </li>
+    <li>
+    <a href="/daiyuchao/article/details/1598915#comments">JPEG压缩编码方法与实现 </a>
+    <p style="margin:0px;"><a href="/jxlczsx" class="user_name">jxlczsx</a>:
+你好:可否将其中的JpegCompression.h也拿出来交流一下,否则我们无法调试程序
+    </p>
+    </li>
+    <li>
+    <a href="/daiyuchao/article/details/1598915#comments">JPEG压缩编码方法与实现 </a>
+    <p style="margin:0px;"><a href="/jxlczsx" class="user_name">jxlczsx</a>:
+很相学习,希望能发源码给我,谢谢!邮箱: jxlczsx@139.com
+    </p>
+    </li>
+    <li>
+    <a href="/daiyuchao/article/details/2218039#comments">C++科学计算库－gsl </a>
+    <p style="margin:0px;"><a href="/zhoufeng12346571" class="user_name">zhoufeng12346571</a>:
+写的很好，太详细了，我都有点目不暇接了
+    </p>
+    </li>
+    <li>
+    <a href="/daiyuchao/article/details/1598915#comments">JPEG压缩编码方法与实现 </a>
+    <p style="margin:0px;"><a href="/xbgd1990" class="user_name">xbgd1990</a>:
+非常希望学习一下，希望发份代码给我 xbdg1990@126.com非常感谢！
+    </p>
+    </li>
+    <li>
+    <a href="/daiyuchao/article/details/1598915#comments">JPEG压缩编码方法与实现 </a>
+    <p style="margin:0px;"><a href="/dododo2013" class="user_name">dododo2013</a>:
+希望您能给我一份代码学习交流一下！978591944@qq.com非常感谢，急于学习！
+    </p>
+    </li>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+</div>
+
+            <div class="clear">
+            </div>
+        </div>
+        
+
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/newblog.min.js"></script>
+<script type="text/javascript" src="http://medal.blog.csdn.net/showblogmedal.ashx?blogid=205834"></script>
+<script type="text/javascript">
+    document.write('<script type="text/javascript" src="http://csdnimg.cn/pubfooter/js/publib_footer.js?' + Math.floor(new Date() / 120000).toString(36) + '="></' + 'script>');
+</script>
+    <script type="text/javascript" src="http://passport.csdn.net/content/loginbox/login.js"></script>
+<script type="text/javascript">document.write("<img src=http://counter.csdn.net/pv.aspx?id=24 border=0 width=0 height=0>");</script>
+<script type="text/javascript" src="http://www.csdn.net/ui/scripts/Csdn/counter.js"></script>
+<script type="text/javascript" src="http://ad.csdn.net/scripts/ad-blog.js"></script>
+<script type="text/javascript" src="http://zz.csdn.net/js/count.js"></script>
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a>"
+                    + "<a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+    });
+</script>
+
+    </div>
+      <!--new top-->
+    
+    <script id="csdn-toolbar-id" btnId="header_notice_num" wrapId="note1" count="5" subCount="5" type="text/javascript" src="http://static.csdn.net/public/common/toolbar/js/toolbar.js"></script>     <!--new top-->
+</body>
+</html>

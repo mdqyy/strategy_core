@@ -1,5 +1,6 @@
 #include <cstddef>
 #include <cmath>
+#include <stdlib.h>
 
 #define REAL float
 #define UINT unsigned int
