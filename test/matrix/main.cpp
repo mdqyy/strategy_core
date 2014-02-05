@@ -14,7 +14,7 @@ void get_random(dense::RealMatrix &A) {
 
 int main() {
   for (UINT i = 0; i < 1; i++)	{
-	  const UINT d = 400;
+    const UINT d = 400;
     struct timeval start, end;
 	  int timeuse;
 	  dense::RealMatrix *A = new dense::RealSquare(d);
@@ -24,8 +24,8 @@ int main() {
 	  get_random(*B);
 	  //A->print();
 	  //B->print();
-    gettimeofday(&start, NULL);
-	  dense::mul(*C, *A, *B);
+		gettimeofday(&start, NULL);
+		dense::mul(*C, *A, *B);
     gettimeofday(&end, NULL);
 	  timeuse = 1000000 * ( end.tv_sec - start.tv_sec ) + end.tv_usec - start.tv_usec;
 	  std::cout << timeuse << std::endl;
