@@ -2,23 +2,23 @@
 
 namespace dense {
 RealMatrix::RealMatrix(UINT row, UINT col):Matrix(row, col) {
-	M = new REAL[row*col];
-	memset(M, 0, row * col * sizeof(REAL));
+  M = new REAL[row*col];
+  memset(M, 0, row * col * sizeof(REAL));
 }
 
 RealMatrix::~RealMatrix() {
-	delete []M; M = NULL;
+  delete []M; M = NULL;
 }
 
 void RealMatrix::print() const {
-	std::cout << "[\n";
-	for (UINT i = 0; i < row; i++) {
-		for (UINT j = 0; j < col - 1; j++)	{
-			std::cout << M[i*col + j] << ",";
-		}
-		std::cout << M[i*col + col - 1] << std::endl;
-	}
-	std::cout << "]\n";
+  std::cout << "[\n";
+  for (UINT i = 0; i < row; i++) {
+	  for (UINT j = 0; j < col - 1; j++)	{
+		  std::cout << M[i*col + j] << ",";
+	  }
+	  std::cout << M[i*col + col - 1] << std::endl;
+  }
+  std::cout << "]\n";
 }
 
 bool copy(RealMatrix &M_dest, const RealMatrix &M_src) {
@@ -42,25 +42,25 @@ end:
 
 bool mul(RealMatrix &C, const RealMatrix &A, const RealMatrix &B) { /// C = A * B
   bool flag = true;
-	const enum CBLAS_ORDER Order = CblasRowMajor;
-	const enum CBLAS_TRANSPOSE TransA = CblasNoTrans;
-	const enum CBLAS_TRANSPOSE TransB = CblasNoTrans;
-	const float alpha = 1;
-	const float beta = 0;
+  const enum CBLAS_ORDER Order = CblasRowMajor;
+  const enum CBLAS_TRANSPOSE TransA = CblasNoTrans;
+  const enum CBLAS_TRANSPOSE TransB = CblasNoTrans;
+  const float alpha = 1;
+  const float beta = 0;
 
-	if (NULL == &A || NULL == &B || NULL == &C) {
+  if (NULL == &A || NULL == &B || NULL == &C) {
     flag = false;
-		goto end;
-	}
-	if (A.col != B.row || A.row != C.row || B.col != C.col) {
+	  goto end;
+  }
+  if (A.col != B.row || A.row != C.row || B.col != C.col) {
     flag = false;
-		goto end;
-	}
+	  goto end;
+  }
 
-	cblas_sgemm(Order, TransA, TransB, A.row, B.col, A.col, alpha, A.M, A.col, B.M, B.col, beta, C.M, C.col);
+  cblas_sgemm(Order, TransA, TransB, A.row, B.col, A.col, alpha, A.M, A.col, B.M, B.col, beta, C.M, C.col);
 
 end:
-	return flag;
+  return flag;
 }
 }
 

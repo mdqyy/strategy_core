@@ -11,13 +11,13 @@ class Matrix {
   UINT row;
   UINT col;
   Matrix(UINT row, UINT col):row(row),
-													 col(col) {};
+												   col(col) {};
 };
 
 class Vector:virtual public Matrix {
  public:
   UINT size;
-	bool by_row;
+  bool by_row;
   Vector(UINT row, UINT col);
 };
 
@@ -25,6 +25,6 @@ class Square:virtual public Matrix {
  public:
   UINT size;
   Square(UINT size):Matrix(size, size), 
-									 size(size)	{};
+								   size(size)	{};
 };
 
