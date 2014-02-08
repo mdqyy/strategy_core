@@ -12,10 +12,10 @@ LD = g++
 WINDRES = windres
 
 INC = -I../../include
-CFLAGS = -Wall
+CFLAGS =
 RESINC = 
 LIBDIR = 
-LIB = 
+LIB = -llapacke -llapack -lblas
 LDFLAGS = 
 
 INC_DEBUG = $(INC)

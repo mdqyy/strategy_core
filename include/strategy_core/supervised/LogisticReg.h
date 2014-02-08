@@ -60,8 +60,8 @@ class LrModel {
  public:
   const SampleSet *ss;
   REAL target;  /// Value of target function.
-  dense::RealMatrix *weight_vector;
-  dense::RealMatrix *gradient_vector;
+  dense::RealVector *wv; /// weight vector
+  dense::RealVector *gv; /// gradient vector
   REAL *sum_xcol; /// intermediate result: sum(x_ij, i, 1, sample_num)
                   /// init when loading whole data set.
   REAL *sum_nz_xcol; /// intermediate result: sum(x_ij, i, 1, sample_num) | yi != 0

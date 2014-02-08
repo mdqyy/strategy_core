@@ -29,52 +29,53 @@ namespace LogisticReg {
 SampleSet::SampleSet (const INT sample_num, const INT feature_num) {
   this->sample_num = sample_num;
   this->feature_num = feature_num;
-  this->features = new CrossList(sample_num, feature_num);
-  this->y = new Ytype_t[sample_num];
+  features = new CrossList(sample_num, feature_num);
+  y = new Ytype_t[sample_num];
 }
 
 SampleSet::~SampleSet () {
-  delete this->features;  this->features = NULL;
-  delete []this->y; this->y = NULL;
+  delete features; features = NULL;
+  delete []y; y = NULL;
 }
 
 /*! TrainingSet */
 TrainingSet::TrainingSet(const char *training_set_path) {
   this->training_set_path = training_set_path;
-  this->line = NULL;
-  this->size = 0;
-  this->sample_set = NULL;
-  this->opf = NULL;
+  line = NULL;
+  size = 0;
+  sample_set = NULL;
+  opf = NULL;
 }
 
 TrainingSet::~TrainingSet() {
-  if (NULL != this->opf)
-    fclose(this->opf);
-  free(this->line);  this->line = NULL;
-  delete this->sample_set;  this->sample_set = NULL;
+  if (NULL != opf) {
+    fclose(opf);
+  }
+  free(line); line = NULL;
+  delete sample_set; sample_set = NULL;
 }
 
 bool TrainingSet::load_header() {
   bool flag = true;
   map<string, string> kv;
 
-  this->opf = fopen(this->training_set_path, "r");
-  if (NULL == this->opf) {
+  opf = fopen(training_set_path, "r");
+  if (NULL == opf) {
     L4C_FATAL("Open training set file failed!");
     flag = false;
     goto end;
   }
 
-  while (-1 != getline(&this->line, &this->size, this->opf)) {
+  while (-1 != getline(&line, &size, opf)) {
     char key[MAX_VAR_LEN];
     char value[MAX_VAR_LEN];
-    if (HEADER_MARK == this->line[0]) {
-      for (INT i = 1; i < strlen(this->line); i++) {
+    if (HEADER_MARK == line[0]) {
+      for (INT i = 1; i < strlen(line); i++) {
         memset(key, 0, sizeof(key));
         memset(value, 0, sizeof(value));
-        if (TOKENIZER == this->line[i]) {
-          strncpy(key, this->line + 1, i - 1);
-          strncpy(value, this->line + i + 1, strlen(this->line) - i - 2);
+        if (TOKENIZER == line[i]) {
+          strncpy(key, line + 1, i - 1);
+          strncpy(value, line + i + 1, strlen(line) - i - 2);
           kv[key] = value;
           break;
         }
@@ -82,9 +83,9 @@ bool TrainingSet::load_header() {
     }
     else {
       if (kv.find("sample_num") != kv.end())
-        this->sample_num = atoi(kv["sample_num"].c_str());
+        sample_num = atoi(kv["sample_num"].c_str());
       if (kv.find("feature_num") != kv.end())
-        this->feature_num = atoi(kv["feature_num"].c_str());
+        feature_num = atoi(kv["feature_num"].c_str());
       break;
     }
   }
@@ -96,10 +97,10 @@ end:
 bool TrainingSet::load_sample() {
   bool flag = true;
   INT row_id = 0;
-  this->sample_set = new SampleSet(this->sample_num, this->feature_num);
+  sample_set = new SampleSet(sample_num, feature_num);
 
   do {
-    this->sample_set->y[row_id] = atoi(&(this->line[0]));
+    sample_set->y[row_id] = atoi(&(line[0]));
     INT curr_pos = 2, last_pos = curr_pos;
     char feature_id[MAX_VAR_LEN];
     char feature_value[MAX_VAR_LEN];
@@ -109,12 +110,12 @@ bool TrainingSet::load_sample() {
       INT fid;
       REAL fvalue;
       if (SEPERATOR == line[curr_pos]) {
-        strncpy(feature_id, this->line + last_pos, curr_pos - last_pos);
+        strncpy(feature_id, line + last_pos, curr_pos - last_pos);
         fid = atoi(feature_id);
         last_pos = curr_pos + 1;
       }
       if (TOKENIZER == line[curr_pos] or END_OF_LINE == line[curr_pos]) {
-        strncpy(feature_value, this->line + last_pos, curr_pos - last_pos);
+        strncpy(feature_value, line + last_pos, curr_pos - last_pos);
         fvalue = atof(feature_value);
         CrossListNode *clnode = new CrossListNode(row_id, fid, fvalue);
         last_pos = curr_pos + 1;
@@ -130,7 +131,7 @@ bool TrainingSet::load_sample() {
       curr_pos++;
     }
     row_id++;
-  } while (-1 != getline(&this->line, &this->size, this->opf));
+  } while (-1 != getline(&line, &size, opf));
   sample_set->features->output_all();
 
 end:
@@ -140,44 +141,43 @@ end:
 /*! LrModel */
 LrModel::LrModel(const SampleSet *ss) {
   this->ss = ss;
-  const UINT d = this->ss->feature_num; /// Dimenstion
-  this->weight_vector = new dense::RealMatrix(d, 1);
-  this->gradient_vector = new dense::RealMatrix(d, 1);
-  this->sum_xcol = new REAL[d];
-  this->sum_nz_xcol = new REAL[d];
-  this->ewx = new REAL[d];
+  const UINT d = ss->feature_num; /// Dimenstion
+  wv = new dense::RealVector(d, 1);
+  gv = new dense::RealVector(d, 1);
+  sum_xcol = new REAL[d];
+  sum_nz_xcol = new REAL[d];
+  ewx = new REAL[d];
 }
 
 LrModel::~LrModel() {
-  delete this->weight_vector; this->weight_vector = NULL;
-  delete this->gradient_vector; this->gradient_vector = NULL;
-  delete []this->sum_xcol;  this->sum_xcol = NULL;
-  delete []this->sum_nz_xcol; this->sum_nz_xcol = NULL;
-  delete []this->ewx; this->ewx = NULL;
+  delete wv; wv = NULL;
+  delete gv; gv = NULL;
+  delete []sum_xcol;  sum_xcol = NULL;
+  delete []sum_nz_xcol; sum_nz_xcol = NULL;
+  delete []ewx; ewx = NULL;
 }
 
 void LrModel::cal_target() {
-  this->target = 0;
-  for (INT i = 0; i < this->ss->sample_num; i++) {
+  target = 0;
+  for (INT i = 0; i < ss->sample_num; i++) {
     REAL inner;
     /*TODO
     /// Transform row features to Vector
-    inner = sparse::inner_product_sd(this->ss->features->rslArray[i],
-                                     this->weight_vector);
+    inner = sparse::inner_product_sd(ss->features->rslArray[i], wv);
     */
-    this->target -= std::log(1 + exp(inner));
-    if (1.0 == this->ss->y[i])
-      this->target += inner;
+    target -= std::log(1 + exp(inner));
+    if (1.0 == ss->y[i])
+      target += inner;
   }
 }
 
 void LrModel::cal_gradient() {
-  for (INT i = 0; i < this->ss->feature_num; i++) {
+  for (INT i = 0; i < ss->feature_num; i++) {
     ///TODO
     /*
-    REAL gradient = this->weight_vector->get(i) * (this->get_sum_nz_xcol[i] -
-                                          this->logit * this->get_sum_xcol[i]);
-    this->gradient_vector->set(i, gradient);
+    REAL gradient = wv->get(i) * (get_sum_nz_xcol[i] -
+                                          logit * get_sum_xcol[i]);
+    gv->set(i, gradient);
     */
   }
 }
@@ -188,23 +188,23 @@ void LrModel::cal_logit() {
 
 REAL LrModel::get_ewx(const INT row) {
   ///TODO:
-  return this->ewx[row];
+  return ewx[row];
 };
 
 REAL LrModel::get_sum_xcol(const INT col) {
   ///TODO:
-  return this->sum_xcol[col];
+  return sum_xcol[col];
 };
 
 REAL LrModel::get_sum_nz_xcol(const INT col) {
   ///TODO:
-  return this->sum_nz_xcol[col];
+  return sum_nz_xcol[col];
 };
 
 LrPara::LrPara(const char *conf_file_path, const char *encoding) {
-  this->step_len = 1e-10;
-  this->epsilon = 1e-100;
-  this->max_iter_num = 2000;
+  step_len = 1e-10;
+  epsilon = 1e-100;
+  max_iter_num = 2000;
 }
 
 /*! Logistic regression inition */

@@ -40,17 +40,17 @@ class Matrix {
   inline void cal_sparsity();
 };
 
-class Square:virtual public Matrix {
- public:
-  UINT size;
-  Square(const UINT n):Matrix(size, size),
-                       size(size) {};
-};
-
 class Vector:virtual public Matrix {
  public:
   UINT size;
 	bool by_row;
   Vector(const UINT row, const UINT col);
+};
+
+class Square:virtual public Matrix {
+ public:
+  UINT size;
+  Square(const UINT size):Matrix(size, size),
+                       size(size) {};
 };
 #endif //STRATEGY_CORE_LIN_ALG_BASE_H_

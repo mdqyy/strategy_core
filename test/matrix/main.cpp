@@ -14,7 +14,7 @@ void get_random(dense::RealMatrix &A) {
 
 int main() {
   for (UINT i = 0; i < 1; i++)	{
-    const UINT d = 400;
+    const UINT d = 5000;
     struct timeval start, end;
 	  int timeuse;
 	  dense::RealMatrix *A = new dense::RealSquare(d);

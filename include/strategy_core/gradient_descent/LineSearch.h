@@ -23,11 +23,11 @@
 class LineSearch {
   ///TODO:
  public:
-  dense::RealMatrix *step_vector;
+  dense::RealVector *step_v;
   LineSearch(const UINT row, const UINT col);
   ~LineSearch();
 
-  bool step(REAL &lambda, REAL step_len, Matrix *w, Matrix *p);
+  bool step(REAL &lambda, const REAL step_len, dense::RealVector &wv, dense::RealVector &pv);
 
  private:
   void *target_fun();

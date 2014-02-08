@@ -1,4 +1,4 @@
 all:
-	g++ -o xblas -O3 blas.cpp  -I /home/cqy/local/include/ -llapacke -llapack -lblas
+	g++ -o xblas -O3 blas.cpp -llapacke -llapack -lblas
 clean:
 	rm -f x* *.o

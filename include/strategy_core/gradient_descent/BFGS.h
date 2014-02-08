@@ -37,24 +37,17 @@ class BFGS {
 
  private:
   const LrPara *lrpara;
-  dense::RealMatrix *B, *B_inv; /// A symmetric positive definite matrix
-  dense::RealMatrix *p;
-  dense::RealMatrix *wk;
-  dense::RealMatrix *gradient_vector_neg; /// -g
-  REAL gradient_vector_norm;
-  dense::RealMatrix *last_gradient_vector;
-  dense::RealMatrix *y;/// y = g^(k + 1) - g^k
-  dense::RealMatrix *last_weight_vector;
-  dense::RealMatrix *delta; /// delta = w^(k + 1) - w^k
-  dense::RealMatrix *deltaT; /// deltaT = delta^T
-  dense::RealMatrix *U; /// y_yt = y * y^T
-  REAL yt_delta; /// yt_delta = y^T * delta
-  dense::RealMatrix *B_delta; /// B_delta = B * delta
-  dense::RealMatrix *deltaT_B; /// deltaT_B = delta^T * B
-  dense::RealMatrix *V;
-  LineSearch *ls;
-  REAL dtBd;
+  REAL step_len;
+  REAL gv_norm;
   REAL lambda;
+  REAL epsilon;
+  dense::RealSquare *B; /// A symmetric positive definite matrix
+  dense::RealSquare *B_copy;
+  dense::RealVector *pv;
+  dense::RealVector *wv;
+  dense::RealVector *gv;
+  dense::RealVector *yv;/// y = g^(k + 1) - g^k
+  LineSearch *ls;
 };
 
 class LBFGS:public BFGS {
