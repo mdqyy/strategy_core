@@ -5,7 +5,7 @@
 1390392154 source:/home/cqy/work/strategy_core/src/common/common.cpp
 	<strategy_core/common/common.h>
 
-1389864303 source:/home/cqy/work/strategy_core/src/common/conf.cpp
+1392021004 source:/home/cqy/work/strategy_core/src/common/conf.cpp
 	<strategy_core/common/conf.h>
 
 1390376018 source:/home/cqy/work/strategy_core/src/common/log4c.c
@@ -25,38 +25,38 @@
 1390523678 source:/home/cqy/work/strategy_core/src/discrete/CrossList.cpp
 	<strategy_core/discrete/CrossList.h>
 
-1391850135 source:/home/cqy/work/strategy_core/src/gradient_descent/BFGS.cpp
+1392244262 source:/home/cqy/work/strategy_core/src/gradient_descent/BFGS.cpp
 	<strategy_core/gradient_descent/BFGS.h>
 
 1389864299 source:/home/cqy/work/strategy_core/src/gradient_descent/GradientDescent.cpp
 	<strategy_core/gradient_descent/GradientDescent.h>
 
-1391845107 source:/home/cqy/work/strategy_core/src/gradient_descent/LineSearch.cpp
+1392199030 source:/home/cqy/work/strategy_core/src/gradient_descent/LineSearch.cpp
 	<strategy_core/gradient_descent/LineSearch.h>
 
 1391837336 source:/home/cqy/work/strategy_core/src/lin_alg/base.cpp
 	<strategy_core/lin_alg/base.h>
 
-1390522347 source:/home/cqy/work/strategy_core/src/lin_alg/sd.cpp
+1392131630 source:/home/cqy/work/strategy_core/src/lin_alg/sd.cpp
 	<strategy_core/lin_alg/sd.h>
 
-1390523836 source:/home/cqy/work/strategy_core/src/lin_alg/sparse.cpp
+1392022928 source:/home/cqy/work/strategy_core/src/lin_alg/sparse.cpp
 	<strategy_core/lin_alg/sparse.h>
 	<strategy_core/common/log4c.h>
 
-1391786437 source:/home/cqy/work/strategy_core/src/supervised/LogisticReg.cpp
+1392243975 source:/home/cqy/work/strategy_core/src/supervised/LogisticReg.cpp
 	<strategy_core/supervised/LogisticReg.h>
 	<strategy_core/gradient_descent/BFGS.h>
 	<map>
 
 1389864258 source:/home/cqy/work/strategy_core/src/supervised/MaxEntropy.cpp
 
-1391767571 source:/home/cqy/work/strategy_core/examples/LogisticReg_main.cpp
+1392015834 source:/home/cqy/work/strategy_core/examples/LogisticReg_main.cpp
 	<strategy_core/supervised/LogisticReg.h>
 	<string>
 	<iostream>
 
-1391849932 source:/home/cqy/work/strategy_core/src/lin_alg/dense.cpp
+1392206327 source:/home/cqy/work/strategy_core/src/lin_alg/dense.cpp
 	<strategy_core/lin_alg/dense.h>
 	<strategy_core/common/log4c.h>
 

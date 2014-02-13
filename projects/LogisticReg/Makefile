@@ -11,11 +11,11 @@ AR = ar
 LD = g++
 WINDRES = windres
 
-INC = -I../../include
-CFLAGS =
+INC = 
+CFLAGS = -Wall
 RESINC = 
 LIBDIR = 
-LIB = -llapacke -llapack -lblas
+LIB = 
 LDFLAGS = 
 
 INC_DEBUG = $(INC)

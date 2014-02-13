@@ -38,15 +38,25 @@ class BFGS {
  private:
   const LrPara *lrpara;
   REAL step_len;
+  REAL step;
   REAL gv_norm;
   REAL lambda;
   REAL epsilon;
-  dense::RealSquare *B; /// A symmetric positive definite matrix
+  REAL k1;                        /// k1 = yt * (w(k+1) - w(k))
+  REAL k2;                        /// k2 = db*d
+  dense::RealSquare *B;           /// A symmetric positive definite matrix
   dense::RealSquare *B_copy;
   dense::RealVector *pv;
   dense::RealVector *wv;
+  dense::RealVector *wv_step;
   dense::RealVector *gv;
-  dense::RealVector *yv;/// y = g^(k + 1) - g^k
+  dense::RealVector *last_wv;
+  dense::RealVector *last_gv;
+  dense::RealVector *yv;
+  dense::RealVector *dv;
+  dense::RealSquare *U;
+  dense::RealVector *Bd;
+  dense::RealVector *dB;
   LineSearch *ls;
 };
 

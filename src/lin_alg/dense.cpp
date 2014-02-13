@@ -28,10 +28,11 @@ RealMatrix::~RealMatrix() {
 }
 
 void RealMatrix::print() const {
+  printf("\n");
   for (UINT i = 0; i < row; i++) {
     printf("(");
 	  for (UINT j = 0; j < col; j++)	{
-      printf(" %f", M[i*col + j]);
+      printf(" %0.20f", M[i*col + j]);
 	  }
 	  printf(" )\n");
   }
@@ -71,48 +72,233 @@ end:
   return flag;
 }
 
-bool RealVector::get(REAL &value, const UINT pos) {
-  bool flag = true;
-  if (pos < 0 or pos >= Vector::size) {
-    flag = false;
-    goto end;
-  }
-
-  value = RealMatrix::M[pos];
-
-end:
-  return flag;
+REAL RealVector::get(const UINT pos) const {
+  return RealMatrix::M[pos];
 }
 
-/// RealMatrix operations
+void RealVector::unitise() {
+  for (UINT i = 0; i < RealVector::size; i++) {
+    RealMatrix::M[i] = 1.0;
+  }
+}
+/* ===========================================================================
+ * level 1 BLAS opertations
+ * ===========================================================================*/
+// M_dest <- M_src
 bool copy(RealMatrix &M_dest, const RealMatrix &M_src) {
   bool flag = true;
   if (NULL == &M_dest or NULL == &M_src) {
-    L4C_ERROR("Fatal error occurs in copy: RealMatrix pointer is NULL!");
+    L4C_ERROR("Fatal error occurs in copy: pointer is NULL!");
     flag = false;
     goto end;
   }
   if (not (M_dest.row == M_src.row and M_dest.col == M_src.col)) {
-    L4C_ERROR("Fatal error occurs in copy: RealMatrix parameter error!");
+    L4C_ERROR("Fatal error occurs in copy: size does not fit!");
     flag = false;
     goto end;
   }
 
-  memmove((void *)M_dest.M, (void *)M_src.M, M_src.row * M_src.col * sizeof(REAL));
+  memmove((void *)M_dest.M, (void *)M_src.M, M_src.row*M_src.col*sizeof(REAL));
 
 end:
   return flag;
 }
 
-/// DenseRealVector operations
-bool inner_product(REAL &inner, const RealVector *rva, const RealVector *rvb) {
+//inner = x*y
+bool dot(REAL &inner, const RealVector &x, const RealVector &y) {
   bool flag = true;
+  UINT N; INT incX, incY;
+  N = x.size;
+  incX = 1;
+  incY = 1;
+  if (NULL == &x || NULL == &y) {
+    flag = false;
+    L4C_ERROR("Fatal error occurs in dot: pointer is NULL!");
+	  goto end;
+  }
+  if (x.size != y.size) {
+    flag = false;
+    L4C_ERROR("Fatal error occurs in dot: size does not fit!");
+	  goto end;
+  }
+
+  inner = cblas_sdot(N, x.M, incX, y.M, incY);
 
 end:
   return flag;
 }
 
-bool mm(RealMatrix &C, const RealMatrix &A, const RealMatrix &B) { /// C = A * B
+// norm = ||x||
+bool nrm2(REAL &norm, const RealVector &x) {
+  bool flag = true;
+  UINT N, incX;
+  N = x.size;
+  incX = 1;
+  if (NULL == &x) {
+    flag = false;
+    L4C_ERROR("Fatal error occurs in nrm2: pointer is NULL!");
+	  goto end;
+  }
+
+  norm = cblas_snrm2(N, x.M, incX);
+
+end:
+  return flag;
+}
+
+// y = a*x + y
+bool axpy(RealVector &y, const REAL alpha, const RealVector &x) {
+  bool flag = true;
+  UINT n, incX, incY;
+  n = x.size;
+  incX = 1;
+  incY = 1;
+  if (NULL == &x || NULL == &y) {
+    flag = false;
+    L4C_ERROR("Fatal error occurs in axpy: pointer is NULL!");
+	  goto end;
+  }
+  if (x.size != y.size) {
+    flag = false;
+    L4C_ERROR("Fatal error occurs in axpy: size does not fit!");
+	  goto end;
+  }
+
+  cblas_saxpy(n, alpha, x.M, incX, y.M, incY);
+
+end:
+  return flag;
+}
+
+/* ===========================================================================
+ * level 2 BLAS opertations
+ * ===========================================================================*/
+// y = alpha*A*x + beta*y
+bool gemv(RealVector &y, const REAL alpha, const REAL beta, const RealMatrix &A,
+          const RealVector &x) {
+  bool flag = true;
+  const enum CBLAS_ORDER Order = CblasRowMajor;
+  const enum CBLAS_TRANSPOSE TransA = CblasNoTrans;
+  const enum CBLAS_TRANSPOSE TransB = CblasNoTrans;
+  UINT M, N; INT incX, incY, lda;
+  M = A.row;
+  N = A.col;
+  incX = 1;
+  incY = 1;
+  lda = M;
+  if (NULL == &A || NULL == &y || NULL == &x) {
+    flag = false;
+    L4C_ERROR("Fatal error occurs in gemv: pointer is NULL!");
+	  goto end;
+  }
+  if (A.col != x.size || A.row != y.size) {
+    flag = false;
+    L4C_ERROR("Fatal error occurs in gemv: size does not fit!");
+	  goto end;
+  }
+
+  cblas_sgemv(Order, TransA, M, N, alpha, A.M, lda, x.M, incX, beta, y.M, incY);
+
+end:
+  return flag;
+}
+
+// y = A * x + y
+bool mv(RealVector &y, const RealMatrix &A, const RealVector &x) {
+  bool flag = true;
+  if (NULL == &A || NULL == &y || NULL == &x) {
+    flag = false;
+    L4C_ERROR("Fatal error occurs in gemv: pointer is NULL!");
+	  goto end;
+  }
+  if (A.col != x.size || A.row != y.size) {
+    flag = false;
+    L4C_ERROR("Fatal error occurs in gemv: size does not fit!");
+	  goto end;
+  }
+
+  gemv(y, 1, 0, A, x);
+
+end:
+  return flag;
+}
+
+// y = alpha*xt *A + beta*y
+bool gevtm(RealVector &y, const REAL alpha, const REAL beta,
+           const RealVector &x, const RealMatrix &A) {
+  bool flag = true;
+  const enum CBLAS_ORDER Order = CblasRowMajor;
+  const enum CBLAS_TRANSPOSE Transx = CblasNoTrans;
+  const enum CBLAS_TRANSPOSE TransA = CblasNoTrans;
+  if (NULL == &A || NULL == &y || NULL == &x) {
+    flag = false;
+    L4C_ERROR("Fatal error occurs in gevtm: pointer is NULL!");
+	  goto end;
+  }
+  if (x.row != A.row || x.col != y.row || A.col != y.col) {
+    flag = false;
+    L4C_ERROR("Fatal error occurs in gevtm: size does not fit!");
+	  goto end;
+  }
+
+  cblas_sgemm(Order, Transx, TransA, x.col, A.col, x.row, alpha, x.M, x.row,
+              A.M, A.col, beta, y.M, y.col);
+
+end:
+  return flag;
+}
+
+// y = xt *A + y
+bool vtm(RealVector &y, const RealVector &x, const RealMatrix &A) {
+  bool flag = true;
+  if (NULL == &A || NULL == &y || NULL == &x) {
+    flag = false;
+    L4C_ERROR("Fatal error occurs in gevtm: pointer is NULL!");
+	  goto end;
+  }
+  if (x.row != A.row || x.col != y.row || A.col != y.col) {
+    flag = false;
+    L4C_ERROR("Fatal error occurs in gevtm: size does not fit!");
+	  goto end;
+  }
+
+  gevtm(y, 1, 0, x, A);
+
+end:
+  return flag;
+}
+
+/* ===========================================================================
+ * level 3 BLAS opertations
+ * ===========================================================================*/
+// C = alpha*A*B + beta*C
+bool gemm(RealMatrix &C, const REAL alpha, const REAL beta, const RealMatrix &A,
+          const RealMatrix &B) {
+  bool flag = true;
+  const enum CBLAS_ORDER Order = CblasRowMajor;
+  const enum CBLAS_TRANSPOSE TransA = CblasNoTrans;
+  const enum CBLAS_TRANSPOSE TransB = CblasNoTrans;
+
+  if (NULL == &A || NULL == &B || NULL == &C) {
+    flag = false;
+    L4C_ERROR("Fatal error occurs in sgemm: pointer is NULL!");
+	  goto end;
+  }
+  if (A.col != B.row || A.row != C.row || B.col != C.col) {
+    flag = false;
+    L4C_ERROR("Fatal error occurs in sgemm: size does not fit!");
+	  goto end;
+  }
+
+  cblas_sgemm(Order, TransA, TransB, A.row, B.col, A.col, alpha, A.M, A.col,
+              B.M, B.col, beta, C.M, C.col);
+
+end:
+  return flag;
+}
+
+// C = A * B
+bool mm(RealMatrix &C, const RealMatrix &A, const RealMatrix &B) {
   bool flag = true;
   const enum CBLAS_ORDER Order = CblasRowMajor;
   const enum CBLAS_TRANSPOSE TransA = CblasNoTrans;
@@ -122,21 +308,95 @@ bool mm(RealMatrix &C, const RealMatrix &A, const RealMatrix &B) { /// C = A * B
 
   if (NULL == &A || NULL == &B || NULL == &C) {
     flag = false;
-    L4C_ERROR("Fatal error occurs in mul: RealMatrix pointer is NULL!");
+    L4C_ERROR("Fatal error occurs in mm: pointer is NULL!");
 	  goto end;
   }
   if (A.col != B.row || A.row != C.row || B.col != C.col) {
     flag = false;
-    L4C_ERROR("Fatal error occurs in mul: RealMatrix parameter error!");
+    L4C_ERROR("Fatal error occurs in mm: size does not fit!");
 	  goto end;
   }
 
-  cblas_sgemm(Order, TransA, TransB, A.row, B.col, A.col, alpha, A.M, A.col, B.M, B.col, beta, C.M, C.col);
+  gemm(C, 1, 0, A, B);
 
 end:
   return flag;
 }
 
+// C = x * y^t
+bool vvt(RealSquare &C, const RealVector &x, const RealVector &y) {
+  bool flag = true;
+  const enum CBLAS_ORDER Order = CblasRowMajor;
+  const enum CBLAS_TRANSPOSE Transx = CblasNoTrans;
+  const enum CBLAS_TRANSPOSE Transy = CblasNoTrans;
+  const float alpha = 1;
+  const float beta = 0;
+
+  if (NULL == &x || NULL == &y || NULL == &C) {
+    flag = false;
+	  goto end;
+  }
+
+  if (x.size != y.size || x.size != C.size ) {
+    flag = false;
+    L4C_ERROR("Fatal error occurs in vvt: size does not fit!");
+	  goto end;
+  }
+
+  cblas_sgemm(Order, Transx, Transy, x.row, y.row, x.col, alpha, x.M, x.col,
+              y.M, y.row, beta, C.M, C.col);
+
+end:
+  return flag;
+}
+
+// A = -A
+bool neg(RealMatrix &A) {
+  bool flag = true;
+  UINT i, j;
+	if (NULL == &A) {
+		L4C_ERROR("Fatal error occurs in f_norm: pointer is NULL!");
+    flag = false;
+		goto end;
+	}
+
+	for (i = 0; i < A.row; i++)
+		for(j = 0; j < A.col; j++) {
+			A.M[i*A.col + j] = - A.M[i*A.col + j];
+		}
+
+end:
+	return flag;
+}
+
+// A = alpha*A + beta*B
+bool add(RealMatrix &A, const REAL alpha, const REAL beta,
+         const RealMatrix &B) {
+  bool flag = true;
+  RealSquare *X = new RealSquare(B.col);
+  X->unitise();
+  if (NULL == &A || NULL == &B) {
+    flag = false;
+    L4C_ERROR("Fatal error occurs in add: pointer is NULL!");
+	  goto end;
+  }
+  if (A.row != B.row || A.col != B.col) {
+    flag = false;
+    L4C_ERROR("Fatal error occurs in vvt: size does not fit!");
+	  goto end;
+  }
+
+  gemm(A, alpha, beta, *X, B);
+
+end:
+  delete X; X = NULL;
+  return flag;
+}
+
+/* ===========================================================================
+ * LAPACK opertations
+ * ===========================================================================*/
+// solve Ax = b
 bool sv(RealVector &b, RealSquare &A) {
   bool flag = true;
   lapack_int n, nrhs, lda, ldb, info;
@@ -149,7 +409,7 @@ bool sv(RealVector &b, RealSquare &A) {
 	  goto end;
   }
   if (A.size != b.size) {
-    L4C_ERROR("Fatal error occurs in sv: parameter error!");
+    L4C_ERROR("Fatal error occurs in sv: size does not fit!");
     flag = false;
 	  goto end;
   }
@@ -169,402 +429,4 @@ end:
   return flag;
 }
 
-bool neg(RealMatrix &A) {
-  bool flag = true;
-  UINT i, j;
-	if (NULL == &A) {
-		L4C_ERROR("Fatal error occurs in f_norm: RealMatrix pointer is NULL!");
-    flag = false;
-		goto end;
-	}
-
-	for (i = 0; i < A.row; i++)
-		for(j = 0; j < A.col; j++) {
-			A.M[i*A.col + j] = - A.M[i*A.col + j];
-		}
-
-end:
-	return flag;
-}
-
-bool e_norm(REAL &norm, const RealMatrix &A) { /// norm = |V|
-  bool flag = true;
-  REAL temp = 0.0;
-  if (NULL == &A) {
-    L4C_ERROR("Fatal error occurs in euclid_norm_d: RealMatrix pointer is NULL!");
-    flag = false;
-    goto end;
-  }
-
-  f_norm(norm, A);
-  norm = sqrt(norm);
-
-end:
-  return flag;
-}
-
-bool f_norm(REAL &fnorm, const RealMatrix &A) { /// Frobenius norm of RealMatrix
-  bool flag = true;
-  REAL sum = 0.0;
-  REAL tmp = 0.0;
-  UINT i, j;
-	if (NULL == &A) {
-		L4C_ERROR("Fatal error occurs in f_norm: RealMatrix pointer is NULL!");
-    flag = false;
-		goto end;
-	}
-
-	for (i = 0; i < A.row; i++)
-		for(j = 0; j < A.col; j++) {
-			tmp = A.M[i*A.col + j];
-			sum += tmp * tmp;
-		}
-  fnorm = sum;
-
-end:
-	return flag;
-}
-
-/*
-bool inv(RealMatrix *B, const RealMatrix *A) {/// B = A^(-1)
-  /// Gauss-Jordan method
-  bool flag = true;
-	INT *is, *js, i, j, k, l, u, v, n = A->row;
-	REAL d, p;
-	is = new INT[n];
-	js = new INT[n];
-	memset(is, 0, sizeof(is) * sizeof(INT));
-	memset(js, 0, sizeof(js) * sizeof(INT));
-
-	if (NULL == A || NULL == B) {
-		L4C_ERROR("Fatal error occurs in inv: RealMatrix pointer is NULL!");
-		flag = false;
-		goto end;
-	}
-	if (A->row != A->col || B->row != B->col || A->row != B->row) {
-		L4C_ERROR("Fatal error occurs in inv: RealMatrix parameter error!");
-    flag = false;
-		goto end;
-	}
-
-	copy(B, A);
-
-	for (k = 0; k < n ; k++) {
-		d = 0.0;
-		for (i = k; i < n; i++)
-			for (j = k; j < n; j++) {
-				p = fabs(B->M[i][j]);
-				if (p > d) {
-					d = p;
-					is[k] = i;
-					js[k] = j;
-				}
-			}
-			if (d + 1.0 == 1.0) { /// det(A) == 0
-				L4C_WARN("Warning in inv: Determinant of A equals zero!");
-				flag = false;
-				goto end;
-			}
-			if (is[k] != k) {
-				for (j = 0; j < n; j++) {
-					p = B->M[k][j];
-					B->M[k][j] = B->M[is[k]][j];
-					B->M[is[k]][j] = p;
-				}
-			}
-			if (js[k] != k) {
-				for (i = 0; i < n; i++) {
-					p = B->M[i][k];
-					B->M[i][k] = B->M[i][js[k]];
-					B->M[i][js[k]] = p;
-				}
-			}
-			B->M[k][k]=(REAL)(1.0/B->M[k][k]);
-			for (j = 0; j < n; j++) {
-				if (j != k) {
-					B->M[k][j] = B->M[k][j]*B->M[k][k];
-				}
-			}
-			for (i = 0; i < n; i++) {
-				if (i != k) {
-					for (j = 0; j < n; j++) {
-						if (j != k) {
-							B->M[i][j] = B->M[i][j] - B->M[i][k] * B->M[k][j];
-						}
-					}
-				}
-			}
-			for (i = 0; i < n; i++) {
-				if (i != k) {
-					B->M[i][k] = - B->M[i][k] * B->M[k][k];
-				}
-			}
-	}
-
-	for (k = n - 1; k >= 0; k--) {
-		if (js[k] != k) {
-			for (j = 0; j < n; j++) {
-				p = B->M[k][j];
-				B->M[k][j] = B->M[js[k]][j];
-				B->M[js[k]][j] = p;
-			}
-		}
-		if (is[k] != k) {
-			for (i = 0; i < n; i++) {
-				p = B->M[i][k];
-				B->M[i][k] = B->M[i][is[k]];
-				B->M[i][is[k]] = p;
-			}
-		}
-	}
-
-end:
-	delete[] is;
-	delete[] js;
-	is = NULL;
-	js = NULL;
-	return flag;
-}
-
-// C = A + B
-bool add(RealMatrix *C, RealMatrix *A, RealMatrix *B) { /// C = A + B
-  bool flag = true;
-	if (A == NULL || B == NULL || C == NULL) {
-		L4C_ERROR("Fatal error occurs in add: RealMatrix pointer is NULL!");
-		flag = false;
-		goto end;
-	}
-	if (A->row != B->row || A->col != B->col ||
-      B->row != C->row || B->col != C->col) {
-		L4C_ERROR("Fatal error occurs in add: RealMatrix parameter error!");
-		return -1;
-	}
-
-	UINT i, j;
-	for(i = 0; i < A->row; i++)
-		for(j = 0; j < A->col; j++)
-			C->M[i][j] = A->M[i][j] + B->M[i][j];
-
-end:
-	return flag;
-}
-
-bool sub(RealMatrix *C, RealMatrix *A, RealMatrix *B) { /// C = A - B
-  bool flag = true;
-	if (NULL == A || NULL == B || NULL == C) {
-		L4C_ERROR("Fatal error occurs in sub: RealMatrix pointer is NULL!");
-    flag = false;
-		goto end;
-	}
-	if (A->row != B->row || A->col != B->col || B->row != C->row || B->col != C->col) {
-		L4C_ERROR("Fatal error occurs in sub: RealMatrix parameter error!");
-    flag = false;
-		goto end;
-	}
-
-	UINT i, j;
-	for(i = 0; i < A->row; i++)
-		for(j = 0; j < A->col; j++)
-			C->M[i][j] = A->M[i][j] - B->M[i][j];
-
-end:
-	return flag;
-}
-
-bool tranv(RealMatrix *B, RealMatrix *A) { /// B = A^T
-  bool flag = true;
-	if (NULL == A || NULL == B) {
-		L4C_ERROR("Fatal error occurs in tranv: RealMatrix pointer is NULL!");
-    flag = false;
-		goto end;
-	}
-	if (A->row != B->col|| A->col != B->row) {
-		L4C_ERROR("Fatal error occurs in tranv: RealMatrix parameter error!");
-    flag = false;
-		goto end;
-	}
-
-	UINT i, j;
-	for (i = 0; i < A->row; i++)
-		for(j = 0; j < A->col; j++)
-			B->M[j][i] = A->M[i][j];
-
-end:
-	return flag;
-}
-
-bool t_mul(RealMatrix *B, RealMatrix *A) {  /// B = A*A^T
-  ///TODO:;
-  bool flag = true;
-
-end:
-  return flag;
-}
-
-
-bool m_norm(REAL &mnorm, const RealMatrix *A) { /// Manhattan norm of RealMatrix
-  bool flag = true;
-  REAL sum = 0.0;
-	if (NULL == A) {
-		L4C_ERROR("Fatal error occurs in m_norm: RealMatrix pointer is NULL!");
-    flag = false;
-		goto end;
-	}
-
-	UINT i, j;
-	REAL tmp;
-	for (i = 0; i < A->row; i++)
-		for(j = 0; j < A->col; j++) {
-			tmp = A->M[i][j];
-			sum += tmp;
-		}
-  mnorm = sum;
-
-end:
-	return  flag;
-}
-
-bool get_min(REAL &min, const RealMatrix *A) {
-  bool flag = true;
-  REAL _min = Max;
-	if (NULL == A) {
-		L4C_ERROR("Fatal error occurs in get_min: RealMatrix pointer is NULL!");
-    flag = false;
-		goto end;
-	}
-
-	UINT i, j;
-	REAL tmp;
-	for (i = 0; i < A->row; i++)
-		for(j = 0; j < A->col; j++) {
-			tmp = A->M[i][j];
-			if (tmp < _min)
-				_min = tmp;
-		}
-  min = _min;
-
-end:
-  return  flag;
-}
-
-bool get_max(REAL &max, const RealMatrix *A) {
-  bool flag = true;
-  REAL _max = Min;
-	if (NULL == A) {
-		L4C_ERROR("Fatal error occurs in get_max: RealMatrix pointer is NULL!");
-    flag = false;
-		goto end;
-	}
-
-	UINT i, j;
-	REAL tmp;
-	for (i = 0; i < A->row; i++)
-		for(j = 0; j < A->col; j++) {
-			tmp = A->M[i][j];
-			if (tmp > _max)
-				_max = tmp;
-		}
-  max = _max;
-
-end:
-	return  flag;
-}
-
-bool num_mul(RealMatrix *B, RealMatrix *A, const REAL real) { /// B = k * A
-  bool flag = true;
-	if (NULL == A || NULL == B) {
-		L4C_ERROR("Fatal error occurs in num_mul: RealMatrix pointer is NULL!");
-    flag = false;
-		goto end;
-	}
-	if (A->row != B->row || A->col != B->col) {
-		L4C_ERROR("Fatal error occurs in num_mul: RealMatrix parameter error!");
-    flag = false;
-		goto end;
-	}
-
-	UINT i, j;
-	for (i = 0; i < A->row; i++)
-		for(j = 0; j < A->col; j++)
-			B->M[i][j] = real * A->M[i][j];
-
-end:
-	return flag;
-}
-
-bool num_add(RealMatrix *B, RealMatrix *A, REAL real) { /// B = [k] + A
-  bool flag = true;
-	if (NULL == A || NULL == B) {
-		L4C_ERROR("Fatal error occurs in num_add: RealMatrix pointer is NULL!");
-    flag = false;
-		goto end;
-	}
-	if (A->row != B->row || A->col != B->col) {
-		L4C_ERROR("Fatal error occurs in num_add: RealMatrix parameter error!");
-    flag = false;
-		goto end;
-	}
-
-  if (0.0 == real) {
-    copy(B, A);
-    goto end;
-  }
-	UINT i, j;
-	for (i = 0; i < A->row; i++)
-		for(j = 0; j < A->col; j++)
-			B->M[i][j] = real + A->M[i][j];
-
-end:
-	return flag;
-}
-
-bool hadamard_mul(RealMatrix *C, const RealMatrix *A, const RealMatrix *B) {///  hadamard mul
-  bool flag = true;
-	if (NULL == A || NULL == B || NULL == C) {
-		L4C_ERROR("Fatal error occurs in hadamard_mul: RealMatrix pointer is NULL!");
-    flag = false;
-		goto end;
-	}
-	if (A->col != B->row || A->row != C->row || B->col != C->col) {
-		L4C_ERROR("Fatal error occurs in hadamard_mul: RealMatrix parameter error!");
-    flag = false;
-		goto end;
-	}
-
-	UINT i, j;
-	for(i = 0; i < A->row; i++)
-		for(j = 0; j < B->col; j++)
-			C->M[i][j] = A->M[i][j] * B->M[i][j];
-
-end:
-	return flag;
-}
-
-bool kronecker_mul(RealMatrix *C, const RealMatrix *A, const RealMatrix *B) {///  kronecker mul
-  bool flag = true;
-	if (NULL == A || NULL == B || NULL == C) {
-		L4C_ERROR("Fatal error occurs in kronecker_mul: RealMatrix pointer is NULL!");
-    flag = false;
-		goto end;
-	}
-	if (C->row != A->row*B->row) {
-		L4C_ERROR("Fatal error occurs in kronecker_mul: RealMatrix C must be a RealMatrix of d(C) = d(A)*d(B)!");
-    flag = false;
-		goto end;
-	}
-
-	UINT i, j, k, l, m, n;
-	for (i = 0; i < A->row; i++)
-		for (j = 0; j < A->col; j++)
-			for (k = 0; k < B->row; k++)
-				for (l = 0; l < B->col; l++) {
-					m = B->row * i + k;
-					n = B->col * j + l;
-					C->M[m][n] = A->M[i][j] * B->M[k][l];
-				}
-
-end:
-	return flag;
-}
-*/
 }

@@ -28,7 +28,7 @@ class Conf {
     Conf(const char *conf_file_path, const char *encoding_type);
     ~Conf();
 
-    bool parse(algorithm::Para *para);
+    bool parse();
 
   private:
     const char *conf_file_path;

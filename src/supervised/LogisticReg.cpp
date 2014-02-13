@@ -30,7 +30,7 @@ SampleSet::SampleSet (const INT sample_num, const INT feature_num) {
   this->sample_num = sample_num;
   this->feature_num = feature_num;
   features = new CrossList(sample_num, feature_num);
-  y = new Ytype_t[sample_num];
+  y = new REAL[sample_num];
 }
 
 SampleSet::~SampleSet () {
@@ -142,11 +142,15 @@ end:
 LrModel::LrModel(const SampleSet *ss) {
   this->ss = ss;
   const UINT d = ss->feature_num; /// Dimenstion
+  target = 0;
   wv = new dense::RealVector(d, 1);
   gv = new dense::RealVector(d, 1);
   sum_xcol = new REAL[d];
+  memset(sum_xcol, 0, d * sizeof(REAL));
   sum_nz_xcol = new REAL[d];
-  ewx = new REAL[d];
+  memset(sum_nz_xcol, 0, d * sizeof(REAL));
+  logit = new REAL[d];
+  memset(logit, 0, d * sizeof(REAL));
 }
 
 LrModel::~LrModel() {
@@ -154,69 +158,91 @@ LrModel::~LrModel() {
   delete gv; gv = NULL;
   delete []sum_xcol;  sum_xcol = NULL;
   delete []sum_nz_xcol; sum_nz_xcol = NULL;
-  delete []ewx; ewx = NULL;
+  delete []logit; logit = NULL;
+}
+
+bool LrModel::write() {
+  bool flag = true;
+  wv->print();
+end:
+  return flag;
+}
+
+bool LrModel::read() {
+  bool flag = true;
+
+end:
+  return flag;
+}
+
+bool LrModel::preprocess() {
+  bool flag = true;
+  for (UINT j = 0; j < ss->feature_num; j++) {
+    CrossListNode *curr = ss->features->get_col(j)->head->down;
+    while (curr) {
+      if (0 != ss->y[curr->i]) {
+        sum_nz_xcol[j] += curr->e;
+      }
+      sum_xcol[j] += curr->e;
+      curr = curr->down;
+    }
+  }
+
+end:
+  return flag;
 }
 
 void LrModel::cal_target() {
   target = 0;
-  for (INT i = 0; i < ss->sample_num; i++) {
+  for (UINT i = 0; i < ss->sample_num; i++) {
     REAL inner;
-    /*TODO
-    /// Transform row features to Vector
-    inner = sparse::inner_product_sd(ss->features->rslArray[i], wv);
-    */
+    sd::dot(inner, *(ss->features->rslArray[i]), *wv);
     target -= std::log(1 + exp(inner));
-    if (1.0 == ss->y[i])
+    if (1.0 == ss->y[i]) {
       target += inner;
+    }
   }
 }
 
 void LrModel::cal_gradient() {
-  for (INT i = 0; i < ss->feature_num; i++) {
-    ///TODO
-    /*
-    REAL gradient = wv->get(i) * (get_sum_nz_xcol[i] -
-                                          logit * get_sum_xcol[i]);
-    gv->set(i, gradient);
-    */
+  cal_logit();
+  for (UINT j = 0; j < ss->feature_num; j++) {
+    //REAL gradient = wv->get(j) * (sum_nz_xcol[j] - logit * sum_xcol[j]);
+    REAL gradient = sum_nz_xcol[j];
+    CrossListNode *curr = ss->features->get_col(j)->head->down;
+    UINT i = 0;
+    while (curr) {
+      gradient -= logit[i]*(curr->e);
+      i++;
+      curr = curr->down;
+    }
+    gv->set(j, gradient);
   }
 }
 
 void LrModel::cal_logit() {
-  ///TODO:
+  for (UINT i = 0; i < ss->sample_num; i++) {
+    REAL inner;
+    sd::dot(inner, *(ss->features->rslArray[i]), *wv);
+    logit[i] = exp(inner) / (1 + exp(inner));
+  }
 }
 
-REAL LrModel::get_ewx(const INT row) {
-  ///TODO:
-  return ewx[row];
-};
-
-REAL LrModel::get_sum_xcol(const INT col) {
-  ///TODO:
-  return sum_xcol[col];
-};
-
-REAL LrModel::get_sum_nz_xcol(const INT col) {
-  ///TODO:
-  return sum_nz_xcol[col];
-};
-
 LrPara::LrPara(const char *conf_file_path, const char *encoding) {
-  step_len = 1e-10;
-  epsilon = 1e-100;
-  max_iter_num = 2000;
+  step_len = 1e-1;
+  step = 1e-3;
+  epsilon = 1e-5;
+  max_iter_num = 2e2;
 }
 
 /*! Logistic regression inition */
 void init(const char *log_conf_path) {
   set_cfg_path(log_conf_path);
-  /// TODO:
 }
 
 /*! Logistic regression preprocessing */
 bool preprocess(TrainingSet *ts) {
   bool flag = true;
-
   L4C_INFO("Loading header starts!");
   if (!ts->load_header()) {
     L4C_FATAL("Loading header failed!");
@@ -243,6 +269,10 @@ bool train(TrainingSet *ts, LrPara *lrpara) {
   LrModel *lrmodel = new LrModel(ts->sample_set);
   BFGS *bfgs = new BFGS(lrmodel, lrpara);
 
+  L4C_INFO("LrModel preprocess starts!");
+  lrmodel->preprocess();
+  L4C_INFO("LrModel preprocess finished!");
+
   L4C_INFO("Training starts!");
   if (!bfgs->solve()) {
     L4C_FATAL("Training failed!");
@@ -251,6 +281,8 @@ bool train(TrainingSet *ts, LrPara *lrpara) {
   }
   L4C_INFO("Training finished!");
 
+  lrmodel->write();
+
 end:
   delete bfgs; bfgs = NULL;
   delete lrmodel; lrmodel = NULL;
@@ -258,10 +290,10 @@ end:
 }
 
 /*! Logistic regression prediction */
-Ytype_p predict(const dense::RealVector *weight, const sparse::RealVector *feature) {
-  Ytype_p probability;
+REAL predict(SingleList &feature, dense::RealVector &weight) {
+  REAL probability;
   REAL wx = 0;
-  sd::inner_product(wx, feature, weight);
+  sd::dot(wx, feature, weight);
   REAL exp_wx = exp(wx);
   probability = exp_wx/(1.0 + exp_wx);
   return probability;

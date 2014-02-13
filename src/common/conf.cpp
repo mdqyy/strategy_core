@@ -20,7 +20,7 @@ Conf::Conf(const char *conf_file_path, const char *encoding_type) {
   this->encoding_type = encoding_type;
 }
 
-bool Conf::parse(algorithm::Para* para) {
+bool Conf::parse() {
   /*
   bool flag = true;
 

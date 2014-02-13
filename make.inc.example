@@ -1,0 +1,20 @@
+####################################################################
+#  strategy_core make include file.                                #
+####################################################################
+
+SHELL 			= /bin/sh
+
+FORTRAN  		= gfortran 
+CC = gcc
+CFLAGS 			= -g -O3
+CXX 				= g++
+CXXFLAGS 		= $(CFLAGS)
+
+ARCH     		= ar
+ARCHFLAGS		= crs
+
+BLASLIB     = -lblas
+LAPACKLIB   = -llapack
+TMGLIB      = -ltmglib
+LAPACKELIB  = -llapacke
+FORTRANLIB  = -lgfortran

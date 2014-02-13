@@ -17,28 +17,22 @@
 
 namespace sd {
 /// Vector Opertations.
-bool inner_product(REAL &inner, const sparse::RealVector *srv, const dense::RealVector *drv) {
+bool dot(REAL &inner, SingleList &sl, dense::RealVector &drv) {
   bool flag = true;
-  /*
-  if (NULL == srv or NULL == drv) {
+  REAL _inner = 0;
+  CrossListNode *curr = sl.head->right;
+  if (NULL == &sl or NULL == &drv) {
     L4C_ERROR("Fatal error occurs in inner_product_sd: Vector pointer is NULL!");
     flag = false;
     goto end;
   }
-  if (srv->length != drv->length) {
-    L4C_ERROR("Fatal error occurs in inner_product_sd: Vector parameter error!");
-    flag = false;
-    goto end;
-  }
 
-  REAL _inner = 0;
-  RealVectorPoint curr = srv->head;
-  while (NULL != curr) {
-    _inner += curr->value * drv.get(curr->pos);
-    curr = srv->next;
+  while (curr) {
+    _inner += curr->e * drv.get(curr->j);
+    curr = curr->right;
   }
   inner = _inner;
-  */
+
 end:
   return flag;
 }

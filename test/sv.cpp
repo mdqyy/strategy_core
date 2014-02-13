@@ -1,7 +1,5 @@
 #include <sys/time.h>
 #include "dense.h"
-#include <stdio.h>
-#include <lapacke/lapacke.h>
 
 int main() {
   for (UINT i = 0; i < 1; i++)	{

@@ -68,7 +68,7 @@ SparseList::~SparseList() {
 }
 
 RealVector::RealVector(const UINT row, const UINT col):Matrix(row, col),
-                                                                   Vector(row, col){
+                                                       Vector(row, col){
   this->sl = new SparseList();
 }
 

@@ -20,10 +20,10 @@
 #include <strategy_core/lin_alg/sparse.h>
 
 namespace sd {
-/// Matrix Opertations.
+// Vector Opertations.
+bool dot(REAL &inner, SingleList &sl, dense::RealVector &drv);
 
-/// Vector Opertations.
-bool inner_product(REAL &inner, const sparse::RealVector *srv, const dense::RealVector *drv);
+// Matrix Opertations.
 }
 
 #endif //STRATEGY_CORE_LIN_ALG_SD_H_
