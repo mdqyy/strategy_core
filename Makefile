@@ -9,8 +9,6 @@ all: logistic_reg logistic_reg_test matrix_test
 
 lib:
 
-clean: logistic_reg_clean logistic_reg_test_clean matrix_test_clean
-
 logistic_reg: lib
 	( cd projects/LogisticReg/ ; $(MAKE) )
 
@@ -28,3 +26,13 @@ logistic_reg_test_clean:
 	
 matrix_test_clean:
 	( cd test/matrix/ ; $(MAKE) clean )
+
+update:	svn git
+
+svn:
+	( svn add examples/ include/ src/ test/ projects/ INSTALL LICENSE Makefile make.inc make.inc.example README.md )
+
+git:
+	( git add . -A ; ${date} = `date` ; git commit -m "${date} chenqinyu")
+
+clean: logistic_reg_clean logistic_reg_test_clean matrix_test_clean
