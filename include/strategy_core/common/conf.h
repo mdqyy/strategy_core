@@ -21,7 +21,6 @@
 #include <iostream>
 #include <string>
 #include "algorithm.h"
-#include "log4c.h"
 
 class Conf {
   public:

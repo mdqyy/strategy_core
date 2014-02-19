@@ -31,7 +31,7 @@ extern "C"
 namespace dense {
 class RealMatrix:virtual public Matrix {
  public:
- 	REAL *M;
+  REAL *M;
   RealMatrix(UINT row, UINT col);
   virtual ~RealMatrix();
   virtual void print() const;
@@ -40,22 +40,22 @@ class RealMatrix:virtual public Matrix {
 };
 
 class RealVector:public Vector,
- 								 public RealMatrix {
+                 public RealMatrix {
  public:
   RealVector(UINT row, UINT col):Matrix(row, col),
-															   Vector(row, col),
-															   RealMatrix(row, col) {};
+                                 Vector(row, col),
+                                 RealMatrix(row, col) {};
   virtual bool set(const UINT pos, const REAL value);
   virtual REAL get(const UINT pos) const;
   virtual void unitise();
 };
 
 class RealSquare:public Square,
-							   public RealMatrix {
+                 public RealMatrix {
  public:
   RealSquare(UINT size):Matrix(size, size),
-											  Square(size),
-											  RealMatrix(size, size) {};
+                        Square(size),
+                        RealMatrix(size, size) {};
   virtual void unitise();
 };
 
@@ -81,7 +81,7 @@ bool axpy(RealVector &y, const REAL alpha, const RealVector &x);
 bool gemv(RealVector &y, const REAL alpha, const REAL beta, const RealMatrix &A,
           const RealVector &x);
 
-// y = A * x + y
+// y = A*x
 bool mv(RealVector &y, const RealMatrix &A, const RealVector &x);
 
 // y = alpha*xt *A + beta*y

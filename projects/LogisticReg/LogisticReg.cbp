@@ -60,7 +60,6 @@
 		<Unit filename="../../src/lin_alg/sd.cpp" />
 		<Unit filename="../../src/lin_alg/sparse.cpp" />
 		<Unit filename="../../src/supervised/LogisticReg.cpp" />
-		<Unit filename="../../src/supervised/MaxEntropy.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

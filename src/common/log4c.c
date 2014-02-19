@@ -19,8 +19,8 @@
 char g_l4c_cfg_path[256]="l4c.cfg";
 
 void set_cfg_path(const char *l4c_cfg_path) {
-    if(strncmp("l4c.cfg", l4c_cfg_path, 7) != 0)
-        strcpy(g_l4c_cfg_path, l4c_cfg_path);
+  if (0 != strncmp("l4c.cfg", l4c_cfg_path, 7))
+    strcpy(g_l4c_cfg_path, l4c_cfg_path);
 }
 
 int pthread_key_create(pthread_key_t* key, void (*destructor)(void*)) {

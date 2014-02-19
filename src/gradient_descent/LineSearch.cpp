@@ -19,15 +19,15 @@ LineSearch::LineSearch(LogisticReg::LrModel *lrmodel) {
   this->lrmodel = lrmodel;
 }
 
-bool LineSearch::step(REAL &lambda, const REAL step, const REAL step_len,
+bool LineSearch::step(REAL &lambda, REAL step, REAL step_len,
                       dense::RealVector &wv, dense::RealVector &pv) {
   bool flag = true;
   REAL min_target = Max;
   REAL s = 0, min = lambda;
   while (s <= step_len) {
-    dense::axpy(wv, step, pv);
+    dense::axpy(wv, step, pv);    // wv = step*pv + wv
     lrmodel->cal_target();
-    //printf("lrmodel->target:%f\n", lrmodel->target);
+    //printf("target:%0.10f\n", lrmodel->target);
     if (lrmodel->target < min_target) {
       min = s;
       min_target = lrmodel->target;

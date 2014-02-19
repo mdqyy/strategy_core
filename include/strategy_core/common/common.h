@@ -21,7 +21,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <cstddef>
+extern "C"
+{
 #include "log4c.h"
+}
 
 namespace Log {
 

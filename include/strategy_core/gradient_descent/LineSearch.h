@@ -25,9 +25,9 @@
 class LineSearch {
  public:
   LogisticReg::LrModel *lrmodel;
+
   LineSearch(LogisticReg::LrModel *lrmodel);
   ~LineSearch() {};
-
   bool step(REAL &lambda, const REAL step, const REAL step_len,
             dense::RealVector &wv, dense::RealVector &pv);
 };

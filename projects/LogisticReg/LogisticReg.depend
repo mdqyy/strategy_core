@@ -25,26 +25,26 @@
 1390523678 source:/home/cqy/work/strategy_core/src/discrete/CrossList.cpp
 	<strategy_core/discrete/CrossList.h>
 
-1392244262 source:/home/cqy/work/strategy_core/src/gradient_descent/BFGS.cpp
+1392705416 source:/home/cqy/work/strategy_core/src/gradient_descent/BFGS.cpp
 	<strategy_core/gradient_descent/BFGS.h>
 
 1389864299 source:/home/cqy/work/strategy_core/src/gradient_descent/GradientDescent.cpp
 	<strategy_core/gradient_descent/GradientDescent.h>
 
-1392199030 source:/home/cqy/work/strategy_core/src/gradient_descent/LineSearch.cpp
+1392705658 source:/home/cqy/work/strategy_core/src/gradient_descent/LineSearch.cpp
 	<strategy_core/gradient_descent/LineSearch.h>
 
 1391837336 source:/home/cqy/work/strategy_core/src/lin_alg/base.cpp
 	<strategy_core/lin_alg/base.h>
 
-1392131630 source:/home/cqy/work/strategy_core/src/lin_alg/sd.cpp
+1392697029 source:/home/cqy/work/strategy_core/src/lin_alg/sd.cpp
 	<strategy_core/lin_alg/sd.h>
 
 1392022928 source:/home/cqy/work/strategy_core/src/lin_alg/sparse.cpp
 	<strategy_core/lin_alg/sparse.h>
 	<strategy_core/common/log4c.h>
 
-1392243975 source:/home/cqy/work/strategy_core/src/supervised/LogisticReg.cpp
+1392705378 source:/home/cqy/work/strategy_core/src/supervised/LogisticReg.cpp
 	<strategy_core/supervised/LogisticReg.h>
 	<strategy_core/gradient_descent/BFGS.h>
 	<map>
@@ -56,7 +56,7 @@
 	<string>
 	<iostream>
 
-1392206327 source:/home/cqy/work/strategy_core/src/lin_alg/dense.cpp
+1392630227 source:/home/cqy/work/strategy_core/src/lin_alg/dense.cpp
 	<strategy_core/lin_alg/dense.h>
 	<strategy_core/common/log4c.h>
 

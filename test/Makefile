@@ -54,4 +54,4 @@ xvtm: vtm.o dense.o base.o $(LIBRARIES)
 	./$@
 
 clean:
-	rm -f x* *.o
+	-rm -f x* *.o

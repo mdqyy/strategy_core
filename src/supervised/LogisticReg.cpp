@@ -26,10 +26,10 @@
 
 namespace LogisticReg {
 /*! SampleSet */
-SampleSet::SampleSet (const INT sample_num, const INT feature_num) {
+SampleSet::SampleSet (const UINT sample_num, const UINT feature_num) {
   this->sample_num = sample_num;
   this->feature_num = feature_num;
-  features = new CrossList(sample_num, feature_num);
+  features = new CrossList(sample_num, feature_num + 1);
   y = new REAL[sample_num];
 }
 
@@ -70,7 +70,7 @@ bool TrainingSet::load_header() {
     char key[MAX_VAR_LEN];
     char value[MAX_VAR_LEN];
     if (HEADER_MARK == line[0]) {
-      for (INT i = 1; i < strlen(line); i++) {
+      for (UINT i = 1; i < strlen(line); i++) {
         memset(key, 0, sizeof(key));
         memset(value, 0, sizeof(value));
         if (TOKENIZER == line[i]) {
@@ -96,18 +96,18 @@ end:
 
 bool TrainingSet::load_sample() {
   bool flag = true;
-  INT row_id = 0;
+  UINT row_id = 0;
   sample_set = new SampleSet(sample_num, feature_num);
 
   do {
     sample_set->y[row_id] = atoi(&(line[0]));
-    INT curr_pos = 2, last_pos = curr_pos;
+    UINT curr_pos = 2, last_pos = curr_pos;
     char feature_id[MAX_VAR_LEN];
     char feature_value[MAX_VAR_LEN];
     while (1) {
       memset(feature_id, 0, sizeof(feature_id));
       memset(feature_value, 0, sizeof(feature_value));
-      INT fid;
+      UINT fid;
       REAL fvalue;
       if (SEPERATOR == line[curr_pos]) {
         strncpy(feature_id, line + last_pos, curr_pos - last_pos);
@@ -130,6 +130,8 @@ bool TrainingSet::load_sample() {
       }
       curr_pos++;
     }
+    CrossListNode *clnode = new CrossListNode(row_id, this->feature_num, 1);
+    sample_set->features->append(clnode);
     row_id++;
   } while (-1 != getline(&line, &size, opf));
   sample_set->features->output_all();
@@ -141,12 +143,10 @@ end:
 /*! LrModel */
 LrModel::LrModel(const SampleSet *ss) {
   this->ss = ss;
-  const UINT d = ss->feature_num; /// Dimenstion
+  const UINT d = ss->features->col; /// Dimenstion
   target = 0;
   wv = new dense::RealVector(d, 1);
   gv = new dense::RealVector(d, 1);
-  sum_xcol = new REAL[d];
-  memset(sum_xcol, 0, d * sizeof(REAL));
   sum_nz_xcol = new REAL[d];
   memset(sum_nz_xcol, 0, d * sizeof(REAL));
   logit = new REAL[d];
@@ -156,14 +156,15 @@ LrModel::LrModel(const SampleSet *ss) {
 LrModel::~LrModel() {
   delete wv; wv = NULL;
   delete gv; gv = NULL;
-  delete []sum_xcol;  sum_xcol = NULL;
   delete []sum_nz_xcol; sum_nz_xcol = NULL;
   delete []logit; logit = NULL;
 }
 
 bool LrModel::write() {
   bool flag = true;
-  wv->print();
+  for (UINT i = 0; i < wv->size; i++) {
+    printf("%d %0.20f\n", i, wv->get(i));
+  }
 end:
   return flag;
 }
@@ -177,13 +178,12 @@ end:
 
 bool LrModel::preprocess() {
   bool flag = true;
-  for (UINT j = 0; j < ss->feature_num; j++) {
+  for (UINT j = 0; j < ss->features->col; j++) {
     CrossListNode *curr = ss->features->get_col(j)->head->down;
     while (curr) {
-      if (0 != ss->y[curr->i]) {
+      if (1 == ss->y[curr->i]) {
         sum_nz_xcol[j] += curr->e;
       }
-      sum_xcol[j] += curr->e;
       curr = curr->down;
     }
   }
@@ -194,11 +194,11 @@ end:
 
 void LrModel::cal_target() {
   target = 0;
-  for (UINT i = 0; i < ss->sample_num; i++) {
-    REAL inner;
-    sd::dot(inner, *(ss->features->rslArray[i]), *wv);
+  for (UINT i = 0; i < ss->features->row; i++) {
+    REAL inner = 0;
+    sd::dot(inner, *(ss->features->rslArray[i]), *wv); //inner = wx
     target -= std::log(1 + exp(inner));
-    if (1.0 == ss->y[i]) {
+    if (1 == ss->y[i]) {
       target += inner;
     }
   }
@@ -206,14 +206,11 @@ void LrModel::cal_target() {
 
 void LrModel::cal_gradient() {
   cal_logit();
-  for (UINT j = 0; j < ss->feature_num; j++) {
-    //REAL gradient = wv->get(j) * (sum_nz_xcol[j] - logit * sum_xcol[j]);
+  for (UINT j = 0; j < ss->features->col; j++) {
     REAL gradient = sum_nz_xcol[j];
     CrossListNode *curr = ss->features->get_col(j)->head->down;
-    UINT i = 0;
     while (curr) {
-      gradient -= logit[i]*(curr->e);
-      i++;
+      gradient -= curr->e * logit[curr->i];
       curr = curr->down;
     }
     gv->set(j, gradient);
@@ -221,18 +218,19 @@ void LrModel::cal_gradient() {
 }
 
 void LrModel::cal_logit() {
-  for (UINT i = 0; i < ss->sample_num; i++) {
-    REAL inner;
+  for (UINT i = 0; i < ss->features->row; i++) {
+    REAL inner, e;
     sd::dot(inner, *(ss->features->rslArray[i]), *wv);
-    logit[i] = exp(inner) / (1 + exp(inner));
+    e = exp(inner);
+    logit[i] = e / (1 + e);
   }
 }
 
 LrPara::LrPara(const char *conf_file_path, const char *encoding) {
-  step_len = 1e-1;
+  step_len = 10;
   step = 1e-3;
   epsilon = 1e-5;
-  max_iter_num = 2e2;
+  max_iter_num = 200;
 }
 
 /*! Logistic regression inition */

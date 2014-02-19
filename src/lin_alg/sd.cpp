@@ -16,7 +16,7 @@
 #include <strategy_core/lin_alg/sd.h>
 
 namespace sd {
-/// Vector Opertations.
+// Vector Opertations.
 bool dot(REAL &inner, SingleList &sl, dense::RealVector &drv) {
   bool flag = true;
   REAL _inner = 0;

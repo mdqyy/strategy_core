@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="../../examples/LogisticReg_main.cpp" open="0" top="0" tabpos="3">
-		<Cursor position="966" topLine="30" />
+	<File name="../../examples/LogisticReg_main.cpp" open="0" top="0" tabpos="4">
+		<Cursor position="386" topLine="0" />
 	</File>
 	<File name="../../include/strategy_core/common/algorithm.h" open="0" top="0" tabpos="0">
 		<Cursor position="541" topLine="0" />
 	</File>
 	<File name="../../include/strategy_core/common/common.h" open="0" top="0" tabpos="0">
-		<Cursor position="449" topLine="0" />
+		<Cursor position="505" topLine="0" />
 	</File>
 	<File name="../../include/strategy_core/common/conf.h" open="0" top="0" tabpos="4">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="527" topLine="6" />
 	</File>
 	<File name="../../include/strategy_core/common/log4c.h" open="0" top="0" tabpos="0">
 		<Cursor position="4748" topLine="91" />
@@ -28,11 +28,11 @@
 	<File name="../../include/strategy_core/gradient_descent/LineSearch.h" open="0" top="0" tabpos="0">
 		<Cursor position="756" topLine="5" />
 	</File>
-	<File name="../../include/strategy_core/lin_alg/base.h" open="0" top="0" tabpos="1">
-		<Cursor position="1088" topLine="17" />
+	<File name="../../include/strategy_core/lin_alg/base.h" open="0" top="0" tabpos="5">
+		<Cursor position="429" topLine="0" />
 	</File>
 	<File name="../../include/strategy_core/lin_alg/dense.h" open="0" top="0" tabpos="2">
-		<Cursor position="3124" topLine="88" />
+		<Cursor position="557" topLine="0" />
 	</File>
 	<File name="../../include/strategy_core/lin_alg/sd.h" open="0" top="0" tabpos="0">
 		<Cursor position="543" topLine="0" />
@@ -59,13 +59,13 @@
 		<Cursor position="690" topLine="18" />
 	</File>
 	<File name="../../src/gradient_descent/BFGS.cpp" open="1" top="1" tabpos="2">
-		<Cursor position="2605" topLine="78" />
+		<Cursor position="537" topLine="0" />
 	</File>
 	<File name="../../src/gradient_descent/GradientDescent.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="196" topLine="0" />
 	</File>
-	<File name="../../src/gradient_descent/LineSearch.cpp" open="1" top="0" tabpos="3">
-		<Cursor position="784" topLine="11" />
+	<File name="../../src/gradient_descent/LineSearch.cpp" open="0" top="0" tabpos="3">
+		<Cursor position="878" topLine="11" />
 	</File>
 	<File name="../../src/lin_alg/base.cpp" open="0" top="0" tabpos="3">
 		<Cursor position="248" topLine="2" />
@@ -80,9 +80,6 @@
 		<Cursor position="300" topLine="0" />
 	</File>
 	<File name="../../src/supervised/LogisticReg.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="5678" topLine="213" />
-	</File>
-	<File name="../../src/supervised/MaxEntropy.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="187" topLine="0" />
+		<Cursor position="4754" topLine="157" />
 	</File>
 </CodeBlocks_layout_file>

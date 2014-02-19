@@ -19,7 +19,7 @@
 
 /// BFGS
 BFGS::BFGS(LrModel *lrmodel, LrPara *lrpara) {
-  const UINT d = lrmodel->ss->feature_num;
+  const UINT d = lrmodel->ss->features->col;
   this->lrmodel = lrmodel;
   this->lrpara = lrpara;
   gv_norm = 0;
@@ -61,10 +61,8 @@ BFGS::~BFGS() {
 bool BFGS::init() {
   bool flag = true;
   B->unitise();
-  wv->unitise();
+  wv->zeroize();
   lrmodel->cal_gradient();
-  wv->print();
-  gv->print();
   dense::nrm2(gv_norm, *gv);
   if (gv_norm < epsilon) {
     L4C_WARN("BFGS will not begin iteration, please check the parameters!");
@@ -79,45 +77,39 @@ end:
 bool BFGS::iter() {
   bool flag = true;
   for (INT i = 0; i < lrpara->max_iter_num; i++) {
-  //for (INT i = 0; i < 1; i++) {
+  //for (INT i = 0; i < 50; i++) {
     dense::copy(*B_copy, *B);
     dense::copy(*pv, *gv);
     dense::neg(*pv);                               // pv = -gv
     dense::sv(*pv, *B_copy);                       // pv = {x|A*x = pv}
     dense::copy(*last_wv, *wv);                    // last_wv = wv
     dense::copy(*wv_step, *wv);                    // wv_step = wv
-    dense::copy(*last_gv, *gv);
+    dense::copy(*last_gv, *gv);                    // last_gv = gv
     ls->step(lambda, step, step_len, *wv, *pv);    // find lamba when min { f(wv + lambda * pv) }
     //printf("lambda:%f\n", lambda);
-    //wv->print();
     dense::axpy(*wv_step, lambda, *pv);            // wv_step = lambda * pv + wv_step
-    dense::copy(*wv, *wv_step);                    // wv = wv_step;
-    //gv->print();
+    dense::copy(*wv, *wv_step);                    // wv = wv_step
     lrmodel->cal_gradient();                       // gv = g(wv)
     dense::nrm2(gv_norm, *gv);                     // gv_norm = ||gv||
-    //wv->print();
-    //gv->print();
     printf("gv_norm:%f\n", gv_norm);
     if (gv_norm < epsilon) {
       L4C_WARN("Now euclide norm of gradient vector is %f < epsilon: %f, \
                iter ends!", gv_norm, epsilon);
       goto end;
     }
-    dense::copy(*yv, *gv);
-    dense::copy(*dv, *wv);
-    dense::axpy(*yv, -1., *last_gv);               // yv = - last_gv + gv
+    dense::copy(*yv, *gv);                         // yv = gv
+    dense::copy(*dv, *wv);                         // wv = dv
+    dense::axpy(*yv, -1., *last_gv);               // yv = - last_gv + yv
     dense::axpy(*dv, -1., *last_wv);               // dv = - last_wv + wv
     dense::vvt(*U, *yv, *yv);                      // U = yv * yvt
-    //gv->print();
-    //U->print();
     dense::dot(k1, *yv, *dv);                      // k1 = yv * dv
-    dense::add(*B, 1., 1./k1, *U);                 // B = B + U/k1
+    dense::add(*B, 1./k1, 1., *U);                 // B = U/k1 + B
     dense::mv(*Bd, *B, *dv);                       // Bd = B * dv
     dense::vtm(*dB, *dv, *B);                      // dB = dvt * B
     dense::mm(*U, *Bd, *dB);                       // U = Bd * dB
-    //U->print();
-    dense::dot(k2, *dB, *dv);                      // k2 = dB * wv
-    dense::add(*B, 1., -1./k2, *U);                // B = B - U/k2
+    dense::dot(k2, *dB, *dv);                      // k2 = dB * dv
+    dense::add(*B, -1./k2, 1., *U);                // B = - U/k2 + B
+    wv->print();
     printf("BFGS iteration turn %d completed!\n", (i + 1));
     ///L4C_INFO("BFGS iteration turn %d completed!", (i + 1));
   }

@@ -31,10 +31,10 @@ void RealMatrix::print() const {
   printf("\n");
   for (UINT i = 0; i < row; i++) {
     printf("(");
-	  for (UINT j = 0; j < col; j++)	{
+    for (UINT j = 0; j < col; j++)  {
       printf(" %0.20f", M[i*col + j]);
-	  }
-	  printf(" )\n");
+    }
+    printf(" )\n");
   }
   printf("\n");
 }
@@ -45,10 +45,10 @@ void RealMatrix::zeroize() {
 
 void RealMatrix::randomize() {
   for (UINT i = 0; i < Matrix::row; i++) {
-	  for (UINT j = 0; j < Matrix::col; j++) {
-		  REAL r = (REAL)rand()/RAND_MAX; // r ~ U(0, 1)
-		  M[i*Matrix::col + j] = r;
-	  }
+    for (UINT j = 0; j < Matrix::col; j++) {
+      REAL r = (REAL)rand()/RAND_MAX; // r ~ U(0, 1)
+      M[i*Matrix::col + j] = r;
+    }
   }
 }
 
@@ -114,12 +114,12 @@ bool dot(REAL &inner, const RealVector &x, const RealVector &y) {
   if (NULL == &x || NULL == &y) {
     flag = false;
     L4C_ERROR("Fatal error occurs in dot: pointer is NULL!");
-	  goto end;
+    goto end;
   }
   if (x.size != y.size) {
     flag = false;
     L4C_ERROR("Fatal error occurs in dot: size does not fit!");
-	  goto end;
+    goto end;
   }
 
   inner = cblas_sdot(N, x.M, incX, y.M, incY);
@@ -137,7 +137,7 @@ bool nrm2(REAL &norm, const RealVector &x) {
   if (NULL == &x) {
     flag = false;
     L4C_ERROR("Fatal error occurs in nrm2: pointer is NULL!");
-	  goto end;
+    goto end;
   }
 
   norm = cblas_snrm2(N, x.M, incX);
@@ -156,12 +156,12 @@ bool axpy(RealVector &y, const REAL alpha, const RealVector &x) {
   if (NULL == &x || NULL == &y) {
     flag = false;
     L4C_ERROR("Fatal error occurs in axpy: pointer is NULL!");
-	  goto end;
+    goto end;
   }
   if (x.size != y.size) {
     flag = false;
     L4C_ERROR("Fatal error occurs in axpy: size does not fit!");
-	  goto end;
+    goto end;
   }
 
   cblas_saxpy(n, alpha, x.M, incX, y.M, incY);
@@ -189,12 +189,12 @@ bool gemv(RealVector &y, const REAL alpha, const REAL beta, const RealMatrix &A,
   if (NULL == &A || NULL == &y || NULL == &x) {
     flag = false;
     L4C_ERROR("Fatal error occurs in gemv: pointer is NULL!");
-	  goto end;
+    goto end;
   }
   if (A.col != x.size || A.row != y.size) {
     flag = false;
     L4C_ERROR("Fatal error occurs in gemv: size does not fit!");
-	  goto end;
+    goto end;
   }
 
   cblas_sgemv(Order, TransA, M, N, alpha, A.M, lda, x.M, incX, beta, y.M, incY);
@@ -203,18 +203,18 @@ end:
   return flag;
 }
 
-// y = A * x + y
+// y = A*x
 bool mv(RealVector &y, const RealMatrix &A, const RealVector &x) {
   bool flag = true;
   if (NULL == &A || NULL == &y || NULL == &x) {
     flag = false;
     L4C_ERROR("Fatal error occurs in gemv: pointer is NULL!");
-	  goto end;
+    goto end;
   }
   if (A.col != x.size || A.row != y.size) {
     flag = false;
     L4C_ERROR("Fatal error occurs in gemv: size does not fit!");
-	  goto end;
+    goto end;
   }
 
   gemv(y, 1, 0, A, x);
@@ -233,12 +233,12 @@ bool gevtm(RealVector &y, const REAL alpha, const REAL beta,
   if (NULL == &A || NULL == &y || NULL == &x) {
     flag = false;
     L4C_ERROR("Fatal error occurs in gevtm: pointer is NULL!");
-	  goto end;
+    goto end;
   }
   if (x.row != A.row || x.col != y.row || A.col != y.col) {
     flag = false;
     L4C_ERROR("Fatal error occurs in gevtm: size does not fit!");
-	  goto end;
+    goto end;
   }
 
   cblas_sgemm(Order, Transx, TransA, x.col, A.col, x.row, alpha, x.M, x.row,
@@ -254,12 +254,12 @@ bool vtm(RealVector &y, const RealVector &x, const RealMatrix &A) {
   if (NULL == &A || NULL == &y || NULL == &x) {
     flag = false;
     L4C_ERROR("Fatal error occurs in gevtm: pointer is NULL!");
-	  goto end;
+    goto end;
   }
   if (x.row != A.row || x.col != y.row || A.col != y.col) {
     flag = false;
     L4C_ERROR("Fatal error occurs in gevtm: size does not fit!");
-	  goto end;
+    goto end;
   }
 
   gevtm(y, 1, 0, x, A);
@@ -282,12 +282,12 @@ bool gemm(RealMatrix &C, const REAL alpha, const REAL beta, const RealMatrix &A,
   if (NULL == &A || NULL == &B || NULL == &C) {
     flag = false;
     L4C_ERROR("Fatal error occurs in sgemm: pointer is NULL!");
-	  goto end;
+    goto end;
   }
   if (A.col != B.row || A.row != C.row || B.col != C.col) {
     flag = false;
     L4C_ERROR("Fatal error occurs in sgemm: size does not fit!");
-	  goto end;
+    goto end;
   }
 
   cblas_sgemm(Order, TransA, TransB, A.row, B.col, A.col, alpha, A.M, A.col,
@@ -309,12 +309,12 @@ bool mm(RealMatrix &C, const RealMatrix &A, const RealMatrix &B) {
   if (NULL == &A || NULL == &B || NULL == &C) {
     flag = false;
     L4C_ERROR("Fatal error occurs in mm: pointer is NULL!");
-	  goto end;
+    goto end;
   }
   if (A.col != B.row || A.row != C.row || B.col != C.col) {
     flag = false;
     L4C_ERROR("Fatal error occurs in mm: size does not fit!");
-	  goto end;
+    goto end;
   }
 
   gemm(C, 1, 0, A, B);
@@ -334,13 +334,13 @@ bool vvt(RealSquare &C, const RealVector &x, const RealVector &y) {
 
   if (NULL == &x || NULL == &y || NULL == &C) {
     flag = false;
-	  goto end;
+    goto end;
   }
 
   if (x.size != y.size || x.size != C.size ) {
     flag = false;
     L4C_ERROR("Fatal error occurs in vvt: size does not fit!");
-	  goto end;
+    goto end;
   }
 
   cblas_sgemm(Order, Transx, Transy, x.row, y.row, x.col, alpha, x.M, x.col,
@@ -354,19 +354,19 @@ end:
 bool neg(RealMatrix &A) {
   bool flag = true;
   UINT i, j;
-	if (NULL == &A) {
-		L4C_ERROR("Fatal error occurs in f_norm: pointer is NULL!");
+  if (NULL == &A) {
+    L4C_ERROR("Fatal error occurs in f_norm: pointer is NULL!");
     flag = false;
-		goto end;
-	}
+    goto end;
+  }
 
-	for (i = 0; i < A.row; i++)
-		for(j = 0; j < A.col; j++) {
-			A.M[i*A.col + j] = - A.M[i*A.col + j];
-		}
+  for (i = 0; i < A.row; i++)
+    for(j = 0; j < A.col; j++) {
+      A.M[i*A.col + j] = - A.M[i*A.col + j];
+    }
 
 end:
-	return flag;
+  return flag;
 }
 
 // A = alpha*A + beta*B
@@ -378,15 +378,15 @@ bool add(RealMatrix &A, const REAL alpha, const REAL beta,
   if (NULL == &A || NULL == &B) {
     flag = false;
     L4C_ERROR("Fatal error occurs in add: pointer is NULL!");
-	  goto end;
+    goto end;
   }
   if (A.row != B.row || A.col != B.col) {
     flag = false;
     L4C_ERROR("Fatal error occurs in vvt: size does not fit!");
-	  goto end;
+    goto end;
   }
 
-  gemm(A, alpha, beta, *X, B);
+  gemm(A, alpha, beta, *X, B); // A = alpha*B + beta*A
 
 end:
   delete X; X = NULL;
@@ -400,18 +400,18 @@ end:
 bool sv(RealVector &b, RealSquare &A) {
   bool flag = true;
   lapack_int n, nrhs, lda, ldb, info;
-	lapack_int *ipiv;
+  lapack_int *ipiv;
   n = A.size, nrhs = 1, lda = n, ldb = nrhs;
   ipiv = new lapack_int[n];
   if (NULL == &A || NULL == &b) {
     L4C_ERROR("Fatal error occurs in sv: pointer is NULL!");
     flag = false;
-	  goto end;
+    goto end;
   }
   if (A.size != b.size) {
     L4C_ERROR("Fatal error occurs in sv: size does not fit!");
     flag = false;
-	  goto end;
+    goto end;
   }
 
   info = LAPACKE_sgesv(LAPACK_ROW_MAJOR, n, nrhs, A.M, lda, ipiv, b.M, ldb);

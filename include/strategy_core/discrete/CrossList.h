@@ -21,7 +21,7 @@
 /// Cross List
 class CrossListNode {
  public:
-  UINT i, j; /// position of a non-zero element, a[i,j]
+  UINT i, j;          // position of a non-zero element, a[i,j]
   REAL e;
   CrossListNode *right, *down;
   CrossListNode() {right = NULL; down = NULL;};
@@ -39,7 +39,7 @@ class SingleList {
 class CrossList {
  public:
   SingleList **rslArray, **lslArray;
-  UINT row, col, nz; /// num of rows, columns and non-zero elements.
+  UINT row, col, nz; // num of rows, columns and non-zero elements.
   CrossList(const UINT row, const UINT col);
   ~CrossList();
 

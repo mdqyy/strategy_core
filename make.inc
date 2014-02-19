@@ -2,19 +2,21 @@
 #  strategy_core make include file.                                #
 ####################################################################
 
-SHELL				= /bin/sh
+SHELL       = /bin/sh
+MAKE        = make
+PYTHON      = python
+FORTRAN     = gfortran
+ 
+CC          = gcc
+CFLAGS      = -O3
+CXX         = g++
+CXXFLAGS    = $(CFLAGS)
+LD          = $(CXX)
+ARCH        = ar
+ARCHFLAGS   = crs
 
-FORTRAN			= gfortran 
-CC					= gcc
-CFLAGS			= -g -O3
-CXX					= g++
-CXXFLAGS		= $(CFLAGS)
-
-ARCH				= ar
-ARCHFLAGS		= crs
-
-BLASLIB			= -lblas
-LAPACKLIB		= -llapack
-TMGLIB			= -ltmglib
-LAPACKELIB	= -llapacke
-FORTRANLIB	= -lgfortran
+BLASLIB     = -lblas
+LAPACKLIB   = -llapack
+TMGLIB      = -ltmglib
+LAPACKELIB  = -llapacke
+FORTRANLIB  = -lgfortran

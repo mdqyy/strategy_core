@@ -22,18 +22,19 @@
 namespace GradientDescent {
 class GradientDescent {
 public:
-  Vector *x; /// X
-  Vector *g; /// Gradient
-  REAL y; /// Y
+  Vector *x;        // X
+  Vector *g;        // Gradient
+  REAL y;           // Y
   REAL step_len;
   INT curr_iter_num;
   INT max_iter_num;
   REAL stop_cond;
 
-  bool init();
-  void step(REAL (*target_fun)(), Vector (*gradient_fun)());
   GradientDescent();
   ~GradientDescent();
+  bool init();
+  void step(REAL (*target_fun)(), Vector (*gradient_fun)());
+
 protected:
 private:
 };

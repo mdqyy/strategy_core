@@ -21,11 +21,11 @@ inline void Matrix::cal_sparsity() {
 
 Vector::Vector(UINT row, UINT col):Matrix(row, col) {
   if (1 == row) {
-	  size = col;
-	  by_row = false;
+    size = col;
+    by_row = false;
   }
   else {
-	  size = row;
-	  by_row = true;
+    size = row;
+    by_row = true;
   }
 }

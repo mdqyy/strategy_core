@@ -27,7 +27,7 @@ using namespace std;
 namespace LogisticReg {
 class SampleSet {
  public:
-  CrossList *features;    // X
+  CrossList *features;     // X
   REAL *y;                 // Y
   INT sample_num;
   INT feature_num;
@@ -56,16 +56,13 @@ class TrainingSet {
 class LrModel:algorithm::Model {
  public:
   const SampleSet *ss;
-  REAL target;           // Value of target function.
+  REAL target;           // value of target function.
   dense::RealVector *wv; // weight vector
   dense::RealVector *gv; // gradient vector
-  REAL *sum_xcol;        // intermediate result: sum(x_ij, i, 1, sample_num)
+  REAL *sum_nz_xcol;     // intermediate result: {sum(x_ij, i, 1, sample_num) | yi != 0}
                          // init when loading whole data set.
-                         // len: feature_num
-  REAL *sum_nz_xcol;     // intermediate result: sum(x_ij, i, 1, sample_num) | yi != 0
-                         // init when loading whole data set.
-                         // len: feature_num
-  REAL *logit;           // intermediate result: ewxi/(1 + ewxi)
+                         // len: feature_num + 1
+  REAL *logit;           // intermediate result: exp(wxi)/(1 + exp(wxi))
                          // init when doing every step.
                          // len: sample_num
 
