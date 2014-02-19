@@ -1,15 +1,15 @@
 10
 
 dir
-0
-http://svn.elong.cn/svn/Code/Search/strategy_core/include/strategy_core/gradient_descent
+36876
+http://svn.elong.cn/svn/Code/Search/strategy/Trunk/strategy_core/include/strategy_core/gradient_descent
 http://svn.elong.cn/svn/Code
-add
 
 
 
-
-
+2014-02-19T10:14:23.072957Z
+36876
+qinyu.chen
 
 
 
@@ -26,24 +26,105 @@ add
 
 168385b2-9697-48c0-9a38-a2aa40b88458
 
+LineSearch.h
+file
+
+
+
+
+2014-02-19T11:27:31.148566Z
+04c9b428c5c941ad38c062aff8f7dc62
+2014-02-19T10:14:23.072957Z
+36876
+qinyu.chen
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+970
+
 BFGS.h
 file
 
 
 
-add
+
+2014-02-19T11:27:31.148566Z
+5c7616bb3089ecbb4c3c7ca116af7358
+2014-02-19T10:14:23.072957Z
+36876
+qinyu.chen
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1749
 
 GradientDescent.h
 file
 
 
 
-add
-
-LineSearch.h
-file
+
+2014-02-19T11:27:31.172566Z
+24f96e848775fdd7942b986e756d7dfe
+2014-02-19T10:14:23.072957Z
+36876
+qinyu.chen
 
 
 
-add
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+977
 
