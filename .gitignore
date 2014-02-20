@@ -15,5 +15,5 @@
 # added by cqy
 bin
 var
-third
 *.svn
+.svn

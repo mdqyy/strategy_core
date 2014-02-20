@@ -7,14 +7,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "make.inc",
-			"settings":
-			{
-				"buffer_size": 546,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -40,6 +32,10 @@
 	},
 	"file_history":
 	[
+		"/home/cqy/work/nlp/ws/example/query_segment.cpp",
+		"/home/cqy/work/nlp/ws/example/log_category_segment.cpp",
+		"/home/cqy/work/nlp/ws/example/log_segment.cpp",
+		"/home/cqy/work/strategy_core/make.inc",
 		"/home/cqy/work/strategy_core/src/discrete/CrossList.cpp",
 		"/home/cqy/work/strategy_core/test/matrix/dot.cpp",
 		"/home/cqy/work/strategy_core/make.inc.example",
@@ -55,7 +51,6 @@
 		"/home/cqy/work/strategy_core/test/matrix/vvt.cpp",
 		"/home/cqy/work/strategy_core/test/matrix/axpy.cpp",
 		"/home/cqy/work/strategy_core/test/LogisticReg/cal_loss.py",
-		"/home/cqy/work/strategy_core/make.inc",
 		"/home/cqy/work/strategy_core/test/matrix/xgemv",
 		"/home/cqy/work/strategy_core/Makefile",
 		"/home/cqy/work/strategy_core/examples/LogisticReg_main.cpp",
@@ -110,35 +105,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "make.inc",
-					"settings":
-					{
-						"buffer_size": 546,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								450,
-								450
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/ShellScript/Shell-Unix-Generic.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
 			]
 		}
 	],

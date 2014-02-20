@@ -33,6 +33,6 @@ svn:
 	( Date=$(date) ; svn commit -m ${Date}" chenqinyu" ; )
 
 git:
-	( git add . -A ; Date=$(date) ; git commit -m ${Date}" chenqinyu" ; git push )
+	( git add . -A ; Date=$(date) ; git commit -m ${Date}" chenqinyu" ; git push -f ; )
 
 clean: logistic_reg_clean logistic_reg_test_clean matrix_test_clean
